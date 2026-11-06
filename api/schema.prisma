@@ -1,4 +1,6 @@
 // schema.prisma
+// After schema update :  npx prisma db push, npx prisma generate
+// After updating by team : npx prisma db pull
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/prisma"
@@ -31,12 +33,12 @@ model Product {
 }
 
 model Customer {
-  id       Int       @id @default(autoincrement())
-  name     String
-  phone    String
-  townId   Int
-  town     Town      @relation(fields: [townId], references: [id])
-  invoices Invoice[]
+  id          Int          @id @default(autoincrement())
+  name        String
+  phone       String
+  townId      Int
+  town        Town         @relation(fields: [townId], references: [id])
+  invoices    Invoice[]
   cashRecords CashRecord[]
 }
 
@@ -74,8 +76,8 @@ model InvoiceItem {
 }
 
 model CashRecord {
-  id         Int      @id @default(autoincrement())
-  date       DateTime @default(now())
+  id         Int       @id @default(autoincrement())
+  date       DateTime  @default(now())
   type       String // "RECEIVED" or "PAID"
   customerId Int?
   customer   Customer? @relation(fields: [customerId], references: [id])
@@ -84,7 +86,9 @@ model CashRecord {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

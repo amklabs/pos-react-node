@@ -13,22 +13,30 @@ export default function Dashboard() {
         lowStockItems: []
     });
     const [loading, setLoading] = useState(true);
+    const fetchDashboard = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/api/dashboard`);
+            setStats(res.data);
+        } catch (err) {
+            console.error("Error fetching dashboard data", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchDashboard = async () => {
-            try {
-                const res = await axios.get(`${API_URL}/api/dashboard`);
-                setStats(res.data);
-            } catch (err) {
-                console.error("Error fetching dashboard data", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchDashboard();
+        fetchDashboard().then(r => {
+            console.log(r.data);
+        });
     }, []);
 
-    if (loading) return <div className="text-xl font-semibold text-gray-500">Loading Dashboard...</div>;
+    if (loading) {
+        return <div className="flex items-center justify-center min-h-[90vh] p-5">
+            <div className="font-semibold text-gray-500 flex items-center justify-center gap-3">
+                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>Loading Dashboard...
+            </div>
+        </div>;
+    }
 
     return (
         <div className="max-w-6xl">
@@ -71,7 +79,7 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* Quick Actions */}
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white p-6 rounded-lg shadow border-t-4 border-yellow-500">
                     <h2 className="text-xl font-bold mb-4 text-gray-800">Quick Actions</h2>
                     <div className="grid grid-cols-2 gap-4">
                         <Link to="/sale" className="bg-blue-50 text-blue-700 p-4 rounded text-center font-bold hover:bg-blue-100 transition border border-blue-200">
