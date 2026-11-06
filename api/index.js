@@ -576,14 +576,15 @@ app.get('/api/salesmen', async (req, res) => {
 // });
 
 // app.get('/api/seed-user', async (req, res) => {
-//     const hashedPassword = await bcrypt.hash('ansar123', 10);
+//     const hashedPassword = await bcrypt.hash('Ansar123', 10);
 //
 //     const admin = await prisma.user.upsert({
-//         where: {username: 'ansar'},
+//         where: {username: 'Ansar'},
 //         update: {},
 //         create: {
-//             username: 'ansar',
+//             username: 'Ansar',
 //             password: hashedPassword,
+//             createdAt: new Date().toISOString(),
 //         },
 //     });
 //
@@ -614,3 +615,28 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
+
+//
+// const express = require('express');
+// const cors = require('cors');
+// const { PORT } = require('../src/config');
+//
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
+//
+// app.get('/', (req, res) => res.send('Hello World!'));
+//
+// app.use('/api', require('../src/routes/auth'));       // public
+// app.use('/api', require('../src/routes/master'));     // protected
+// app.use('/api', require('../src/routes/invoices'));   // protected
+// app.use('/api', require('../src/routes/cash'));       // protected
+// app.use('/api', require('../src/routes/reports'));    // protected
+// app.use('/api', require('../src/routes/ledger'));     // protected
+//
+// if (require.main === module) {
+//     app.listen(PORT, () => console.log(`API listening on ${PORT}`));
+// }
+//
+// module.exports = app;
