@@ -1,0 +1,82 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma" // Choose a location
+}
+
+datasource db {
+  provider = "postgresql" // Using Neon or Supabase
+}
+
+model Town {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  customers Customer[]
+  invoices  Invoice[]
+}
+
+model Company {
+  id       Int       @id @default(autoincrement())
+  name     String
+  phone    String
+  products Product[]
+}
+
+model Product {
+  id           Int           @id @default(autoincrement())
+  name         String
+  companyId    Int
+  company      Company       @relation(fields: [companyId], references: [id])
+  invoiceItems InvoiceItem[]
+}
+
+model Customer {
+  id       Int       @id @default(autoincrement())
+  name     String
+  phone    String
+  townId   Int
+  town     Town      @relation(fields: [townId], references: [id])
+  invoices Invoice[]
+}
+
+model Salesman {
+  id       Int       @id @default(autoincrement())
+  name     String
+  phone    String
+  invoices Invoice[]
+}
+
+model Invoice {
+  id          Int           @id @default(autoincrement())
+  invoiceNo   String        @unique
+  date        DateTime      @default(now())
+  type        String // "SALE" or "PURCHASE"
+  townId      Int
+  town        Town          @relation(fields: [townId], references: [id])
+  customerId  Int?
+  customer    Customer?     @relation(fields: [customerId], references: [id])
+  salesmanId  Int?
+  salesman    Salesman?     @relation(fields: [salesmanId], references: [id])
+  items       InvoiceItem[]
+  totalAmount Float         @default(0)
+}
+
+model InvoiceItem {
+  id        Int     @id @default(autoincrement())
+  invoiceId Int
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  qty       Int
+  rate      Float
+  discount  Float   @default(0)
+}
+
+model CashRecord {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  type       String // "RECEIVED" or "PAID"
+  customerId Int?
+  amount     Float
+  note       String?
+}

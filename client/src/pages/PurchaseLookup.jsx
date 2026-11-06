@@ -1,0 +1,79 @@
+// src/pages/PurchaseLookup.jsx
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+export default function PurchaseLookup() {
+    const [purchases, setPurchases] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        const fetchPurchases = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/api/invoices?type=PURCHASE`);
+                // Filter to only show PURCHASES
+                const purchaseInvoices = res.data.filter(inv => inv.type === 'PURCHASE');
+                setPurchases(res.data);
+            } catch (err) { console.error(err); }
+        };
+        fetchPurchases();
+    }, []);
+
+    // Filter based on search term
+    const filteredPurchases = purchases.filter(inv => {
+        const search = searchTerm.toLowerCase();
+        const townName = inv.town?.name?.toLowerCase() || '';
+        const invoiceNo = inv.invoiceNo?.toLowerCase() || '';
+        return invoiceNo.includes(search) || townName.includes(search);
+    });
+
+    return (
+        <div className="max-w-6xl">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold">Purchase Lookup</h1>
+                <input
+                    type="text"
+                    placeholder="Search by Invoice # or Town..."
+                    className="border p-2 rounded w-80"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+
+            <table className="w-full bg-white shadow rounded border-collapse text-left text-sm">
+                <thead className="bg-gray-200">
+                <tr>
+                    <th className="p-2 border">Date</th>
+                    <th className="p-2 border">Invoice #</th>
+                    <th className="p-2 border">Supplier (Company)</th>
+                    <th className="p-2 border">Town</th>
+                    <th className="p-2 border">Total Amount</th>
+                    <th className="p-2 border">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {filteredPurchases.map((inv) => (
+                    <tr key={inv.id} className="border-b hover:bg-gray-50">
+                        <td className="p-2 border">{new Date(inv.date).toLocaleDateString()}</td>
+                        <td className="p-2 border font-semibold">{inv.invoiceNo}</td>
+                        <td className="p-2 border">{inv.company?.name || 'N/A'}</td>
+                        <td className="p-2 border">{inv.town?.name}</td>
+                        <td className="p-2 border font-bold">Rs. {inv.totalAmount}</td>
+                        <td className="p-2 border">
+                            {/* We will create this view page next */}
+                            <Link to={`/invoice/${inv.id}`} className="text-blue-600 hover:underline font-semibold">
+                                View Details
+                            </Link>
+                        </td>
+                    </tr>
+                ))}
+                {filteredPurchases.length === 0 && (
+                    <tr><td colSpan="6" className="p-4 text-center text-gray-500">No purchase invoices found.</td></tr>
+                )}
+                </tbody>
+            </table>
+        </div>
+    );
+}
