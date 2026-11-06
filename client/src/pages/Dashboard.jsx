@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from '../apiClient.js';
 
 export default function Dashboard() {
     const [stats, setStats] = useState({
@@ -15,7 +14,7 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const fetchDashboard = async () => {
         try {
-            const res = await axios.get(`${API_URL}/api/dashboard`);
+            const res = await apiClient.get(`/api/dashboard`);
             setStats(res.data);
         } catch (err) {
             console.error("Error fetching dashboard data", err);
@@ -26,7 +25,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchDashboard().then(r => {
-            console.log(r.data);
+            //
         });
     }, []);
 

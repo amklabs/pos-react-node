@@ -1,8 +1,6 @@
 // src/pages/NewSale.jsx
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
 
 export default function NewSale() {
     const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: '' });
@@ -20,10 +18,10 @@ export default function NewSale() {
         const fetchData = async () => {
             try {
                 const [townRes, custRes, salesRes, prodRes] = await Promise.all([
-                    axios.get(`${API_URL}/api/towns`),
-                    axios.get(`${API_URL}/api/customers`),
-                    axios.get(`${API_URL}/api/salesmen`),
-                    axios.get(`${API_URL}/api/products`)
+                    apiClient.get(`/api/towns`),
+                    apiClient.get(`/api/customers`),
+                    apiClient.get(`/api/salesmen`),
+                    apiClient.get(`/api/products`)
                 ]);
                 setTowns(townRes.data);
                 setCustomers(custRes.data);
@@ -33,7 +31,7 @@ export default function NewSale() {
                 console.error("Error fetching dropdown data", err);
             }
         };
-        fetchData();
+        fetchData().then(()=>{});
     }, []);
 
     const handleAddItem = () => {
@@ -46,7 +44,7 @@ export default function NewSale() {
         if (!invoice.invoiceNo || !invoice.townId) return alert("Invoice No and Town are required");
 
         try {
-            await axios.post(`${API_URL}/api/invoices`, {
+            await apiClient.post(`/api/invoices`, {
                 ...invoice,
                 type: 'SALE',
                 items: items

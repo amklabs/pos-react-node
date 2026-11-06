@@ -1,9 +1,7 @@
 // src/pages/Login.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -14,7 +12,7 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${API_URL}/api/login`, { username, password });
+            const res = await apiClient.post(`/api/login`, { username, password });
 
             // Save token and user info to browser storage
             localStorage.setItem('token', res.data.token);

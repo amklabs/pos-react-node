@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
 
 export default function InvoiceView() {
     const { id } = useParams();
@@ -13,11 +13,11 @@ export default function InvoiceView() {
     useEffect(() => {
         const fetchInvoice = async () => {
             try {
-                const res = await axios.get(`${API_URL}/api/invoices/${id}`);
+                const res = await apiClient.get(`}/api/invoices/${id}`);
                 setInvoice(res.data);
             } catch (err) { alert('Invoice not found'); navigate(-1); }
         };
-        fetchInvoice();
+        fetchInvoice().then((response) => {});
     }, [id, navigate]);
 
     if (!invoice) return <div>Loading...</div>;

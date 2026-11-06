@@ -1,11 +1,11 @@
 // src/pages/CashReceived.jsx
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from '../apiClient.js';
 
 export default function CashReceived() {
-    const [formData, setFormData] = useState({ date: '', townId: '', customerId: '', amount: '', note: '' });
+    const [formData, setFormData] = useState({date: '', townId: '', customerId: '', amount: '', note: ''});
     const [customers, setCustomers] = useState([]);
     const [records, setRecords] = useState([]);
 
@@ -13,26 +13,35 @@ export default function CashReceived() {
     const fetchData = async () => {
         try {
             const [custRes, cashRes] = await Promise.all([
-                axios.get(`${API_URL}/api/customers`),
-                axios.get(`${API_URL}/api/cash`)
+                apiClient().get(`/api/customers`),
+                apiClient.get(`/api/cash`)
             ]);
             console.log(custRes.data);
             console.log(cashRes.data);
             setCustomers(custRes.data);
             setRecords(cashRes.data);
-        } catch (err) { console.error(err); }
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => {
+        fetchData().then((response) => {
+            //
+        });
+    }, []);
 
     const handleSave = async () => {
         if (!formData.amount || !formData.customerId) return alert("Customer and Amount are required");
         try {
-            await axios.post(`${API_URL}/api/cash`, formData);
+            await apiClient.post(`/api/cash`, formData);
             alert('Cash Record Saved!');
-            setFormData({ date: '', townId: '', customerId: '', amount: '', note: '' });
-            fetchData(); // Refresh the list below
-        } catch (err) { alert('Error saving'); }
+            setFormData({date: '', townId: '', customerId: '', amount: '', note: ''});
+            fetchData().then(() => {
+            }); // Refresh the list below
+        } catch (err) {
+            alert('Error saving');
+        }
     };
 
     return (
@@ -44,24 +53,31 @@ export default function CashReceived() {
                 <div className="flex gap-4 items-end">
                     <div>
                         <label className="block text-sm font-semibold mb-1">Date</label>
-                        <input type="date" className="border p-2 rounded" value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} />
+                        <input type="date" className="border p-2 rounded" value={formData.date}
+                               onChange={e => setFormData({...formData, date: e.target.value})}/>
                     </div>
                     <div className="flex-1">
                         <label className="block text-sm font-semibold mb-1">Customer / Party</label>
-                        <select className="border p-2 rounded w-full" value={formData.customerId} onChange={e => setFormData({...formData, customerId: e.target.value})}>
+                        <select className="border p-2 rounded w-full" value={formData.customerId}
+                                onChange={e => setFormData({...formData, customerId: e.target.value})}>
                             <option value="">Select Customer</option>
                             {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
                     </div>
                     <div>
                         <label className="block text-sm font-semibold mb-1">Amount</label>
-                        <input type="number" placeholder="Rs." className="border p-2 rounded w-32" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} />
+                        <input type="number" placeholder="Rs." className="border p-2 rounded w-32"
+                               value={formData.amount}
+                               onChange={e => setFormData({...formData, amount: e.target.value})}/>
                     </div>
                     <div className="flex-1">
                         <label className="block text-sm font-semibold mb-1">Note</label>
-                        <input type="text" placeholder="Optional details" className="border p-2 rounded w-full" value={formData.note} onChange={e => setFormData({...formData, note: e.target.value})} />
+                        <input type="text" placeholder="Optional details" className="border p-2 rounded w-full"
+                               value={formData.note} onChange={e => setFormData({...formData, note: e.target.value})}/>
                     </div>
-                    <button onClick={handleSave} className="bg-blue-600 text-white px-6 py-2 rounded font-bold">Save Cash</button>
+                    <button onClick={handleSave} className="bg-blue-600 text-white px-6 py-2 rounded font-bold">Save
+                        Cash
+                    </button>
                 </div>
             </div>
 
@@ -86,7 +102,9 @@ export default function CashReceived() {
                     </tr>
                 ))}
                 {records.length === 0 && (
-                    <tr><td colSpan="4" className="p-4 text-center text-gray-500">No cash records found.</td></tr>
+                    <tr>
+                        <td colSpan="4" className="p-4 text-center text-gray-500">No cash records found.</td>
+                    </tr>
                 )}
                 </tbody>
             </table>

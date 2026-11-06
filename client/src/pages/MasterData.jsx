@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
 
 export default function MasterData() {
     // Form states
@@ -20,8 +20,8 @@ export default function MasterData() {
     const fetchDropdownData = async () => {
         try {
             const [townRes, compRes] = await Promise.all([
-                axios.get(`${API_URL}/api/towns`),
-                axios.get(`${API_URL}/api/companies`)
+                apiClient.get(`/api/towns`),
+                apiClient.get(`/api/companies`)
             ]);
             setTowns(townRes.data);
             setCompanies(compRes.data);
@@ -31,19 +31,19 @@ export default function MasterData() {
     };
 
     useEffect(() => {
-        fetchDropdownData();
+        fetchDropdownData().then(r => {});
     }, []);
 
     // Generic handler to reduce code repetition
     const handleAdd = async (endpoint, data, setter, emptyState) => {
         try {
-            await axios.post(`${API_URL}/api/${endpoint}`, data);
+            await apiClient.post(`/api/${endpoint}`, data);
             alert('Added Successfully!');
             setter(emptyState);
 
             // If we added a Town or Company, we need to refresh the dropdowns
             if (endpoint === 'towns' || endpoint === 'companies') {
-                fetchDropdownData();
+                fetchDropdownData().then(r => {});
             }
         } catch (err) {
             alert('Error adding. Check console.');

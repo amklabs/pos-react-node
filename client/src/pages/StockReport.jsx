@@ -1,8 +1,7 @@
 // src/pages/StockReport.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
 
 export default function StockReport() {
     const [stockData, setStockData] = useState([]);
@@ -10,11 +9,11 @@ export default function StockReport() {
     useEffect(() => {
         const fetchStock = async () => {
             try {
-                const res = await axios.get(`${API_URL}/api/reports/stock`);
+                const res = await apiClient.get(`/api/reports/stock`);
                 setStockData(res.data);
             } catch (err) { console.error(err); }
         };
-        fetchStock();
+        fetchStock().then(()=>{});
     }, []);
 
     // Calculate Totals for the summary boxes

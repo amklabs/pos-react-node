@@ -1,8 +1,7 @@
 // src/pages/StockReturn.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
 
 export default function StockReturn() {
     const [invoice, setInvoice] = useState({ invoiceNo: '', date: '', townId: '', customerId: '' });
@@ -18,16 +17,16 @@ export default function StockReturn() {
         const fetchData = async () => {
             try {
                 const [townRes, custRes, prodRes] = await Promise.all([
-                    axios.get(`${API_URL}/api/towns`),
-                    axios.get(`${API_URL}/api/customers`),
-                    axios.get(`${API_URL}/api/products`)
+                    apiClient.get(`/api/towns`),
+                    apiClient.get(`/api/customers`),
+                    apiClient.get(`/api/products`)
                 ]);
                 setTowns(townRes.data);
                 setCustomers(custRes.data);
                 setProducts(prodRes.data);
             } catch (err) { console.error(err); }
         };
-        fetchData();
+        fetchData().then(()=>{});
     }, []);
 
     const handleAddItem = () => {
@@ -42,7 +41,7 @@ export default function StockReturn() {
         }
 
         try {
-            await axios.post(`${API_URL}/api/returns`, {
+            await apiClient.post(`/api/returns`, {
                 ...invoice,
                 items: items
             });

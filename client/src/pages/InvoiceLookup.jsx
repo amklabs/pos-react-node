@@ -1,8 +1,8 @@
 // src/pages/InvoiceLookup.jsx
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import {Link} from 'react-router-dom';
+import apiClient from "../apiClient.js";
 
 export default function InvoiceLookup() {
     const [invoices, setInvoices] = useState([]);
@@ -11,11 +11,13 @@ export default function InvoiceLookup() {
     useEffect(() => {
         const fetchInvoices = async () => {
             try {
-                const res = await axios.get(`${API_URL}/api/invoices`);
+                const res = await apiClient.get(`/api/invoices`);
                 setInvoices(res.data);
-            } catch (err) { console.error(err); }
+            } catch (err) {
+                console.error(err);
+            }
         };
-        fetchInvoices();
+        fetchInvoices().then((response) => {});
     }, []);
 
     // Filter invoices based on search (Invoice No, Customer Name, or Town)
@@ -59,7 +61,8 @@ export default function InvoiceLookup() {
                         <td className="p-2 border">{new Date(inv.date).toLocaleDateString()}</td>
                         <td className="p-2 border font-semibold">{inv.invoiceNo}</td>
                         <td className="p-2 border">
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${inv.type === 'SALE' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+                            <span
+                                className={`px-2 py-1 rounded text-xs font-bold ${inv.type === 'SALE' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
                               {inv.type}
                             </span>
                         </td>
@@ -68,12 +71,15 @@ export default function InvoiceLookup() {
                         <td className="p-2 border">{inv.salesman?.name || '-'}</td>
                         <td className="p-2 border font-bold">Rs. {inv.totalAmount}</td>
                         <td className="p-2 border">
-                            <Link to={`/invoice/${inv.id}`} className="text-blue-600 hover:underline text-sm font-semibold">View / Print</Link>
+                            <Link to={`/invoice/${inv.id}`}
+                                  className="text-blue-600 hover:underline text-sm font-semibold">View / Print</Link>
                         </td>
                     </tr>
                 ))}
                 {filteredInvoices.length === 0 && (
-                    <tr><td colSpan="8" className="p-4 text-center text-gray-500">No invoices found.</td></tr>
+                    <tr>
+                        <td colSpan="8" className="p-4 text-center text-gray-500">No invoices found.</td>
+                    </tr>
                 )}
                 </tbody>
             </table>
