@@ -11,7 +11,9 @@ import {
     Receipt,
     RotateCcw,
     Store,
-    ChevronRight, BookOpen
+    ChevronRight,
+    BookOpen,
+    LogOut
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -146,11 +148,13 @@ export default function Sidebar() {
                     </div>
 
                     <div className="ml-auto">
-                        <span className="w-2 h-2 rounded-full bg-green-500 block"></span>
+                        <form id="logoutForm" action="/api/logout" method="POST"></form>
+                        <button className="hover:cursor-pointer hover:text-gray-500" onClick="">
+                            <LogOut size={18}/>
+                        </button>
                     </div>
                 </div>
             </div>
-
         </aside>
     );
 }

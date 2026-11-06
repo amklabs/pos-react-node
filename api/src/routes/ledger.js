@@ -6,7 +6,7 @@ const router = express.Router();
 router.use(authenticateToken); // everything below is protected
 
 // --- CUSTOMER LEDGER ---
-router.get('/api/customers/:id/ledger', async (req, res) => {
+router.get('/customers/:id/ledger', async (req, res) => {
     const customerId = parseInt(req.params.id);
 
     try {
