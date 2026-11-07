@@ -1,4 +1,4 @@
-import {NavLink} from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 import {
     LayoutDashboard,
     ShoppingCart,
@@ -17,8 +17,8 @@ import {
 } from 'lucide-react';
 
 export default function Sidebar() {
-
-    const navLinkClass = ({ isActive }) =>
+    const navigate = useNavigate();
+    const navLinkClass = ({isActive}) =>
         `group flex w-full items-center justify-start text-left gap-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
             isActive
                 ? 'bg-blue-600 text-white shadow-md shadow-blue-950/30'
@@ -65,6 +65,12 @@ export default function Sidebar() {
         }
     ];
 
+    const handleLogout = () => {
+        console.log('Logout');
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        navigate('/login');
+    }
     return (
         <aside className="w-64 min-w-64 bg-slate-950 text-white flex flex-col h-full shadow-xl print:hidden">
 
@@ -78,7 +84,7 @@ export default function Sidebar() {
 
                     <div>
                         <span className="text-xl font-extrabold tracking-wide text-white mb-0">
-                            AMK
+                            AMK Labs
                         </span>
                         <p className="text-[10px] font-semibold tracking-[2px] text-blue-400 uppercase">
                             Point of Sale
@@ -140,7 +146,7 @@ export default function Sidebar() {
 
                     <div>
                         <p className="text-xs font-semibold text-slate-200">
-                            AMK POS
+                            AMK LABS POS
                         </p>
                         <p className="text-[10px] text-slate-500">
                             Management System
@@ -148,8 +154,8 @@ export default function Sidebar() {
                     </div>
 
                     <div className="ml-auto">
-                        <form id="logoutForm" action="/api/logout" method="POST"></form>
-                        <button className="hover:cursor-pointer hover:text-gray-500" onClick="">
+                        <button className="hover:cursor-pointer hover:text-gray-500"
+                                onClick={handleLogout}>
                             <LogOut size={18}/>
                         </button>
                     </div>

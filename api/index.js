@@ -29,6 +29,7 @@ app.use('/api', require('./src/routes/cash'));       // protected
 app.use('/api', require('./src/routes/reports'));    // protected
 app.use('/api', require('./src/routes/ledger'));     // protected
 app.use('/api', require('./src/routes/returns'));   // protected
+app.use('/api', require('./src/routes/user'));      // protected
 
 if (require.main === module) {
     app.listen(PORT, () => console.log(`API listening on ${PORT}`));

@@ -13,11 +13,11 @@ export default function CashReceived() {
     const fetchData = async () => {
         try {
             const [custRes, cashRes] = await Promise.all([
-                apiClient().get(`/api/customers`),
+                apiClient.get(`/api/customers`),
                 apiClient.get(`/api/cash`)
             ]);
-            console.log(custRes.data);
-            console.log(cashRes.data);
+            // console.log(custRes.data);
+            // console.log(cashRes.data);
             setCustomers(custRes.data);
             setRecords(cashRes.data);
         } catch (err) {

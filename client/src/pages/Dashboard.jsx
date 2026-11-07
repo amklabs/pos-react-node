@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import apiClient from '../apiClient.js';
+import Spinner from "../components/Spinner.jsx";
 
 export default function Dashboard() {
     const [stats, setStats] = useState({
@@ -30,11 +31,7 @@ export default function Dashboard() {
     }, []);
 
     if (loading) {
-        return <div className="flex items-center justify-center min-h-[90vh] p-5">
-            <div className="font-semibold text-gray-500 flex items-center justify-center gap-3">
-                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>Loading Dashboard...
-            </div>
-        </div>;
+        return <Spinner />;
     }
 
     return (

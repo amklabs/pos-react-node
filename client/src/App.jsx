@@ -1,7 +1,4 @@
-// src/App.jsx
-
-// src/App.jsx
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -19,6 +16,9 @@ import InvoiceView from './pages/InvoiceView';
 import CustomerLedger from './pages/CustomerLedger';
 import Login from "./pages/Login.jsx";
 
+import { AuthProvider, useAuthContext } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
 function AppLayout() {
     return (
         <div className="flex h-screen bg-gray-100">
@@ -30,14 +30,30 @@ function AppLayout() {
     );
 }
 
-function App() {
-    return (
-        <Router>
-            <Routes>
-                {/* Login has no layout */}
-                <Route path="/login" element={<Login />} />
+// Redirect authenticated users away from /login
+function PublicOnlyRoute() {
+    const { user, loading } = useAuthContext();
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+    return user ? <Navigate to="/" replace /> : <Outlet />;
+}
 
-                {/* Everything else uses the sidebar layout */}
+
+function AppRoutes() {
+    return (
+        <Routes>
+            {/* Public: only accessible when NOT logged in */}
+            <Route element={<PublicOnlyRoute />}>
+                <Route path="/login" element={<Login />} />
+            </Route>
+
+            {/* Protected: requires auth, then renders inside sidebar layout */}
+            <Route element={<ProtectedRoute />}>
                 <Route element={<AppLayout />}>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/sale" element={<NewSale />} />
@@ -53,7 +69,17 @@ function App() {
                     <Route path="/invoice/:id" element={<InvoiceView />} />
                     <Route path="/ledger" element={<CustomerLedger />} />
                 </Route>
-            </Routes>
+            </Route>
+        </Routes>
+    );
+}
+
+function App() {
+    return (
+        <Router>
+            <AuthProvider>
+                <AppRoutes />
+            </AuthProvider>
         </Router>
     );
 }
