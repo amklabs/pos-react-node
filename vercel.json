@@ -18,6 +18,9 @@
       }
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "source": "/(.*)",
       "destination": {
         "service": "client",
