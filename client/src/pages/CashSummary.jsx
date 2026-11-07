@@ -2,9 +2,11 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 
 export default function CashSummary() {
+    usePageTitle('Cash Summary');
     const [data, setData] = useState({records: [], totalCash: 0});
 
     const fetchSummary = async () => {

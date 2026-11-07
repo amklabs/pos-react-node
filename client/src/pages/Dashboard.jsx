@@ -4,8 +4,10 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import apiClient from '../apiClient.js';
 import Spinner from "../components/Spinner.jsx";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function Dashboard() {
+    usePageTitle('Dashboard');
     const [stats, setStats] = useState({
         todaySales: 0,
         totalCash: 0,

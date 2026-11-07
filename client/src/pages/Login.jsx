@@ -3,8 +3,10 @@ import {useState} from 'react';
 import {useNavigate, useLocation, Link} from 'react-router-dom';
 import apiClient from "../apiClient.js";
 import { useAuthContext } from '../context/AuthContext';
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function Login() {
+    usePageTitle('Login');
     const [loggingIn, setLoggingIn] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');

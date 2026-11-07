@@ -3,8 +3,10 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 
 import apiClient from '../apiClient.js';
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function CashReceived() {
+    usePageTitle('Cash Received');
     const [formData, setFormData] = useState({date: '', townId: '', customerId: '', amount: '', note: ''});
     const [customers, setCustomers] = useState([]);
     const [records, setRecords] = useState([]);

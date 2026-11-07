@@ -2,8 +2,10 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function NewPurchase() {
+    usePageTitle('New Purchase');
     const [invoice, setInvoice] = useState({invoiceNo: '', date: '', townId: '', companyId: ''});
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState({productId: '', qty: 1, rate: 0, discount: 0});

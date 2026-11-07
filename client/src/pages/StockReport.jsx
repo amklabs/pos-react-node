@@ -2,8 +2,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function StockReport() {
+    usePageTitle('Stock Report');
     const [stockData, setStockData] = useState([]);
 
     useEffect(() => {

@@ -3,8 +3,10 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function InvoiceLookup() {
+    usePageTitle('Invoice Lookup');
     const [invoices, setInvoices] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 

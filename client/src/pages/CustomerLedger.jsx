@@ -2,8 +2,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function CustomerLedger() {
+    usePageTitle('Customer Ledger');
+
     const [customers, setCustomers] = useState([]);
     const [selectedCustomer, setSelectedCustomer] = useState('');
     const [data, setData] = useState(null);

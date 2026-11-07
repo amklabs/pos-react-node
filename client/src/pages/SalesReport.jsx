@@ -1,8 +1,10 @@
 // src/pages/SalesReport.jsx
 import { useState } from 'react';
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function SalesReport() {
+    usePageTitle('Sales Report');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [reportData, setReportData] = useState([]);

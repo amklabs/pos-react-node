@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function MasterData() {
-    // Form states
+    usePageTitle('Setup Data');
     const [townName, setTownName] = useState('');
     const [customer, setCustomer] = useState({ name: '', phone: '', townId: '' });
     const [salesman, setSalesman] = useState({ name: '', phone: '' });

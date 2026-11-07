@@ -1,8 +1,11 @@
 // src/pages/NewSale.jsx
 import {useState, useEffect} from 'react';
 import apiClient from "../apiClient.js";
+import usePageTitle from '../hooks/usePageTitle';
 
 export default function NewSale() {
+    usePageTitle('New Sale');
+
     const [invoice, setInvoice] = useState({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState({productId: '', qty: 1, rate: 0, discount: 0});
@@ -105,7 +108,7 @@ export default function NewSale() {
             </div>
 
             {/* Item Entry Area */}
-            <div className="flex gap-2 mb-4 items-end bg-gray-50 p-4 rounded-lg border border-gray-300">
+            <div className="flex gap-2 mb-4 items-end bg-gray-50 p-4 rounded-lg border ">
                 <div className="flex-1">
                     <label className="block text-sm font-semibold mb-1">Product</label>
                     <select className="border p-2 rounded w-full" value={currentItem.productId}
@@ -130,43 +133,44 @@ export default function NewSale() {
                            onChange={e => setCurrentItem({...currentItem, discount: parseFloat(e.target.value)})}/>
                 </div>
                 <button onClick={handleAddItem}
-                        className="bg-blue-600 text-white px-6 py-2 rounded h-10 hover:bg-blue-700">Add Item
+                        className="btn btn-primary">Add Item
                 </button>
             </div>
 
             {/* Items Table */}
-            <table className="w-full mb-6  border border-gray-300 border-collapse text-left">
-                <thead className="rounded-lg">
-                <tr className="bg-gray-200 rounded-lg">
-                    <th className="p-2">Product</th>
-                    <th className="p-2">Qty</th>
-                    <th className="p-2">Rate</th>
-                    <th className="p-2">Discount</th>
-                    <th className="p-2">Total</th>
-                </tr>
-                </thead>
-                <tbody>
-                {items.map((item, idx) => {
-                    // Find the product name to display in the table instead of just the ID
-                    const productName = products.find(p => p.id === parseInt(item.productId))?.name || item.productId;
-                    return (
-                        <tr key={idx} className="border-b hover:bg-gray-50">
-                            <td className="p-2 border">{productName}</td>
-                            <td className="p-2 border">{item.qty}</td>
-                            <td className="p-2 border">{item.rate}</td>
-                            <td className="p-2 border">{item.discount}</td>
-                            <td className="p-2 border font-bold">{(item.qty * item.rate) - item.discount}</td>
-                        </tr>
-                    )
-                })}
-                {items.length === 0 && (
-                    <tr>
-                        <td colSpan="5" className="p-4 text-center text-gray-500">No items added yet.</td>
+            <div className="overflow-hidden rounded-lg border border-gray-300 bg-white  mb-6">
+                <table className="w-full border-collapse text-left">
+                    <thead>
+                    <tr className="bg-gray-50 border-b rounded-lg font-semibold">
+                        <th className="p-2 font-medium text-gray-700">Product</th>
+                        <th className="p-2 font-medium text-gray-700">Qty</th>
+                        <th className="p-2 font-medium text-gray-700">Rate</th>
+                        <th className="p-2 font-medium text-gray-700">Discount</th>
+                        <th className="p-2 font-medium text-gray-700">Total</th>
                     </tr>
-                )}
-                </tbody>
-            </table>
-
+                    </thead>
+                    <tbody>
+                    {items.map((item, idx) => {
+                        // Find the product name to display in the table instead of just the ID
+                        const productName = products.find(p => p.id === parseInt(item.productId))?.name || item.productId;
+                        return (
+                            <tr key={idx} className="hover:bg-gray-50">
+                                <td className="p-2">{productName}</td>
+                                <td className="p-2">{item.qty}</td>
+                                <td className="p-2">{item.rate}</td>
+                                <td className="p-2">{item.discount}</td>
+                                <td className="p-2 font-bold">{(item.qty * item.rate) - item.discount}</td>
+                            </tr>
+                        )
+                    })}
+                    {items.length === 0 && (
+                        <tr>
+                            <td colSpan="5" className="p-4 text-center text-gray-500">No items added yet.</td>
+                        </tr>
+                    )}
+                    </tbody>
+                </table>
+            </div>
             {/* Action Buttons */}
             <div className="flex gap-4 border-t border-gray-300 pt-4">
                 <button onClick={handleSave} className="btn btn-primary">Save Invoice</button>

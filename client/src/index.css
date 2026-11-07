@@ -151,6 +151,13 @@
     margin: 0;
   }
   input[type="number"] { -moz-appearance: textfield; }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-300, currentColor);
+  }
 }
 
 /* ============================================================
@@ -167,7 +174,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     padding: 0.5rem 1rem;
     font-size: var(--text-sm);
     font-weight: 500;

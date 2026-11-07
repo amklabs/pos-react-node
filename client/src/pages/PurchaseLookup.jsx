@@ -4,8 +4,10 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function PurchaseLookup() {
+    usePageTitle('Purchase Lookup');
     const [purchases, setPurchases] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 

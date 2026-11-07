@@ -18,6 +18,7 @@ import Login from "./pages/Login.jsx";
 
 import { AuthProvider, useAuthContext } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import usePageTitle from "./hooks/usePageTitle.js";
 
 function AppLayout() {
     return (
@@ -75,6 +76,8 @@ function AppRoutes() {
 }
 
 function App() {
+    usePageTitle();
+
     return (
         <Router>
             <AuthProvider>
