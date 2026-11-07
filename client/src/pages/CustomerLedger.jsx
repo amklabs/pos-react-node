@@ -1,22 +1,24 @@
 // src/pages/CustomerLedger.jsx
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function CustomerLedger() {
+    usePageTitle('Customer Ledger');
+
     const [customers, setCustomers] = useState([]);
     const [selectedCustomer, setSelectedCustomer] = useState('');
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        axios.get(`${API_URL}/api/customers`).then(res => setCustomers(res.data));
+        apiClient.get(`/api/customers`).then(res => setCustomers(res.data));
     }, []);
 
     const handleFetchLedger = async () => {
         if (!selectedCustomer) return;
         try {
-            const res = await axios.get(`${API_URL}/api/customers/${selectedCustomer}/ledger`);
+            const res = await apiClient.get(`/api/customers/${selectedCustomer}/ledger`);
             setData(res.data);
         } catch (err) { alert("Error fetching ledger"); }
     };

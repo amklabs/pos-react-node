@@ -1,17 +1,17 @@
 // src/pages/SalesReport.jsx
 import { useState } from 'react';
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function SalesReport() {
+    usePageTitle('Sales Report');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [reportData, setReportData] = useState([]);
 
     const fetchReport = async () => {
         try {
-            const res = await axios.get(`${API_URL}/api/reports/sales?from=${fromDate}&to=${toDate}`);
+            const res = await apiClient.get(`/api/reports/sales?from=${fromDate}&to=${toDate}`);
             setReportData(res.data);
         } catch (err) { alert('Error fetching report'); }
     };

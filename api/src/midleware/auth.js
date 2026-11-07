@@ -4,7 +4,7 @@ const { JWT_SECRET } = require('../config');
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Access denied. Please log in.' });
+    if (!token) return res.status(401).json({ error: 'Un-authenticated access. Please log in to proceed.' });
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) return res.status(403).json({ error: 'Invalid or expired token' });

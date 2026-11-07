@@ -1,22 +1,26 @@
 // src/pages/CashSummary.jsx
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function CashSummary() {
+    usePageTitle('Cash Summary');
     const [data, setData] = useState({records: [], totalCash: 0});
 
+    const fetchSummary = async () => {
+        try {
+            const res = await apiClient.get(`/api/reports/cash-summary`);
+            setData(res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
-        const fetchSummary = async () => {
-            try {
-                const res = await axios.get(`${API_URL}/api/reports/cash-summary`);
-                setData(res.data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        fetchSummary();
+        fetchSummary().then(res => {
+        });
     }, []);
 
     return (

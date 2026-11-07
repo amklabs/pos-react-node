@@ -3,22 +3,24 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+import apiClient from "../apiClient.js";
+import usePageTitle from "../hooks/usePageTitle.js";
 
 export default function PurchaseLookup() {
+    usePageTitle('Purchase Lookup');
     const [purchases, setPurchases] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchPurchases = async () => {
             try {
-                const res = await axios.get(`${API_URL}/api/invoices?type=PURCHASE`);
+                const res = await apiClient.get(`/api/invoices?type=PURCHASE`);
                 // Filter to only show PURCHASES
                 const purchaseInvoices = res.data.filter(inv => inv.type === 'PURCHASE');
                 setPurchases(res.data);
             } catch (err) { console.error(err); }
         };
-        fetchPurchases();
+        fetchPurchases().then(r => {});
     }, []);
 
     // Filter based on search term
