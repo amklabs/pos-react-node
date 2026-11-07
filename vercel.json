@@ -20,7 +20,8 @@
     {
       "source": "/(.*)",
       "destination": {
-        "service": "client"
+        "service": "client",
+        "path": "index.html"
       }
     }
   ]
