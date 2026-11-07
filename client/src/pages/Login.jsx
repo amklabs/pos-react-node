@@ -63,7 +63,7 @@ export default function Login() {
                         />
                     </div>
                     <button type="submit"
-                            className="bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 mt-2 cursor-pointer">
+                            className="btn btn-primary">
                         ()Log In
                     </button>
                 </form>
