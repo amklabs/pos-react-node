@@ -1,4 +1,5 @@
 import {NavLink, useNavigate} from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
 import {
     LayoutDashboard,
     ShoppingCart,
@@ -11,12 +12,14 @@ import {
     Receipt,
     RotateCcw,
     Store,
+    CircleUserRound,
     ChevronRight,
     BookOpen,
     LogOut
 } from 'lucide-react';
 
 export default function Sidebar() {
+    const { user, logout } = useAuthContext();
     const navigate = useNavigate();
     const navLinkClass = ({isActive}) =>
         `group flex w-full items-center justify-start text-left gap-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -141,15 +144,15 @@ export default function Sidebar() {
             <div className="p-4 border-t border-slate-800">
                 <div className="flex items-center gap-3 px-2">
                     <div className="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center">
-                        <Store size={17} className="text-blue-400"/>
+                        <CircleUserRound size={17} className="text-blue-400"/>
                     </div>
 
                     <div>
                         <p className="text-xs font-semibold text-slate-200">
-                            AMK LABS POS
+                            {user?.firstname} {user?.lastname}
                         </p>
                         <p className="text-[10px] text-slate-500">
-                            Management System
+                            {user?.role?.name}
                         </p>
                     </div>
 
