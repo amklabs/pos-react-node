@@ -13,7 +13,7 @@
 // });
 const express = require('express');
 const cors = require('cors');
-const { PORT } = require('./src/config');
+const {PORT} = require('./src/config');
 
 const app = express();
 app.use(cors());
@@ -36,47 +36,5 @@ if (require.main === module) {
 }
 
 module.exports = app;
-
-
-// app.get('/api/seed-user', async (req, res) => {
-//     const hashedPassword = await bcrypt.hash('Ansar123', 10);
-//
-//     const admin = await prisma.user.upsert({
-//         where: {username: 'Ansar'},
-//         update: {},
-//         create: {
-//             username: 'Ansar',
-//             password: hashedPassword,
-//             createdAt: new Date().toISOString(),
-//         },
-//     });
-//
-//     console.log('Admin user created!');
-//     res.status(200).json({ message: 'Admin user created!' });
-// });
-
-// Export for Vercel
-// if (require.main === module) {
-//     const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-//     const startServer = requestedPort => {
-//         const server = app.listen(requestedPort);
-// server.once('listening', () => {
-//     console.log(`API server listening on port ${server.address().port}`);
-// });
-// server.once('error', error => {
-//     if (requestedPort !== 0 && ['EACCES', 'EADDRINUSE'].includes(error.code)) {
-//         console.warn(`Port ${requestedPort} is unavailable; using an available port.`);
-//         startServer(0);
-//         return;
-//     }
-//     console.error(`Failed to start API server: ${error.message}`);
-//     process.exitCode = 1;
-// });
-//     };
-//
-//     startServer(port);
-// }
-//
-// module.exports = app;
 
 

@@ -16,11 +16,6 @@ router.post('/towns', async (req, res) => {
     }
 });
 
-router.get('/towns', async (req, res) => {
-    const towns = await prisma.town.findMany();
-    res.json(towns);
-});
-
 // Add a Customer
 router.post('/customers', async (req, res) => {
     const {name, phone, townId} = req.body;
@@ -51,14 +46,17 @@ router.post('/products', async (req, res) => {
     res.json(product);
 });
 
-// Get All Companies / Vendors
-router.get('/companies', async (req, res) => { /* ... */
+// Add a New Company
+router.post('/companies', async (req, res) => {
+    const {name, phone} = req.body;
+    const company = await prisma.company.create({
+        data: {
+            name,
+            phone
+        }
+    });
+    res.json(company);
 });
-
-// router.get('/towns', async (req, res) => {
-//     const towns = await prisma.town.findMany();
-//     res.json(towns);
-// });
 
 
 //Dropdown Routes
@@ -80,6 +78,11 @@ router.get('/companies', async (req, res) => {
 router.get('/salesmen', async (req, res) => {
     const salesmen = await prisma.salesman.findMany();
     res.json(salesmen);
+});
+
+router.get('/towns', async (req, res) => {
+    const towns = await prisma.town.findMany();
+    res.json(towns);
 });
 
 module.exports = router;

@@ -158,7 +158,9 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   townId: 'townId',
   customerId: 'customerId',
   salesmanId: 'salesmanId',
-  totalAmount: 'totalAmount'
+  totalAmount: 'totalAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.InvoiceItemScalarFieldEnum = {
@@ -179,10 +181,18 @@ exports.Prisma.CashRecordScalarFieldEnum = {
   note: 'note'
 };
 
+exports.Prisma.RoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
   password: 'password',
+  firstname: 'firstname',
+  lastname: 'lastname',
+  roleId: 'roleId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -212,6 +222,7 @@ exports.Prisma.ModelName = {
   Invoice: 'Invoice',
   InvoiceItem: 'InvoiceItem',
   CashRecord: 'CashRecord',
+  Role: 'Role',
   User: 'User'
 };
 

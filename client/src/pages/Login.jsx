@@ -25,7 +25,7 @@ export default function Login() {
         try {
             const res = await apiClient.post(`/api/login`, {username, password});
 
-            login(res.data.token, {username: res.data.username});
+            login(res.data.token, res.data.user);
 
             navigate(from, {replace: true});
         } catch (err) {
@@ -39,7 +39,8 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-96">
                 <div className="flex flex-col items-center justify-center mb-4 border-b border-gray-200">
-                    <span className="text-[36px] font-bold mb-0 leading-10 text-center text-blue-800">POINT OF SALES</span>
+                    <span
+                        className="text-[36px] font-bold mb-0 leading-10 text-center text-blue-800">POINT OF SALES</span>
                     <span className="text-sm font-semibold text-gray-400 mb-2">Designed and Developed by AMK Labs</span>
                 </div>
                 {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">{error}</div>}

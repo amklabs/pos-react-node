@@ -2,18 +2,26 @@
 import { useState } from 'react';
 import apiClient from "../apiClient.js";
 import usePageTitle from "../hooks/usePageTitle.js";
+import Spinner from "../components/Spinner.jsx";
 
 export default function SalesReport() {
     usePageTitle('Sales Report');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [reportData, setReportData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const fetchReport = async () => {
         try {
+            setLoading(true);
+            setReportData([]);
             const res = await apiClient.get(`/api/reports/sales?from=${fromDate}&to=${toDate}`);
             setReportData(res.data);
+            console.log(res.data);
         } catch (err) { alert('Error fetching report'); }
+        finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -33,7 +41,7 @@ export default function SalesReport() {
                     <label className="block text-sm font-semibold mb-1">To Date</label>
                     <input type="date" className="border p-2 rounded" value={toDate} onChange={e => setToDate(e.target.value)} />
                 </div>
-                <button onClick={fetchReport} className="bg-blue-600 text-white px-6 py-2 rounded font-bold">Generate</button>
+                <button onClick={fetchReport} className="btn btn-primary">Generate</button>
             </div>
 
             {/* Report Table */}
@@ -44,15 +52,15 @@ export default function SalesReport() {
                     <th className="p-2 border">Invoice #</th>
                     <th className="p-2 border">Salesman</th>
                     <th className="p-2 border">Product</th>
-                    <th className="p-2 border">Qty</th>
-                    <th className="p-2 border">Rate</th>
-                    <th className="p-2 border">Total</th>
+                    <th className="p-2 border text-center">Qty</th>
+                    <th className="p-2 border text-center">Rate</th>
+                    <th className="p-2 border text-end">Total</th>
                 </tr>
                 </thead>
                 <tbody>
                 {reportData.map(invoice => (
                     invoice.items.map((item, idx) => (
-                        <tr key={`${invoice.id}-${item.id}`} className="border-b">
+                        <tr key={`${invoice.id}-${item.id}`} className="border-b odd:border-gray-200">
                             {idx === 0 && (
                                 <>
                                     <td className="p-2 border" rowSpan={invoice.items.length}>{new Date(invoice.date).toLocaleDateString()}</td>
@@ -60,15 +68,24 @@ export default function SalesReport() {
                                     <td className="p-2 border" rowSpan={invoice.items.length}>{invoice.salesman?.name || '-'}</td>
                                 </>
                             )}
-                            <td className="p-2 border">{item.product.name}</td>
-                            <td className="p-2 border">{item.qty}</td>
-                            <td className="p-2 border">{item.rate}</td>
-                            <td className="p-2 border">{(item.qty * item.rate) - item.discount}</td>
+                            <td className="p-2 border text-start">{item.product.name}</td>
+                            <td className="p-2 border text-center">{item.qty}</td>
+                            <td className="p-2 border text-end pe-6">{item.rate}</td>
+                            <td className="p-2 border text-end pe-6">{(item.qty * item.rate) - item.discount}</td>
                         </tr>
                     ))
                 ))}
-                {reportData.length === 0 && (
-                    <tr><td colSpan="7" className="p-4 text-center text-gray-500">No sales found for this period.</td></tr>
+                {loading && (
+                    <tr>
+                        <td colSpan="7" className="p-4 text-center text-gray-500">
+                            <Spinner size="4"  label="Loading Report data ..." />
+                        </td>
+                    </tr>
+                )}
+                {!loading && reportData.length === 0 && (
+                    <tr>
+                        <td colSpan="7" className="p-4 text-center text-gray-500">No sales found for this period.</td>
+                    </tr>
                 )}
                 </tbody>
             </table>

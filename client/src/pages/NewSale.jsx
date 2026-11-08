@@ -70,7 +70,7 @@ export default function NewSale() {
             <div className="grid grid-cols-5 gap-4 mb-6">
                 <div>
                     <label className="block text-sm font-semibold mb-1">Invoice No</label>
-                    <input type="text" className="border p-2 rounded w-full"
+                    <input type="text" className="border p-2 rounded w-full" placeholder="Enter Invoice No"
                            onChange={e => setInvoice({...invoice, invoiceNo: e.target.value})}
                            value={invoice.invoiceNo}/>
                 </div>
@@ -178,7 +178,7 @@ export default function NewSale() {
                 <button onClick={() => {
                     setItems([]);
                     setInvoice({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
-                }} className="btn btn-secondary">Cancel
+                }} className="btn bg-red-300">Cancel
                 </button>
             </div>
         </div>
