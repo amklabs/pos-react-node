@@ -87,10 +87,10 @@ export default function Sidebar() {
 
                     <div>
                         <span className="text-xl font-extrabold tracking-wide text-white mb-0">
-                            AMK Labs
+                            POINT OF SALE
                         </span>
                         <p className="text-[10px] font-semibold tracking-[2px] text-blue-400 uppercase">
-                            Point of Sale
+                            By AMK Labs
                         </p>
                     </div>
                 </div>

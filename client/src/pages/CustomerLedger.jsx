@@ -1,8 +1,9 @@
 // src/pages/CustomerLedger.jsx
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 import apiClient from "../apiClient.js";
 import usePageTitle from "../hooks/usePageTitle.js";
+import Spinner from "../components/Spinner.jsx";
 
 export default function CustomerLedger() {
     usePageTitle('Customer Ledger');
@@ -10,6 +11,7 @@ export default function CustomerLedger() {
     const [customers, setCustomers] = useState([]);
     const [selectedCustomer, setSelectedCustomer] = useState('');
     const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         apiClient.get(`/api/customers`).then(res => setCustomers(res.data));
@@ -18,27 +20,40 @@ export default function CustomerLedger() {
     const handleFetchLedger = async () => {
         if (!selectedCustomer) return;
         try {
+            setLoading(true);
             const res = await apiClient.get(`/api/customers/${selectedCustomer}/ledger`);
             setData(res.data);
-        } catch (err) { alert("Error fetching ledger"); }
+        } catch (err) {
+            alert("Error fetching ledger");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="max-w-5xl">
-            <h1 className="text-2xl font-bold mb-6">Customer Ledger</h1>
+            <h1 className="text-2xl font-bold mb-2">Customer Ledger</h1>
 
-            <div className="bg-white p-4 rounded shadow mb-6 flex gap-4 items-end print:hidden">
+            <div className="bg-white p-2 rounded shadow mb-6 flex gap-4 items-end print:hidden">
                 <div className="flex-1">
                     <label className="block text-sm font-semibold mb-1">Select Customer</label>
-                    <select className="border p-2 rounded w-full" value={selectedCustomer} onChange={e => setSelectedCustomer(e.target.value)}>
+                    <select className="form-select border p-2 rounded w-full" value={selectedCustomer}
+                            onChange={e => setSelectedCustomer(e.target.value)}>
                         <option value="">Choose a customer...</option>
                         {customers.map(c => <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>)}
                     </select>
                 </div>
-                <button onClick={handleFetchLedger} className="bg-blue-600 text-white px-6 py-2 rounded font-bold">View Ledger</button>
+                <button onClick={handleFetchLedger} className="btn btn-primary disabled:bg-blue-200" disabled={loading}>View
+                    Ledger
+                </button>
             </div>
 
-            {data && (
+            {loading && (
+                <div className="min-h-[50vh] flex justify-center items-center">
+                    <Spinner size="4" label="Loading data ..."/>
+                </div>
+            )}
+            {!loading && data && (
                 <div className="bg-white p-8 rounded shadow print:shadow-none print:p-0">
                     <div className="flex justify-between items-start mb-8 border-b pb-4">
                         <div>
@@ -46,7 +61,9 @@ export default function CustomerLedger() {
                             <p className="text-gray-600">{data.customer.phone}</p>
                             <p className="text-gray-600">Town: {data.customer.town?.name}</p>
                         </div>
-                        <button onClick={() => window.print()} className="bg-gray-800 text-white px-4 py-2 rounded print:hidden">Print Statement</button>
+                        <button onClick={() => window.print()}
+                                className="bg-gray-800 text-white px-4 py-2 rounded print:hidden">Print Statement
+                        </button>
                     </div>
 
                     <table className="w-full mb-8 border-collapse text-left text-sm">
@@ -74,7 +91,9 @@ export default function CustomerLedger() {
                             </tr>
                         ))}
                         {data.ledger.length === 0 && (
-                            <tr><td colSpan="6" className="p-4 text-center text-gray-500">No transactions found.</td></tr>
+                            <tr>
+                                <td colSpan="6" className="p-4 text-center text-gray-500">No transactions found.</td>
+                            </tr>
                         )}
                         </tbody>
                     </table>

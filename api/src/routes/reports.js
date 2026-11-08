@@ -53,52 +53,131 @@ router.get('/reports/sales', async (req, res) => {
     }
 });
 
-// 2. Stock Report
+// 2. Stock Report with N+1 Query Problem
+// router.get('/reports/stock', async (req, res) => {
+//     try {
+//         // Get all products
+//         const products = await prisma.product.findMany();
+//
+//         // For each product, calculate purchased, sold, returned, and balance
+//         const stockData = await Promise.all(products.map(async (product) => {
+//             // Total Purchased
+//             const purchased = await prisma.invoiceItem.aggregate({
+//                 _sum: {qty: true},
+//                 where: {productId: product.id, invoice: {type: 'PURCHASE'}}
+//             });
+//
+//             // Total Sold
+//             const sold = await prisma.invoiceItem.aggregate({
+//                 _sum: {qty: true},
+//                 where: {productId: product.id, invoice: {type: 'SALE'}}
+//             });
+//
+//             // Total Returned
+//             const returned = await prisma.invoiceItem.aggregate({
+//                 _sum: {qty: true},
+//                 where: {productId: product.id, invoice: {type: 'RETURN'}}
+//             });
+//
+//             const pQty = purchased._sum.qty || 0;
+//             const sQty = sold._sum.qty || 0;
+//             const rQty = returned._sum.qty || 0;
+//             const balance = pQty - sQty + rQty;
+//
+//             return {
+//                 id: product.id,
+//                 name: product.name,
+//                 purchasedQty: pQty,
+//                 soldQty: sQty,
+//                 returnQty: rQty,
+//                 balanceQty: balance
+//             };
+//         }));
+//
+//         res.json(stockData);
+//     } catch (error) {
+//         res.status(500).json({error: error.message});
+//     }
+// });
 router.get('/reports/stock', async (req, res) => {
     try {
-        // Get all products
-        const products = await prisma.product.findMany();
+        const products = await prisma.product.findMany({
+            select: { id: true, name: true },
+        });
 
-        // For each product, calculate purchased, sold, returned, and balance
-        const stockData = await Promise.all(products.map(async (product) => {
-            // Total Purchased
-            const purchased = await prisma.invoiceItem.aggregate({
-                _sum: {qty: true},
-                where: {productId: product.id, invoice: {type: 'PURCHASE'}}
-            });
+        // One query each for PURCHASE, SALE, RETURN
+        const [purchased, sold, returned] = await Promise.all([
+            prisma.invoiceItem.groupBy({
+                by: ['productId'],
+                _sum: { qty: true },
+                where: { invoice: { type: 'PURCHASE' } },
+            }),
+            prisma.invoiceItem.groupBy({
+                by: ['productId'],
+                _sum: { qty: true },
+                where: { invoice: { type: 'SALE' } },
+            }),
+            prisma.invoiceItem.groupBy({
+                by: ['productId'],
+                _sum: { qty: true },
+                where: { invoice: { type: 'RETURN' } },
+            }),
+        ]);
 
-            // Total Sold
-            const sold = await prisma.invoiceItem.aggregate({
-                _sum: {qty: true},
-                where: {productId: product.id, invoice: {type: 'SALE'}}
-            });
+        // Build lookup maps
+        const toMap = (rows) =>
+            new Map(rows.map((r) => [r.productId, r._sum.qty || 0]));
 
-            // Total Returned
-            const returned = await prisma.invoiceItem.aggregate({
-                _sum: {qty: true},
-                where: {productId: product.id, invoice: {type: 'RETURN'}}
-            });
+        const purchasedMap = toMap(purchased);
+        const soldMap = toMap(sold);
+        const returnedMap = toMap(returned);
 
-            const pQty = purchased._sum.qty || 0;
-            const sQty = sold._sum.qty || 0;
-            const rQty = returned._sum.qty || 0;
-            const balance = pQty - sQty + rQty;
-
+        const stockData = products.map((p) => {
+            const pQty = purchasedMap.get(p.id) || 0;
+            const sQty = soldMap.get(p.id) || 0;
+            const rQty = returnedMap.get(p.id) || 0;
             return {
-                id: product.id,
-                name: product.name,
+                id: p.id,
+                name: p.name,
                 purchasedQty: pQty,
                 soldQty: sQty,
                 returnQty: rQty,
-                balanceQty: balance
+                balanceQty: pQty - sQty + rQty,
             };
-        }));
+        });
 
         res.json(stockData);
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: error.message });
     }
 });
+
+// Same Stock Report with 1 Raw Query
+// router.get('/reports/stock', async (req, res) => {
+//     try {
+//         const rows = await prisma.$queryRaw`
+//       SELECT
+//         p.id,
+//         p.name,
+//         COALESCE(SUM(CASE WHEN i.type = 'PURCHASE' THEN ii.qty END), 0)::int AS "purchasedQty",
+//         COALESCE(SUM(CASE WHEN i.type = 'SALE'     THEN ii.qty END), 0)::int AS "soldQty",
+//         COALESCE(SUM(CASE WHEN i.type = 'RETURN'   THEN ii.qty END), 0)::int AS "returnQty",
+//         (
+//           COALESCE(SUM(CASE WHEN i.type = 'PURCHASE' THEN ii.qty END), 0)
+//           - COALESCE(SUM(CASE WHEN i.type = 'SALE'   THEN ii.qty END), 0)
+//           + COALESCE(SUM(CASE WHEN i.type = 'RETURN' THEN ii.qty END), 0)
+//         )::int AS "balanceQty"
+//       FROM "Product" p
+//       LEFT JOIN "InvoiceItem" ii ON ii."productId" = p.id
+//       LEFT JOIN "Invoice"     i  ON i.id = ii."invoiceId"
+//       GROUP BY p.id, p.name
+//       ORDER BY p.name;
+//     `;
+//         res.json(rows);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
 
 // 3. All Cash Record (Overall Summary)
 router.get('/reports/cash-summary', async (req, res) => {
@@ -117,50 +196,5 @@ router.get('/reports/cash-summary', async (req, res) => {
         res.status(500).json({error: error.message});
     }
 });
-
-// router.get('/reports/stock', async (req, res) => {
-//     try {
-//         const products = await prisma.product.findMany();
-//
-//         const stockData = await Promise.all(products.map(async (product) => {
-//             // Get all purchase items to calculate Average Cost
-//             const purchaseItems = await prisma.invoiceItem.findMany({
-//                 where: {productId: product.id, invoice: {type: 'PURCHASE'}}
-//             });
-//
-//             const totalPurchaseQty = purchaseItems.reduce((sum, item) => sum + item.qty, 0);
-//             const totalPurchaseAmount = purchaseItems.reduce((sum, item) => sum + (item.qty * item.rate), 0);
-//             const avgPurchaseRate = totalPurchaseQty > 0 ? (totalPurchaseAmount / totalPurchaseQty) : 0;
-//
-//             // Calculate current balances
-//             const sold = await prisma.invoiceItem.aggregate({
-//                 _sum: {qty: true},
-//                 where: {productId: product.id, invoice: {type: 'SALE'}}
-//             });
-//             const returned = await prisma.invoiceItem.aggregate({
-//                 _sum: {qty: true},
-//                 where: {productId: product.id, invoice: {type: 'RETURN'}}
-//             });
-//
-//             const balanceQty = totalPurchaseQty - (sold._sum.qty || 0) + (returned._sum.qty || 0);
-//             const stockValue = balanceQty * avgPurchaseRate;
-//
-//             return {
-//                 id: product.id,
-//                 name: product.name,
-//                 purchasedQty: totalPurchaseQty,
-//                 soldQty: sold._sum.qty || 0,
-//                 returnQty: returned._sum.qty || 0,
-//                 balanceQty,
-//                 avgRate: avgPurchaseRate.toFixed(2),
-//                 stockValue: stockValue
-//             };
-//         }));
-//
-//         res.json(stockData);
-//     } catch (error) {
-//         res.status(500).json({error: error.message});
-//     }
-// });
 
 module.exports = router;

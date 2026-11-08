@@ -14,7 +14,7 @@ export function AuthProvider({children}) {
         try {
             const res = await apiClient('/api/user');
             if (res.status === 200) {
-                setUser(res.data);
+                setUser(res.data.user);
             }
         } catch {
             localStorage.removeItem('token');
