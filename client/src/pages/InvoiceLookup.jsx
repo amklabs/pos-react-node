@@ -4,11 +4,13 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 import apiClient from "../apiClient.js";
 import usePageTitle from "../hooks/usePageTitle.js";
+import Spinner from "../components/Spinner.jsx";
 
 export default function InvoiceLookup() {
     usePageTitle('Invoice Lookup');
     const [invoices, setInvoices] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchInvoices = async () => {
@@ -19,7 +21,9 @@ export default function InvoiceLookup() {
                 console.error(err);
             }
         };
-        fetchInvoices().then((response) => {});
+        fetchInvoices().then((response) => {
+            setLoading(false);
+        });
     }, []);
 
     // Filter invoices based on search (Invoice No, Customer Name, or Town)
@@ -43,48 +47,58 @@ export default function InvoiceLookup() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-
-            <table className="w-full bg-white shadow rounded border-collapse text-left">
-                <thead className="bg-gray-200">
-                <tr>
-                    <th className="p-2 border">Date</th>
-                    <th className="p-2 border">Inv #</th>
-                    <th className="p-2 border">Type</th>
-                    <th className="p-2 border">Customer / Company</th>
-                    <th className="p-2 border">Town</th>
-                    <th className="p-2 border">Salesman</th>
-                    <th className="p-2 border">Total Amount</th>
-                    <th className="p-2 border">Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                {filteredInvoices.map((inv) => (
-                    <tr key={inv.id} className="border-b hover:bg-gray-50">
-                        <td className="p-2 border">{new Date(inv.date).toLocaleDateString()}</td>
-                        <td className="p-2 border font-semibold">{inv.invoiceNo}</td>
-                        <td className="p-2 border">
+            <div className="overflow-hidden rounded-lg border border-gray-300 bg-white  mb-6">
+                <table className="w-full bg-white shadow rounded border-collapse text-left">
+                    <thead className="bg-gray-200">
+                    <tr>
+                        <th className="p-2 border">Date</th>
+                        <th className="p-2 border">Inv #</th>
+                        <th className="p-2 border">Type</th>
+                        <th className="p-2 border">Customer / Company</th>
+                        <th className="p-2 border">Town</th>
+                        <th className="p-2 border">Salesman</th>
+                        <th className="p-2 border">Total Amount</th>
+                        <th className="p-2 border">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {filteredInvoices.map((inv) => (
+                        <tr key={inv.id} className="border-b hover:bg-gray-50">
+                            <td className="p-2 border">{new Date(inv.date).toLocaleDateString()}</td>
+                            <td className="p-2 border font-semibold">{inv.invoiceNo}</td>
+                            <td className="p-2 border">
                             <span
                                 className={`px-2 py-1 rounded text-xs font-bold ${inv.type === 'SALE' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
                               {inv.type}
                             </span>
-                        </td>
-                        <td className="p-2 border">{inv.customer?.name || 'N/A (Purchase)'}</td>
-                        <td className="p-2 border">{inv.town?.name}</td>
-                        <td className="p-2 border">{inv.salesman?.name || '-'}</td>
-                        <td className="p-2 border font-bold">Rs. {inv.totalAmount}</td>
-                        <td className="p-2 border">
-                            <Link to={`/invoice/${inv.id}`}
-                                  className="text-blue-600 hover:underline text-sm font-semibold">View / Print</Link>
-                        </td>
-                    </tr>
-                ))}
-                {filteredInvoices.length === 0 && (
-                    <tr>
-                        <td colSpan="8" className="p-4 text-center text-gray-500">No invoices found.</td>
-                    </tr>
-                )}
-                </tbody>
-            </table>
+                            </td>
+                            <td className="p-2 border">{inv.customer?.name || 'N/A (Purchase)'}</td>
+                            <td className="p-2 border">{inv.town?.name}</td>
+                            <td className="p-2 border">{inv.salesman?.name || '-'}</td>
+                            <td className="p-2 border font-bold">Rs. {inv.totalAmount}</td>
+                            <td className="p-2 border">
+                                <Link to={`/invoice/${inv.id}`}
+                                      className="text-blue-600 hover:underline text-sm font-semibold">View /
+                                    Print</Link>
+                            </td>
+                        </tr>
+                    ))}
+                    {loading && (
+                        <tr>
+                            <td colSpan="8" className="p-4 text-center text-gray-500">
+                                <Spinner size="4" label="Loading invoices..." />
+                            </td>
+                        </tr>
+                    )}
+                    {!loading && filteredInvoices.length === 0 && (
+                        <tr>
+                            <td colSpan="8" className="p-4 text-center text-gray-500">No invoices found.</td>
+                        </tr>
+                    )}
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
