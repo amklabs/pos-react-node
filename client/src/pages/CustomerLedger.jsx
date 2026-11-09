@@ -4,6 +4,7 @@ import axios from 'axios';
 import apiClient from "../apiClient.js";
 import usePageTitle from "../hooks/usePageTitle.js";
 import Spinner from "../components/Spinner.jsx";
+import {formatNumber} from "../utils/formaters.js";
 
 export default function CustomerLedger() {
     usePageTitle('Customer Ledger');
@@ -29,6 +30,7 @@ export default function CustomerLedger() {
             setLoading(false);
         }
     };
+    const isAllMode = selectedCustomer === 'all';
 
     return (
         <div className="max-w-5xl">
@@ -41,10 +43,13 @@ export default function CustomerLedger() {
                             onChange={e => setSelectedCustomer(e.target.value)}>
                         <option value="">Choose a customer...</option>
                         <option value="all">All Customers</option>
-                        {customers.map(c => <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>)}
+                        {customers.map(c => <option key={c.id} value={c.id}>{c.name} {c.phone && (
+                            <span className="text-sm text-gray-300">({c.phone})</span>
+                        )}</option>)}
                     </select>
                 </div>
-                <button onClick={handleFetchLedger} className="btn btn-primary disabled:bg-blue-200" disabled={loading}>View
+                <button onClick={handleFetchLedger} className="btn btn-primary disabled:bg-blue-200"
+                        disabled={loading}>View
                     Ledger
                 </button>
             </div>
@@ -56,14 +61,17 @@ export default function CustomerLedger() {
             )}
             {!loading && data && (
                 <div className="bg-white p-8 rounded shadow print:shadow-none print:p-0">
-                    <div className="flex justify-between items-start mb-8 border-b pb-4">
-                        <div>
-                            <h2 className="text-2xl font-bold">{data.customer.name}</h2>
-                            <p className="text-gray-600">{data.customer.phone}</p>
-                            <p className="text-gray-600">Town: {data.customer.town?.name}</p>
-                        </div>
+                    <div className="flex justify-between items-start mb-4">
+                        {!isAllMode && (
+                            <div className="border-b border-gray-200 pb-2 w-[50%]">
+                                <h2 className="text-xl font-semibold">Name: {data.customer?.name}</h2>
+                                <p className="text-gray-600">Phone : {data.customer?.phone}</p>
+                                <p className="text-gray-600">Town: {data.customer?.town?.name}</p>
+                            </div>
+                        )}
                         <button onClick={() => window.print()}
-                                className="bg-gray-800 text-white px-4 py-2 rounded print:hidden">Print Statement
+                                className="bg-gray-800 text-white px-4 py-2 rounded print:hidden ml-auto">Print
+                            Statement
                         </button>
                     </div>
 
@@ -71,6 +79,7 @@ export default function CustomerLedger() {
                         <thead className="bg-gray-100">
                         <tr>
                             <th className="p-2 border">Date</th>
+                            {isAllMode && <th className="p-2 font-medium text-gray-700">Customer</th>}
                             <th className="p-2 border">Reference / Note</th>
                             <th className="p-2 border">Type</th>
                             <th className="p-2 border text-right">Debit (Sale)</th>
@@ -82,12 +91,18 @@ export default function CustomerLedger() {
                         {data.ledger.map((row, idx) => (
                             <tr key={idx} className="border-b">
                                 <td className="p-2 border">{new Date(row.date).toLocaleDateString()}</td>
+                                {isAllMode && (
+                                    <td className="p-2">
+                                        {row.customerName}
+                                        {row.town && <span className="text-gray-500 text-xs"> ({row.town})</span>}
+                                    </td>
+                                )}
                                 <td className="p-2 border">{row.ref}</td>
                                 <td className="p-2 border">{row.type}</td>
-                                <td className="p-2 border text-right">{row.type.includes('SALE') ? `Rs. ${row.amount}` : '-'}</td>
-                                <td className="p-2 border text-right text-green-600">{row.type.includes('CASH') ? `Rs. ${row.amount}` : '-'}</td>
+                                <td className="p-2 border text-right">{row.type.includes('SALE') ? formatNumber(row.amount) : '-'}</td>
+                                <td className="p-2 border text-right text-green-600">{row.type.includes('CASH') ? formatNumber(row.amount) : '-'}</td>
                                 <td className={`p-2 border text-right font-bold ${row.runningBalance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                    Rs. {row.runningBalance}
+                                    {formatNumber(row.runningBalance)}
                                 </td>
                             </tr>
                         ))}
@@ -102,16 +117,16 @@ export default function CustomerLedger() {
                     <div className="flex justify-end gap-12 border-t-2 pt-4">
                         <div className="text-right">
                             <p className="text-gray-500 text-sm">Total Debit:</p>
-                            <p className="font-bold text-lg text-red-600">Rs. {data.totalDebit}</p>
+                            <p className="font-bold text-lg text-red-600">{formatNumber(data.totalDebit)}</p>
                         </div>
                         <div className="text-right">
                             <p className="text-gray-500 text-sm">Total Credit:</p>
-                            <p className="font-bold text-lg text-green-600">Rs. {data.totalCredit}</p>
+                            <p className="font-bold text-lg text-green-600">{formatNumber(data.totalCredit)}</p>
                         </div>
-                        <div className="text-right bg-gray-100 p-2 rounded">
+                        <div className="text-right ">
                             <p className="text-gray-800 text-sm font-bold">Outstanding Balance:</p>
                             <p className={`font-bold text-xl ${data.finalBalance > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                Rs. {data.finalBalance}
+                                {formatNumber(data.finalBalance)}
                             </p>
                         </div>
                     </div>
