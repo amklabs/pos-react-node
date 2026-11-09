@@ -2,6 +2,9 @@
 import {useState, useEffect} from 'react';
 import apiClient from "../apiClient.js";
 import usePageTitle from '../hooks/usePageTitle';
+import MySwal from "../components/MySwal.jsx";
+import { toastSuccess, toastError } from '../utils/toast';
+
 
 export default function NewSale() {
     usePageTitle('New Sale');
@@ -9,7 +12,7 @@ export default function NewSale() {
     const [invoice, setInvoice] = useState({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState({productId: '', qty: 1, rate: 0, discount: 0});
-
+    const [processing, setProcessing] = useState(false);
     // State for our dropdown lists
     const [towns, setTowns] = useState([]);
     const [customers, setCustomers] = useState([]);
@@ -45,20 +48,27 @@ export default function NewSale() {
     };
 
     const handleSave = async () => {
-        if (!invoice.invoiceNo || !invoice.townId) return alert("Invoice No and Town are required");
+        if (!invoice.invoiceNo || !invoice.townId || items.length === 0) {
+            toastError("Invoice No, Town Name and at least one item is required.")
+            return ;
+        }
 
         try {
+            setProcessing(true);
             await apiClient.post(`/api/invoices`, {
                 ...invoice,
                 type: 'SALE',
                 items: items
             });
-            alert('Sale Saved Successfully!');
             setItems([]);
             setInvoice({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
+            toastSuccess('Sale Invoice saved successfully!');
         } catch (err) {
-            console.error(err);
-            alert('Error saving sale. Check console.');
+            const message =
+                err.response?.data?.message || err.message || 'Something went wrong';
+            toastError(message);
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -119,17 +129,17 @@ export default function NewSale() {
                 </div>
                 <div>
                     <label className="block text-sm font-semibold mb-1">Qty</label>
-                    <input type="number" className="border p-2 rounded w-24" value={currentItem.qty}
-                           onChange={e => setCurrentItem({...currentItem, qty: parseInt(e.target.value)})}/>
+                    <input type="number" className="border p-2 rounded w-24" value={currentItem.qty} step="0.0001"
+                           onChange={e => setCurrentItem({...currentItem, qty: parseFloat(e.target.value)})}/>
                 </div>
                 <div>
                     <label className="block text-sm font-semibold mb-1">Rate</label>
-                    <input type="number" className="border p-2 rounded w-32" value={currentItem.rate}
+                    <input type="number" className="border p-2 rounded w-32" value={currentItem.rate} step="0.01"
                            onChange={e => setCurrentItem({...currentItem, rate: parseFloat(e.target.value)})}/>
                 </div>
                 <div>
                     <label className="block text-sm font-semibold mb-1">Discount %</label>
-                    <input type="number" className="border p-2 rounded w-32" value={currentItem.discount}
+                    <input type="number" className="border p-2 rounded w-32" value={currentItem.discount} step="0.01"
                            onChange={e => setCurrentItem({...currentItem, discount: parseFloat(e.target.value)})}/>
                 </div>
                 <button onClick={handleAddItem}
@@ -159,7 +169,7 @@ export default function NewSale() {
                                 <td className="p-2">{item.qty}</td>
                                 <td className="p-2">{item.rate}</td>
                                 <td className="p-2">{item.discount}</td>
-                                <td className="p-2 font-bold">{(item.qty * item.rate) - item.discount}</td>
+                                <td className="p-2 font-bold">{((item.qty * item.rate) - item.discount).toFixed(2)}</td>
                             </tr>
                         )
                     })}
@@ -173,7 +183,9 @@ export default function NewSale() {
             </div>
             {/* Action Buttons */}
             <div className="flex gap-4 border-t border-gray-300 pt-4">
-                <button onClick={handleSave} className="btn btn-primary">Save Invoice</button>
+                <button onClick={handleSave} className="btn btn-primary disabled:bg-blue-300" disabled={processing}>Save
+                    Invoice
+                </button>
                 <button onClick={() => window.print()} className="btn bg-green-300">Print</button>
                 <button onClick={() => {
                     setItems([]);

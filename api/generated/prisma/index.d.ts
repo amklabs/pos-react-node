@@ -4169,17 +4169,23 @@ export namespace Prisma {
   export type ProductAvgAggregateOutputType = {
     id: number | null
     companyId: number | null
+    lastPRate: Decimal | null
+    lastSRate: Decimal | null
   }
 
   export type ProductSumAggregateOutputType = {
     id: number | null
     companyId: number | null
+    lastPRate: Decimal | null
+    lastSRate: Decimal | null
   }
 
   export type ProductMinAggregateOutputType = {
     id: number | null
     name: string | null
     companyId: number | null
+    lastPRate: Decimal | null
+    lastSRate: Decimal | null
     isActive: boolean | null
   }
 
@@ -4187,6 +4193,8 @@ export namespace Prisma {
     id: number | null
     name: string | null
     companyId: number | null
+    lastPRate: Decimal | null
+    lastSRate: Decimal | null
     isActive: boolean | null
   }
 
@@ -4194,6 +4202,8 @@ export namespace Prisma {
     id: number
     name: number
     companyId: number
+    lastPRate: number
+    lastSRate: number
     isActive: number
     _all: number
   }
@@ -4202,17 +4212,23 @@ export namespace Prisma {
   export type ProductAvgAggregateInputType = {
     id?: true
     companyId?: true
+    lastPRate?: true
+    lastSRate?: true
   }
 
   export type ProductSumAggregateInputType = {
     id?: true
     companyId?: true
+    lastPRate?: true
+    lastSRate?: true
   }
 
   export type ProductMinAggregateInputType = {
     id?: true
     name?: true
     companyId?: true
+    lastPRate?: true
+    lastSRate?: true
     isActive?: true
   }
 
@@ -4220,6 +4236,8 @@ export namespace Prisma {
     id?: true
     name?: true
     companyId?: true
+    lastPRate?: true
+    lastSRate?: true
     isActive?: true
   }
 
@@ -4227,6 +4245,8 @@ export namespace Prisma {
     id?: true
     name?: true
     companyId?: true
+    lastPRate?: true
+    lastSRate?: true
     isActive?: true
     _all?: true
   }
@@ -4321,6 +4341,8 @@ export namespace Prisma {
     id: number
     name: string
     companyId: number
+    lastPRate: Decimal
+    lastSRate: Decimal
     isActive: boolean
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
@@ -4347,6 +4369,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    lastPRate?: boolean
+    lastSRate?: boolean
     isActive?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     invoiceItems?: boolean | Product$invoiceItemsArgs<ExtArgs>
@@ -4357,6 +4381,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    lastPRate?: boolean
+    lastSRate?: boolean
     isActive?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
@@ -4365,6 +4391,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    lastPRate?: boolean
+    lastSRate?: boolean
     isActive?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
@@ -4373,10 +4401,12 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    lastPRate?: boolean
+    lastSRate?: boolean
     isActive?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "companyId" | "isActive", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "companyId" | "lastPRate" | "lastSRate" | "isActive", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     invoiceItems?: boolean | Product$invoiceItemsArgs<ExtArgs>
@@ -4399,6 +4429,8 @@ export namespace Prisma {
       id: number
       name: string
       companyId: number
+      lastPRate: Prisma.Decimal
+      lastSRate: Prisma.Decimal
       isActive: boolean
     }, ExtArgs["result"]["product"]>
     composites: {}
@@ -4828,6 +4860,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Product", 'Int'>
     readonly name: FieldRef<"Product", 'String'>
     readonly companyId: FieldRef<"Product", 'Int'>
+    readonly lastPRate: FieldRef<"Product", 'Decimal'>
+    readonly lastSRate: FieldRef<"Product", 'Decimal'>
     readonly isActive: FieldRef<"Product", 'Boolean'>
   }
     
@@ -7544,7 +7578,9 @@ export namespace Prisma {
     townId: number | null
     customerId: number | null
     salesmanId: number | null
-    totalAmount: number | null
+    totalSubTotal: Decimal | null
+    totalDiscount: Decimal | null
+    totalAmount: Decimal | null
   }
 
   export type InvoiceSumAggregateOutputType = {
@@ -7552,7 +7588,9 @@ export namespace Prisma {
     townId: number | null
     customerId: number | null
     salesmanId: number | null
-    totalAmount: number | null
+    totalSubTotal: Decimal | null
+    totalDiscount: Decimal | null
+    totalAmount: Decimal | null
   }
 
   export type InvoiceMinAggregateOutputType = {
@@ -7563,7 +7601,9 @@ export namespace Prisma {
     townId: number | null
     customerId: number | null
     salesmanId: number | null
-    totalAmount: number | null
+    totalSubTotal: Decimal | null
+    totalDiscount: Decimal | null
+    totalAmount: Decimal | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7576,7 +7616,9 @@ export namespace Prisma {
     townId: number | null
     customerId: number | null
     salesmanId: number | null
-    totalAmount: number | null
+    totalSubTotal: Decimal | null
+    totalDiscount: Decimal | null
+    totalAmount: Decimal | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7589,6 +7631,8 @@ export namespace Prisma {
     townId: number
     customerId: number
     salesmanId: number
+    totalSubTotal: number
+    totalDiscount: number
     totalAmount: number
     createdAt: number
     updatedAt: number
@@ -7601,6 +7645,8 @@ export namespace Prisma {
     townId?: true
     customerId?: true
     salesmanId?: true
+    totalSubTotal?: true
+    totalDiscount?: true
     totalAmount?: true
   }
 
@@ -7609,6 +7655,8 @@ export namespace Prisma {
     townId?: true
     customerId?: true
     salesmanId?: true
+    totalSubTotal?: true
+    totalDiscount?: true
     totalAmount?: true
   }
 
@@ -7620,6 +7668,8 @@ export namespace Prisma {
     townId?: true
     customerId?: true
     salesmanId?: true
+    totalSubTotal?: true
+    totalDiscount?: true
     totalAmount?: true
     createdAt?: true
     updatedAt?: true
@@ -7633,6 +7683,8 @@ export namespace Prisma {
     townId?: true
     customerId?: true
     salesmanId?: true
+    totalSubTotal?: true
+    totalDiscount?: true
     totalAmount?: true
     createdAt?: true
     updatedAt?: true
@@ -7646,6 +7698,8 @@ export namespace Prisma {
     townId?: true
     customerId?: true
     salesmanId?: true
+    totalSubTotal?: true
+    totalDiscount?: true
     totalAmount?: true
     createdAt?: true
     updatedAt?: true
@@ -7746,7 +7800,9 @@ export namespace Prisma {
     townId: number
     customerId: number | null
     salesmanId: number | null
-    totalAmount: number
+    totalSubTotal: Decimal
+    totalDiscount: Decimal
+    totalAmount: Decimal
     createdAt: Date | null
     updatedAt: Date | null
     _count: InvoiceCountAggregateOutputType | null
@@ -7778,6 +7834,8 @@ export namespace Prisma {
     townId?: boolean
     customerId?: boolean
     salesmanId?: boolean
+    totalSubTotal?: boolean
+    totalDiscount?: boolean
     totalAmount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7796,6 +7854,8 @@ export namespace Prisma {
     townId?: boolean
     customerId?: boolean
     salesmanId?: boolean
+    totalSubTotal?: boolean
+    totalDiscount?: boolean
     totalAmount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7812,6 +7872,8 @@ export namespace Prisma {
     townId?: boolean
     customerId?: boolean
     salesmanId?: boolean
+    totalSubTotal?: boolean
+    totalDiscount?: boolean
     totalAmount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7828,12 +7890,14 @@ export namespace Prisma {
     townId?: boolean
     customerId?: boolean
     salesmanId?: boolean
+    totalSubTotal?: boolean
+    totalDiscount?: boolean
     totalAmount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNo" | "date" | "type" | "townId" | "customerId" | "salesmanId" | "totalAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNo" | "date" | "type" | "townId" | "customerId" | "salesmanId" | "totalSubTotal" | "totalDiscount" | "totalAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     town?: boolean | TownDefaultArgs<ExtArgs>
     customer?: boolean | Invoice$customerArgs<ExtArgs>
@@ -7868,7 +7932,9 @@ export namespace Prisma {
       townId: number
       customerId: number | null
       salesmanId: number | null
-      totalAmount: number
+      totalSubTotal: Prisma.Decimal
+      totalDiscount: Prisma.Decimal
+      totalAmount: Prisma.Decimal
       createdAt: Date | null
       updatedAt: Date | null
     }, ExtArgs["result"]["invoice"]>
@@ -8305,7 +8371,9 @@ export namespace Prisma {
     readonly townId: FieldRef<"Invoice", 'Int'>
     readonly customerId: FieldRef<"Invoice", 'Int'>
     readonly salesmanId: FieldRef<"Invoice", 'Int'>
-    readonly totalAmount: FieldRef<"Invoice", 'Float'>
+    readonly totalSubTotal: FieldRef<"Invoice", 'Decimal'>
+    readonly totalDiscount: FieldRef<"Invoice", 'Decimal'>
+    readonly totalAmount: FieldRef<"Invoice", 'Decimal'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
   }
@@ -8805,36 +8873,44 @@ export namespace Prisma {
     id: number | null
     invoiceId: number | null
     productId: number | null
-    qty: number | null
-    rate: number | null
-    discount: number | null
+    qty: Decimal | null
+    rate: Decimal | null
+    subTotal: Decimal | null
+    discount: Decimal | null
+    total: Decimal | null
   }
 
   export type InvoiceItemSumAggregateOutputType = {
     id: number | null
     invoiceId: number | null
     productId: number | null
-    qty: number | null
-    rate: number | null
-    discount: number | null
+    qty: Decimal | null
+    rate: Decimal | null
+    subTotal: Decimal | null
+    discount: Decimal | null
+    total: Decimal | null
   }
 
   export type InvoiceItemMinAggregateOutputType = {
     id: number | null
     invoiceId: number | null
     productId: number | null
-    qty: number | null
-    rate: number | null
-    discount: number | null
+    qty: Decimal | null
+    rate: Decimal | null
+    subTotal: Decimal | null
+    discount: Decimal | null
+    total: Decimal | null
   }
 
   export type InvoiceItemMaxAggregateOutputType = {
     id: number | null
     invoiceId: number | null
     productId: number | null
-    qty: number | null
-    rate: number | null
-    discount: number | null
+    qty: Decimal | null
+    rate: Decimal | null
+    subTotal: Decimal | null
+    discount: Decimal | null
+    total: Decimal | null
   }
 
   export type InvoiceItemCountAggregateOutputType = {
@@ -8843,7 +8919,9 @@ export namespace Prisma {
     productId: number
     qty: number
     rate: number
+    subTotal: number
     discount: number
+    total: number
     _all: number
   }
 
@@ -8854,7 +8932,9 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    subTotal?: true
     discount?: true
+    total?: true
   }
 
   export type InvoiceItemSumAggregateInputType = {
@@ -8863,7 +8943,9 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    subTotal?: true
     discount?: true
+    total?: true
   }
 
   export type InvoiceItemMinAggregateInputType = {
@@ -8872,7 +8954,9 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    subTotal?: true
     discount?: true
+    total?: true
   }
 
   export type InvoiceItemMaxAggregateInputType = {
@@ -8881,7 +8965,9 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    subTotal?: true
     discount?: true
+    total?: true
   }
 
   export type InvoiceItemCountAggregateInputType = {
@@ -8890,7 +8976,9 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    subTotal?: true
     discount?: true
+    total?: true
     _all?: true
   }
 
@@ -8984,9 +9072,11 @@ export namespace Prisma {
     id: number
     invoiceId: number
     productId: number
-    qty: number
-    rate: number
-    discount: number
+    qty: Decimal
+    rate: Decimal
+    subTotal: Decimal
+    discount: Decimal
+    total: Decimal
     _count: InvoiceItemCountAggregateOutputType | null
     _avg: InvoiceItemAvgAggregateOutputType | null
     _sum: InvoiceItemSumAggregateOutputType | null
@@ -9014,7 +9104,9 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    subTotal?: boolean
     discount?: boolean
+    total?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceItem"]>
@@ -9025,7 +9117,9 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    subTotal?: boolean
     discount?: boolean
+    total?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceItem"]>
@@ -9036,7 +9130,9 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    subTotal?: boolean
     discount?: boolean
+    total?: boolean
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoiceItem"]>
@@ -9047,10 +9143,12 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    subTotal?: boolean
     discount?: boolean
+    total?: boolean
   }
 
-  export type InvoiceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "productId" | "qty" | "rate" | "discount", ExtArgs["result"]["invoiceItem"]>
+  export type InvoiceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "productId" | "qty" | "rate" | "subTotal" | "discount" | "total", ExtArgs["result"]["invoiceItem"]>
   export type InvoiceItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
@@ -9074,9 +9172,11 @@ export namespace Prisma {
       id: number
       invoiceId: number
       productId: number
-      qty: number
-      rate: number
-      discount: number
+      qty: Prisma.Decimal
+      rate: Prisma.Decimal
+      subTotal: Prisma.Decimal
+      discount: Prisma.Decimal
+      total: Prisma.Decimal
     }, ExtArgs["result"]["invoiceItem"]>
     composites: {}
   }
@@ -9505,9 +9605,11 @@ export namespace Prisma {
     readonly id: FieldRef<"InvoiceItem", 'Int'>
     readonly invoiceId: FieldRef<"InvoiceItem", 'Int'>
     readonly productId: FieldRef<"InvoiceItem", 'Int'>
-    readonly qty: FieldRef<"InvoiceItem", 'Int'>
-    readonly rate: FieldRef<"InvoiceItem", 'Float'>
-    readonly discount: FieldRef<"InvoiceItem", 'Float'>
+    readonly qty: FieldRef<"InvoiceItem", 'Decimal'>
+    readonly rate: FieldRef<"InvoiceItem", 'Decimal'>
+    readonly subTotal: FieldRef<"InvoiceItem", 'Decimal'>
+    readonly discount: FieldRef<"InvoiceItem", 'Decimal'>
+    readonly total: FieldRef<"InvoiceItem", 'Decimal'>
   }
     
 
@@ -13356,6 +13458,8 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     companyId: 'companyId',
+    lastPRate: 'lastPRate',
+    lastSRate: 'lastSRate',
     isActive: 'isActive'
   };
 
@@ -13391,6 +13495,8 @@ export namespace Prisma {
     townId: 'townId',
     customerId: 'customerId',
     salesmanId: 'salesmanId',
+    totalSubTotal: 'totalSubTotal',
+    totalDiscount: 'totalDiscount',
     totalAmount: 'totalAmount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13405,7 +13511,9 @@ export namespace Prisma {
     productId: 'productId',
     qty: 'qty',
     rate: 'rate',
-    discount: 'discount'
+    subTotal: 'subTotal',
+    discount: 'discount',
+    total: 'total'
   };
 
   export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
@@ -13508,6 +13616,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -13651,6 +13773,8 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     companyId?: IntFilter<"Product"> | number
+    lastPRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"Product"> | boolean
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     invoiceItems?: InvoiceItemListRelationFilter
@@ -13660,6 +13784,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
     isActive?: SortOrder
     company?: CompanyOrderByWithRelationInput
     invoiceItems?: InvoiceItemOrderByRelationAggregateInput
@@ -13672,6 +13798,8 @@ export namespace Prisma {
     NOT?: ProductWhereInput | ProductWhereInput[]
     name?: StringFilter<"Product"> | string
     companyId?: IntFilter<"Product"> | number
+    lastPRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"Product"> | boolean
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     invoiceItems?: InvoiceItemListRelationFilter
@@ -13681,6 +13809,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
     isActive?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
@@ -13696,6 +13826,8 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Product"> | number
     name?: StringWithAggregatesFilter<"Product"> | string
     companyId?: IntWithAggregatesFilter<"Product"> | number
+    lastPRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalWithAggregatesFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolWithAggregatesFilter<"Product"> | boolean
   }
 
@@ -13825,7 +13957,9 @@ export namespace Prisma {
     townId?: IntFilter<"Invoice"> | number
     customerId?: IntNullableFilter<"Invoice"> | number | null
     salesmanId?: IntNullableFilter<"Invoice"> | number | null
-    totalAmount?: FloatFilter<"Invoice"> | number
+    totalSubTotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     town?: XOR<TownScalarRelationFilter, TownWhereInput>
@@ -13842,6 +13976,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrderInput | SortOrder
     salesmanId?: SortOrderInput | SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
@@ -13862,7 +13998,9 @@ export namespace Prisma {
     townId?: IntFilter<"Invoice"> | number
     customerId?: IntNullableFilter<"Invoice"> | number | null
     salesmanId?: IntNullableFilter<"Invoice"> | number | null
-    totalAmount?: FloatFilter<"Invoice"> | number
+    totalSubTotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     town?: XOR<TownScalarRelationFilter, TownWhereInput>
@@ -13879,6 +14017,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrderInput | SortOrder
     salesmanId?: SortOrderInput | SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
@@ -13900,7 +14040,9 @@ export namespace Prisma {
     townId?: IntWithAggregatesFilter<"Invoice"> | number
     customerId?: IntNullableWithAggregatesFilter<"Invoice"> | number | null
     salesmanId?: IntNullableWithAggregatesFilter<"Invoice"> | number | null
-    totalAmount?: FloatWithAggregatesFilter<"Invoice"> | number
+    totalSubTotal?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
   }
@@ -13912,9 +14054,11 @@ export namespace Prisma {
     id?: IntFilter<"InvoiceItem"> | number
     invoiceId?: IntFilter<"InvoiceItem"> | number
     productId?: IntFilter<"InvoiceItem"> | number
-    qty?: IntFilter<"InvoiceItem"> | number
-    rate?: FloatFilter<"InvoiceItem"> | number
-    discount?: FloatFilter<"InvoiceItem"> | number
+    qty?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }
@@ -13925,7 +14069,9 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
     invoice?: InvoiceOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
   }
@@ -13937,9 +14083,11 @@ export namespace Prisma {
     NOT?: InvoiceItemWhereInput | InvoiceItemWhereInput[]
     invoiceId?: IntFilter<"InvoiceItem"> | number
     productId?: IntFilter<"InvoiceItem"> | number
-    qty?: IntFilter<"InvoiceItem"> | number
-    rate?: FloatFilter<"InvoiceItem"> | number
-    discount?: FloatFilter<"InvoiceItem"> | number
+    qty?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     invoice?: XOR<InvoiceScalarRelationFilter, InvoiceWhereInput>
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
   }, "id">
@@ -13950,7 +14098,9 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
     _count?: InvoiceItemCountOrderByAggregateInput
     _avg?: InvoiceItemAvgOrderByAggregateInput
     _max?: InvoiceItemMaxOrderByAggregateInput
@@ -13965,9 +14115,11 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"InvoiceItem"> | number
     invoiceId?: IntWithAggregatesFilter<"InvoiceItem"> | number
     productId?: IntWithAggregatesFilter<"InvoiceItem"> | number
-    qty?: IntWithAggregatesFilter<"InvoiceItem"> | number
-    rate?: FloatWithAggregatesFilter<"InvoiceItem"> | number
-    discount?: FloatWithAggregatesFilter<"InvoiceItem"> | number
+    qty?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    rate?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    total?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
   }
 
   export type CashRecordWhereInput = {
@@ -14255,6 +14407,8 @@ export namespace Prisma {
 
   export type ProductCreateInput = {
     name: string
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     company: CompanyCreateNestedOneWithoutProductsInput
     invoiceItems?: InvoiceItemCreateNestedManyWithoutProductInput
@@ -14264,12 +14418,16 @@ export namespace Prisma {
     id?: number
     name: string
     companyId: number
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneRequiredWithoutProductsNestedInput
     invoiceItems?: InvoiceItemUpdateManyWithoutProductNestedInput
@@ -14279,6 +14437,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     companyId?: IntFieldUpdateOperationsInput | number
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -14287,11 +14447,15 @@ export namespace Prisma {
     id?: number
     name: string
     companyId: number
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
   }
 
   export type ProductUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -14299,6 +14463,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     companyId?: IntFieldUpdateOperationsInput | number
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -14416,7 +14582,9 @@ export namespace Prisma {
     invoiceNo: string
     date?: Date | string
     type: string
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
@@ -14433,7 +14601,9 @@ export namespace Prisma {
     townId: number
     customerId?: number | null
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -14443,7 +14613,9 @@ export namespace Prisma {
     invoiceNo?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
@@ -14460,7 +14632,9 @@ export namespace Prisma {
     townId?: IntFieldUpdateOperationsInput | number
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -14474,7 +14648,9 @@ export namespace Prisma {
     townId: number
     customerId?: number | null
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -14483,7 +14659,9 @@ export namespace Prisma {
     invoiceNo?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -14496,15 +14674,19 @@ export namespace Prisma {
     townId?: IntFieldUpdateOperationsInput | number
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type InvoiceItemCreateInput = {
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
     invoice: InvoiceCreateNestedOneWithoutItemsInput
     product: ProductCreateNestedOneWithoutInvoiceItemsInput
   }
@@ -14513,15 +14695,19 @@ export namespace Prisma {
     id?: number
     invoiceId: number
     productId: number
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateInput = {
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     invoice?: InvoiceUpdateOneRequiredWithoutItemsNestedInput
     product?: ProductUpdateOneRequiredWithoutInvoiceItemsNestedInput
   }
@@ -14530,33 +14716,41 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     invoiceId?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemCreateManyInput = {
     id?: number
     invoiceId: number
     productId: number
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateManyMutationInput = {
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     invoiceId?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type CashRecordCreateInput = {
@@ -14899,6 +15093,17 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
   export type CompanyScalarRelationFilter = {
     is?: CompanyWhereInput
     isNot?: CompanyWhereInput
@@ -14918,18 +15123,24 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
     isActive?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
     isActive?: SortOrder
   }
 
@@ -14937,12 +15148,32 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
     isActive?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
     id?: SortOrder
     companyId?: SortOrder
+    lastPRate?: SortOrder
+    lastSRate?: SortOrder
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type TownScalarRelationFilter = {
@@ -15045,17 +15276,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -15090,6 +15310,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrder
     salesmanId?: SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15100,6 +15322,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrder
     salesmanId?: SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
   }
 
@@ -15111,6 +15335,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrder
     salesmanId?: SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15124,6 +15350,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrder
     salesmanId?: SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15134,6 +15362,8 @@ export namespace Prisma {
     townId?: SortOrder
     customerId?: SortOrder
     salesmanId?: SortOrder
+    totalSubTotal?: SortOrder
+    totalDiscount?: SortOrder
     totalAmount?: SortOrder
   }
 
@@ -15167,22 +15397,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -15213,7 +15427,9 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
   }
 
   export type InvoiceItemAvgOrderByAggregateInput = {
@@ -15222,7 +15438,9 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
   }
 
   export type InvoiceItemMaxOrderByAggregateInput = {
@@ -15231,7 +15449,9 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
   }
 
   export type InvoiceItemMinOrderByAggregateInput = {
@@ -15240,7 +15460,9 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
   }
 
   export type InvoiceItemSumOrderByAggregateInput = {
@@ -15249,7 +15471,20 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    subTotal?: SortOrder
     discount?: SortOrder
+    total?: SortOrder
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type StringNullableFilter<$PrismaModel = never> = {
@@ -15304,6 +15539,22 @@ export namespace Prisma {
     id?: SortOrder
     customerId?: SortOrder
     amount?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -15573,6 +15824,14 @@ export namespace Prisma {
     connect?: InvoiceItemWhereUniqueInput | InvoiceItemWhereUniqueInput[]
   }
 
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type CompanyUpdateOneRequiredWithoutProductsNestedInput = {
     create?: XOR<CompanyCreateWithoutProductsInput, CompanyUncheckedCreateWithoutProductsInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutProductsInput
@@ -15785,14 +16044,6 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
@@ -15893,6 +16144,14 @@ export namespace Prisma {
     create?: XOR<CustomerCreateWithoutCashRecordsInput, CustomerUncheckedCreateWithoutCashRecordsInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutCashRecordsInput
     connect?: CustomerWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -16049,6 +16308,33 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -16123,22 +16409,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -16165,6 +16435,22 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -16215,7 +16501,9 @@ export namespace Prisma {
     invoiceNo: string
     date?: Date | string
     type: string
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     customer?: CustomerCreateNestedOneWithoutInvoicesInput
@@ -16230,7 +16518,9 @@ export namespace Prisma {
     type: string
     customerId?: number | null
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -16300,13 +16590,17 @@ export namespace Prisma {
     townId?: IntFilter<"Invoice"> | number
     customerId?: IntNullableFilter<"Invoice"> | number | null
     salesmanId?: IntNullableFilter<"Invoice"> | number | null
-    totalAmount?: FloatFilter<"Invoice"> | number
+    totalSubTotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
   }
 
   export type ProductCreateWithoutCompanyInput = {
     name: string
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     invoiceItems?: InvoiceItemCreateNestedManyWithoutProductInput
   }
@@ -16314,6 +16608,8 @@ export namespace Prisma {
   export type ProductUncheckedCreateWithoutCompanyInput = {
     id?: number
     name: string
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutProductInput
   }
@@ -16351,6 +16647,8 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     companyId?: IntFilter<"Product"> | number
+    lastPRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFilter<"Product"> | Decimal | DecimalJsLike | number | string
     isActive?: BoolFilter<"Product"> | boolean
   }
 
@@ -16373,18 +16671,22 @@ export namespace Prisma {
   }
 
   export type InvoiceItemCreateWithoutProductInput = {
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
     invoice: InvoiceCreateNestedOneWithoutItemsInput
   }
 
   export type InvoiceItemUncheckedCreateWithoutProductInput = {
     id?: number
     invoiceId: number
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemCreateOrConnectWithoutProductInput = {
@@ -16444,9 +16746,11 @@ export namespace Prisma {
     id?: IntFilter<"InvoiceItem"> | number
     invoiceId?: IntFilter<"InvoiceItem"> | number
     productId?: IntFilter<"InvoiceItem"> | number
-    qty?: IntFilter<"InvoiceItem"> | number
-    rate?: FloatFilter<"InvoiceItem"> | number
-    discount?: FloatFilter<"InvoiceItem"> | number
+    qty?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
   }
 
   export type TownCreateWithoutCustomersInput = {
@@ -16471,7 +16775,9 @@ export namespace Prisma {
     invoiceNo: string
     date?: Date | string
     type: string
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
@@ -16486,7 +16792,9 @@ export namespace Prisma {
     type: string
     townId: number
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -16599,7 +16907,9 @@ export namespace Prisma {
     invoiceNo: string
     date?: Date | string
     type: string
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
@@ -16614,7 +16924,9 @@ export namespace Prisma {
     type: string
     townId: number
     customerId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
@@ -16705,18 +17017,22 @@ export namespace Prisma {
   }
 
   export type InvoiceItemCreateWithoutInvoiceInput = {
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
     product: ProductCreateNestedOneWithoutInvoiceItemsInput
   }
 
   export type InvoiceItemUncheckedCreateWithoutInvoiceInput = {
     id?: number
     productId: number
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemCreateOrConnectWithoutInvoiceInput = {
@@ -16825,7 +17141,9 @@ export namespace Prisma {
     invoiceNo: string
     date?: Date | string
     type: string
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
@@ -16841,7 +17159,9 @@ export namespace Prisma {
     townId: number
     customerId?: number | null
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -16853,6 +17173,8 @@ export namespace Prisma {
 
   export type ProductCreateWithoutInvoiceItemsInput = {
     name: string
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
     company: CompanyCreateNestedOneWithoutProductsInput
   }
@@ -16861,6 +17183,8 @@ export namespace Prisma {
     id?: number
     name: string
     companyId: number
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
   }
 
@@ -16884,7 +17208,9 @@ export namespace Prisma {
     invoiceNo?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
@@ -16900,7 +17226,9 @@ export namespace Prisma {
     townId?: IntFieldUpdateOperationsInput | number
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -16918,6 +17246,8 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutInvoiceItemsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneRequiredWithoutProductsNestedInput
   }
@@ -16926,6 +17256,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     companyId?: IntFieldUpdateOperationsInput | number
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -17093,7 +17425,9 @@ export namespace Prisma {
     type: string
     customerId?: number | null
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -17126,7 +17460,9 @@ export namespace Prisma {
     invoiceNo?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: CustomerUpdateOneWithoutInvoicesNestedInput
@@ -17141,7 +17477,9 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -17154,7 +17492,9 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17162,11 +17502,15 @@ export namespace Prisma {
   export type ProductCreateManyCompanyInput = {
     id?: number
     name: string
+    lastPRate?: Decimal | DecimalJsLike | number | string
+    lastSRate?: Decimal | DecimalJsLike | number | string
     isActive?: boolean
   }
 
   export type ProductUpdateWithoutCompanyInput = {
     name?: StringFieldUpdateOperationsInput | string
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     invoiceItems?: InvoiceItemUpdateManyWithoutProductNestedInput
   }
@@ -17174,6 +17518,8 @@ export namespace Prisma {
   export type ProductUncheckedUpdateWithoutCompanyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   }
@@ -17181,38 +17527,48 @@ export namespace Prisma {
   export type ProductUncheckedUpdateManyWithoutCompanyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    lastPRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lastSRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceItemCreateManyProductInput = {
     id?: number
     invoiceId: number
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateWithoutProductInput = {
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     invoice?: InvoiceUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type InvoiceItemUncheckedUpdateWithoutProductInput = {
     id?: IntFieldUpdateOperationsInput | number
     invoiceId?: IntFieldUpdateOperationsInput | number
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUncheckedUpdateManyWithoutProductInput = {
     id?: IntFieldUpdateOperationsInput | number
     invoiceId?: IntFieldUpdateOperationsInput | number
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceCreateManyCustomerInput = {
@@ -17222,7 +17578,9 @@ export namespace Prisma {
     type: string
     townId: number
     salesmanId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -17239,7 +17597,9 @@ export namespace Prisma {
     invoiceNo?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
@@ -17254,7 +17614,9 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -17267,7 +17629,9 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
     salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17302,7 +17666,9 @@ export namespace Prisma {
     type: string
     townId: number
     customerId?: number | null
-    totalAmount?: number
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -17311,7 +17677,9 @@ export namespace Prisma {
     invoiceNo?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
@@ -17326,7 +17694,9 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -17339,7 +17709,9 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
-    totalAmount?: FloatFieldUpdateOperationsInput | number
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17347,32 +17719,40 @@ export namespace Prisma {
   export type InvoiceItemCreateManyInvoiceInput = {
     id?: number
     productId: number
-    qty: number
-    rate: number
-    discount?: number
+    qty: Decimal | DecimalJsLike | number | string
+    rate?: Decimal | DecimalJsLike | number | string
+    subTotal?: Decimal | DecimalJsLike | number | string
+    discount?: Decimal | DecimalJsLike | number | string
+    total?: Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUpdateWithoutInvoiceInput = {
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     product?: ProductUpdateOneRequiredWithoutInvoiceItemsNestedInput
   }
 
   export type InvoiceItemUncheckedUpdateWithoutInvoiceInput = {
     id?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InvoiceItemUncheckedUpdateManyWithoutInvoiceInput = {
     id?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
-    qty?: IntFieldUpdateOperationsInput | number
-    rate?: FloatFieldUpdateOperationsInput | number
-    discount?: FloatFieldUpdateOperationsInput | number
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type UserCreateManyRoleInput = {
