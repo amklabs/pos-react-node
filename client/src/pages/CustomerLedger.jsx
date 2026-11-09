@@ -42,7 +42,7 @@ export default function CustomerLedger() {
                     <select className="form-select border p-2 rounded w-full" value={selectedCustomer}
                             onChange={e => setSelectedCustomer(e.target.value)}>
                         <option value="">Choose a customer...</option>
-                        <option value="all">All Customers</option>
+                        {/*<option value="all">All Customers</option>*/}
                         {customers.map(c => <option key={c.id} value={c.id}>{c.name} {c.phone && (
                             <span className="text-sm text-gray-300">({c.phone})</span>
                         )}</option>)}
@@ -99,8 +99,8 @@ export default function CustomerLedger() {
                                 )}
                                 <td className="p-2 border">{row.ref}</td>
                                 <td className="p-2 border">{row.type}</td>
-                                <td className="p-2 border text-right">{row.type.includes('SALE') ? formatNumber(row.amount) : '-'}</td>
-                                <td className="p-2 border text-right text-green-600">{row.type.includes('CASH') ? formatNumber(row.amount) : '-'}</td>
+                                <td className="p-2 border text-right">{row.type?.includes('SALE') ? formatNumber(row.amount) : '-'}</td>
+                                <td className="p-2 border text-right text-green-600">{['CASH', 'RETURN'].includes(row.type) ? formatNumber(row.amount) : '-'}</td>
                                 <td className={`p-2 border text-right font-bold ${row.runningBalance > 0 ? 'text-red-600' : 'text-green-600'}`}>
                                     {formatNumber(row.runningBalance)}
                                 </td>

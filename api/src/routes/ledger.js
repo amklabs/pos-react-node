@@ -12,7 +12,7 @@ router.get('/customers/:id/ledger', async (req, res) => {
     try {
         if (customerIdParam === 'all') {
             // ===== ALL CUSTOMERS MODE =====
-            const [sales, cash, customers] = await Promise.all([
+            const [sales, cash, customers, returns] = await Promise.all([
                 prisma.invoice.findMany({
                     where: {type: 'SALE'},
                     orderBy: {date: 'asc'}
@@ -23,7 +23,11 @@ router.get('/customers/:id/ledger', async (req, res) => {
                 }),
                 prisma.customer.findMany({
                     include: {town: true}
-                })
+                }),
+                prisma.invoice.findMany({
+                    where: {type: 'RETURN'},
+                    orderBy: {date: 'asc'}
+                }),
             ]);
 
             const customerMap = new Map(customers.map(c => [c.id, c]));
@@ -43,6 +47,13 @@ router.get('/customers/:id/ledger', async (req, res) => {
                     type: 'CASH (Credit)',
                     ref: c.note || '-',
                     amount: c.amount
+                })),
+                ...returns.map(r => ({
+                    customerId: r.customerId,
+                    date: r.date,
+                    type: 'RETURN (Credit)',
+                    ref: r.invoiceNo,
+                    amount: r.totalAmount
                 }))
             ].sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -57,17 +68,18 @@ router.get('/customers/:id/ledger', async (req, res) => {
                     perCustomerState.set(t.customerId, 0);
                 }
                 let custBalance = perCustomerState.get(t.customerId);
+                const amt = parseFloat(t.amount);
 
                 if (t.type.includes('SALE')) {
-                    totalDebit += parseFloat(t.amount);
-                    custBalance += parseFloat(t.amount);
+                    totalDebit += amt;
+                    custBalance += amt;
+                    overallBalance += amt;
                 } else {
-                    totalCredit += parseFloat(t.amount);
-                    custBalance -= parseFloat(t.amount);
+                    // CASH and RETURN both credit the customer
+                    totalCredit += amt;
+                    custBalance -= amt;
+                    overallBalance -= amt;
                 }
-                overallBalance = t.type.includes('SALE')
-                    ? overallBalance + parseFloat(t.amount)
-                    : overallBalance - parseFloat(t.amount);
 
                 perCustomerState.set(t.customerId, custBalance);
 
@@ -89,9 +101,9 @@ router.get('/customers/:id/ledger', async (req, res) => {
             }));
 
             return res.json({
-                customer: null,          // no single customer in 'all' mode
-                customers,               // full list of customers
-                customerBalances,        // per-customer final balance summary
+                customer: null,
+                customers,
+                customerBalances,
                 ledger,
                 totalDebit,
                 totalCredit,
@@ -99,31 +111,33 @@ router.get('/customers/:id/ledger', async (req, res) => {
             });
         }
 
-        // ===== SINGLE CUSTOMER MODE (unchanged) =====
+        // ===== SINGLE CUSTOMER MODE =====
         const customerId = parseInt(customerIdParam);
 
-        // Get all Sales for this customer
-        const sales = await prisma.invoice.findMany({
-            where: {customerId, type: 'SALE'},
-            orderBy: {date: 'asc'}
-        });
-
-        // Get all Cash Received from this customer
-        const cash = await prisma.cashRecord.findMany({
-            where: {customerId, type: 'RECEIVED'},
-            orderBy: {date: 'asc'}
-        });
-
-        // Get Customer info
-        const customer = await prisma.customer.findUnique({
-            where: {id: customerId},
-            include: {town: true}
-        });
+        const [sales, cash, returns, customer] = await Promise.all([
+            prisma.invoice.findMany({
+                where: {customerId, type: 'SALE'},
+                orderBy: {date: 'asc'}
+            }),
+            prisma.cashRecord.findMany({
+                where: {customerId, type: 'RECEIVED'},
+                orderBy: {date: 'asc'}
+            }),
+            prisma.invoice.findMany({
+                where: {customerId, type: 'RETURN'},
+                orderBy: {date: 'asc'}
+            }),
+            prisma.customer.findUnique({
+                where: {id: customerId},
+                include: {town: true}
+            })
+        ]);
 
         // Combine and sort all transactions by date
         const transactions = [
             ...sales.map(s => ({date: s.date, type: 'SALE (Debit)', ref: s.invoiceNo, amount: s.totalAmount})),
-            ...cash.map(c => ({date: c.date, type: 'CASH (Credit)', ref: c.note || '-', amount: c.amount}))
+            ...cash.map(c => ({date: c.date, type: 'CASH (Credit)', ref: c.note || '-', amount: c.amount})),
+            ...returns.map(r => ({date: r.date, type: 'RETURN (Credit)', ref: r.invoiceNo, amount: r.totalAmount}))
         ].sort((a, b) => new Date(a.date) - new Date(b.date));
 
         // Calculate running balance and totals
@@ -132,12 +146,14 @@ router.get('/customers/:id/ledger', async (req, res) => {
         let totalCredit = 0;
 
         const ledger = transactions.map(t => {
+            const amt = parseFloat(t.amount);
             if (t.type.includes('SALE')) {
-                totalDebit += parseFloat(t.amount);
-                balance += parseFloat(t.amount);
+                totalDebit += amt;
+                balance += amt;
             } else {
-                totalCredit += parseFloat(t.amount);
-                balance -= parseFloat(t.amount);
+                // CASH and RETURN both credit the customer
+                totalCredit += amt;
+                balance -= amt;
             }
             return {...t, runningBalance: balance};
         });
