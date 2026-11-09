@@ -40,6 +40,7 @@ export default function CustomerLedger() {
                     <select className="form-select border p-2 rounded w-full" value={selectedCustomer}
                             onChange={e => setSelectedCustomer(e.target.value)}>
                         <option value="">Choose a customer...</option>
+                        <option value="all">All Customers</option>
                         {customers.map(c => <option key={c.id} value={c.id}>{c.name} ({c.phone})</option>)}
                     </select>
                 </div>

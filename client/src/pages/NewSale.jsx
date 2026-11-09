@@ -4,6 +4,7 @@ import apiClient from "../apiClient.js";
 import usePageTitle from '../hooks/usePageTitle';
 import MySwal from "../components/MySwal.jsx";
 import { toastSuccess, toastError } from '../utils/toast';
+import {formatNumber} from "../utils/formaters.js";
 
 
 export default function NewSale() {
@@ -13,6 +14,8 @@ export default function NewSale() {
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState({productId: '', qty: 1, rate: 0, discount: 0});
     const [processing, setProcessing] = useState(false);
+    // State for editing an existing item in the table
+    const [editingIndex, setEditingIndex] = useState(null);
     // State for our dropdown lists
     const [towns, setTowns] = useState([]);
     const [customers, setCustomers] = useState([]);
@@ -43,9 +46,43 @@ export default function NewSale() {
 
     const handleAddItem = () => {
         if (!currentItem.productId) return alert('Please select a product');
-        setItems([...items, currentItem]);
+        if (editingIndex !== null) {
+            // Update the existing item
+            const updated = [...items];
+            updated[editingIndex] = currentItem;
+            setItems(updated);
+            setEditingIndex(null);
+        } else {
+            setItems([...items, currentItem]);
+        }
         setCurrentItem({productId: '', qty: 1, rate: 0, discount: 0});
     };
+
+    const handleEditItem = (idx) => {
+        setCurrentItem({...items[idx]});
+        setEditingIndex(idx);
+    };
+
+    const handleDeleteItem = (idx) => {
+        setItems(items.filter((_, i) => i !== idx));
+        if (editingIndex === idx) {
+            setEditingIndex(null);
+            setCurrentItem({productId: '', qty: 1, rate: 0, discount: 0});
+        } else if (editingIndex !== null && idx < editingIndex) {
+            setEditingIndex(editingIndex - 1);
+            setCurrentItem(null);
+        }
+    };
+
+    // Compute total for footer
+    const grandTotal = items.reduce(
+        (sum, item) => sum + (item.qty * item.rate) - item.discount,
+        0
+    );
+    const grandDiscount = items.reduce(
+        (sum, item) => sum + item.discount,
+        0
+    );
 
     const handleSave = async () => {
         if (!invoice.invoiceNo || !invoice.townId || items.length === 0) {
@@ -143,8 +180,15 @@ export default function NewSale() {
                            onChange={e => setCurrentItem({...currentItem, discount: parseFloat(e.target.value)})}/>
                 </div>
                 <button onClick={handleAddItem}
-                        className="btn btn-primary">Add Item
+                        className="btn btn-primary">{editingIndex !== null ? 'Update Item' : 'Add Item'}
                 </button>
+                {editingIndex !== null && (
+                    <button onClick={() => {
+                        setEditingIndex(null);
+                        setCurrentItem({productId: '', qty: 1, rate: 0, discount: 0});
+                    }} className="btn bg-gray-300">Cancel Edit
+                    </button>
+                )}
             </div>
 
             {/* Items Table */}
@@ -152,11 +196,12 @@ export default function NewSale() {
                 <table className="w-full border-collapse text-left">
                     <thead>
                     <tr className="bg-gray-50 border-b rounded-lg font-semibold">
-                        <th className="p-2 font-medium text-gray-700">Product</th>
-                        <th className="p-2 font-medium text-gray-700">Qty</th>
-                        <th className="p-2 font-medium text-gray-700">Rate</th>
-                        <th className="p-2 font-medium text-gray-700">Discount</th>
-                        <th className="p-2 font-medium text-gray-700">Total</th>
+                        <th className="p-2 font-medium text-gray-700">Product Name</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Qty</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Rate</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Discount</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Sub-Total</th>
+                        <th className="p-2 font-medium text-gray-700 w-30 text-center">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -165,20 +210,34 @@ export default function NewSale() {
                         const productName = products.find(p => p.id === parseInt(item.productId))?.name || item.productId;
                         return (
                             <tr key={idx} className="hover:bg-gray-50">
-                                <td className="p-2">{productName}</td>
-                                <td className="p-2">{item.qty}</td>
-                                <td className="p-2">{item.rate}</td>
-                                <td className="p-2">{item.discount}</td>
-                                <td className="p-2 font-bold">{((item.qty * item.rate) - item.discount).toFixed(2)}</td>
+                                <td className="p-2 w-[40%]">{productName}</td>
+                                <td className="p-2 w-30 text-end">{item.qty}</td>
+                                <td className="p-2 w-30 text-end">{formatNumber(item.rate)}</td>
+                                <td className="p-2 w-30 text-end">{formatNumber(item.discount)}</td>
+                                <td className="p-2 font-bold w-30 text-end">{formatNumber(((item.qty * item.rate) - item.discount).toFixed(2))}</td>
+                                <td className="p-2 w-30 text-center">
+                                    <button onClick={() => handleEditItem(idx)}
+                                            className="text-blue-600 hover:underline mr-3">Edit</button>
+                                    <button onClick={() => handleDeleteItem(idx)}
+                                            className="text-red-600 hover:underline">Delete</button>
+                                </td>
                             </tr>
                         )
                     })}
                     {items.length === 0 && (
                         <tr>
-                            <td colSpan="5" className="p-4 text-center text-gray-500">No items added yet.</td>
+                            <td colSpan="6" className="p-4 text-center text-gray-500">No items added yet.</td>
                         </tr>
                     )}
                     </tbody>
+                    <tfoot>
+                    <tr className="bg-gray-100 border-t font-semibold">
+                        <td colSpan="3" className="p-2 text-right">Grand Total</td>
+                        <td className="p-2 font-bold text-end">{formatNumber(grandDiscount.toFixed(2))}</td>
+                        <td className="p-2 font-bold text-end">{formatNumber(grandTotal.toFixed(2))}</td>
+                        <td className="p-2 w-30"></td>
+                    </tr>
+                    </tfoot>
                 </table>
             </div>
             {/* Action Buttons */}
@@ -186,7 +245,6 @@ export default function NewSale() {
                 <button onClick={handleSave} className="btn btn-primary disabled:bg-blue-300" disabled={processing}>Save
                     Invoice
                 </button>
-                <button onClick={() => window.print()} className="btn bg-green-300">Print</button>
                 <button onClick={() => {
                     setItems([]);
                     setInvoice({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
