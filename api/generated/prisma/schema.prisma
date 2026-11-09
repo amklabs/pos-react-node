@@ -15,6 +15,7 @@ model Town {
   name      String     @unique
   customers Customer[]
   invoices  Invoice[]
+  isActive  Boolean    @default(true)
 }
 
 model Company {
@@ -22,6 +23,7 @@ model Company {
   name     String
   phone    String
   products Product[]
+  isActive Boolean   @default(true)
 }
 
 model Product {
@@ -30,6 +32,7 @@ model Product {
   companyId    Int
   company      Company       @relation(fields: [companyId], references: [id])
   invoiceItems InvoiceItem[]
+  isActive     Boolean       @default(true)
 }
 
 model Customer {
@@ -40,6 +43,7 @@ model Customer {
   town        Town         @relation(fields: [townId], references: [id])
   invoices    Invoice[]
   cashRecords CashRecord[]
+  isActive    Boolean      @default(true)
 }
 
 model Salesman {
@@ -47,6 +51,7 @@ model Salesman {
   name     String
   phone    String
   invoices Invoice[]
+  isActive Boolean   @default(true)
 }
 
 model Invoice {
@@ -88,9 +93,10 @@ model CashRecord {
 }
 
 model Role {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  users User[]
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  users    User[]
+  isActive Boolean @default(true)
 }
 
 model User {
@@ -103,4 +109,5 @@ model User {
   role      Role?    @relation(fields: [roleId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  isActive  Boolean  @default(true)
 }

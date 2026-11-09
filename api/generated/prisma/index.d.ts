@@ -1970,16 +1970,19 @@ export namespace Prisma {
   export type TownMinAggregateOutputType = {
     id: number | null
     name: string | null
+    isActive: boolean | null
   }
 
   export type TownMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    isActive: boolean | null
   }
 
   export type TownCountAggregateOutputType = {
     id: number
     name: number
+    isActive: number
     _all: number
   }
 
@@ -1995,16 +1998,19 @@ export namespace Prisma {
   export type TownMinAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
   }
 
   export type TownMaxAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
   }
 
   export type TownCountAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
     _all?: true
   }
 
@@ -2097,6 +2103,7 @@ export namespace Prisma {
   export type TownGroupByOutputType = {
     id: number
     name: string
+    isActive: boolean
     _count: TownCountAggregateOutputType | null
     _avg: TownAvgAggregateOutputType | null
     _sum: TownSumAggregateOutputType | null
@@ -2121,6 +2128,7 @@ export namespace Prisma {
   export type TownSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
     customers?: boolean | Town$customersArgs<ExtArgs>
     invoices?: boolean | Town$invoicesArgs<ExtArgs>
     _count?: boolean | TownCountOutputTypeDefaultArgs<ExtArgs>
@@ -2129,19 +2137,22 @@ export namespace Prisma {
   export type TownSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["town"]>
 
   export type TownSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["town"]>
 
   export type TownSelectScalar = {
     id?: boolean
     name?: boolean
+    isActive?: boolean
   }
 
-  export type TownOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["town"]>
+  export type TownOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "isActive", ExtArgs["result"]["town"]>
   export type TownInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customers?: boolean | Town$customersArgs<ExtArgs>
     invoices?: boolean | Town$invoicesArgs<ExtArgs>
@@ -2159,6 +2170,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      isActive: boolean
     }, ExtArgs["result"]["town"]>
     composites: {}
   }
@@ -2586,6 +2598,7 @@ export namespace Prisma {
   interface TownFieldRefs {
     readonly id: FieldRef<"Town", 'Int'>
     readonly name: FieldRef<"Town", 'String'>
+    readonly isActive: FieldRef<"Town", 'Boolean'>
   }
     
 
@@ -3069,18 +3082,21 @@ export namespace Prisma {
     id: number | null
     name: string | null
     phone: string | null
+    isActive: boolean | null
   }
 
   export type CompanyMaxAggregateOutputType = {
     id: number | null
     name: string | null
     phone: string | null
+    isActive: boolean | null
   }
 
   export type CompanyCountAggregateOutputType = {
     id: number
     name: number
     phone: number
+    isActive: number
     _all: number
   }
 
@@ -3097,18 +3113,21 @@ export namespace Prisma {
     id?: true
     name?: true
     phone?: true
+    isActive?: true
   }
 
   export type CompanyMaxAggregateInputType = {
     id?: true
     name?: true
     phone?: true
+    isActive?: true
   }
 
   export type CompanyCountAggregateInputType = {
     id?: true
     name?: true
     phone?: true
+    isActive?: true
     _all?: true
   }
 
@@ -3202,6 +3221,7 @@ export namespace Prisma {
     id: number
     name: string
     phone: string
+    isActive: boolean
     _count: CompanyCountAggregateOutputType | null
     _avg: CompanyAvgAggregateOutputType | null
     _sum: CompanySumAggregateOutputType | null
@@ -3227,6 +3247,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
     products?: boolean | Company$productsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
@@ -3235,21 +3256,24 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectScalar = {
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "isActive", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | Company$productsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
@@ -3266,6 +3290,7 @@ export namespace Prisma {
       id: number
       name: string
       phone: string
+      isActive: boolean
     }, ExtArgs["result"]["company"]>
     composites: {}
   }
@@ -3693,6 +3718,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Company", 'Int'>
     readonly name: FieldRef<"Company", 'String'>
     readonly phone: FieldRef<"Company", 'String'>
+    readonly isActive: FieldRef<"Company", 'Boolean'>
   }
     
 
@@ -4154,18 +4180,21 @@ export namespace Prisma {
     id: number | null
     name: string | null
     companyId: number | null
+    isActive: boolean | null
   }
 
   export type ProductMaxAggregateOutputType = {
     id: number | null
     name: string | null
     companyId: number | null
+    isActive: boolean | null
   }
 
   export type ProductCountAggregateOutputType = {
     id: number
     name: number
     companyId: number
+    isActive: number
     _all: number
   }
 
@@ -4184,18 +4213,21 @@ export namespace Prisma {
     id?: true
     name?: true
     companyId?: true
+    isActive?: true
   }
 
   export type ProductMaxAggregateInputType = {
     id?: true
     name?: true
     companyId?: true
+    isActive?: true
   }
 
   export type ProductCountAggregateInputType = {
     id?: true
     name?: true
     companyId?: true
+    isActive?: true
     _all?: true
   }
 
@@ -4289,6 +4321,7 @@ export namespace Prisma {
     id: number
     name: string
     companyId: number
+    isActive: boolean
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -4314,6 +4347,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    isActive?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     invoiceItems?: boolean | Product$invoiceItemsArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
@@ -4323,6 +4357,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    isActive?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4330,6 +4365,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    isActive?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -4337,9 +4373,10 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     companyId?: boolean
+    isActive?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "companyId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "companyId" | "isActive", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
     invoiceItems?: boolean | Product$invoiceItemsArgs<ExtArgs>
@@ -4362,6 +4399,7 @@ export namespace Prisma {
       id: number
       name: string
       companyId: number
+      isActive: boolean
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -4790,6 +4828,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Product", 'Int'>
     readonly name: FieldRef<"Product", 'String'>
     readonly companyId: FieldRef<"Product", 'Int'>
+    readonly isActive: FieldRef<"Product", 'Boolean'>
   }
     
 
@@ -5260,6 +5299,7 @@ export namespace Prisma {
     name: string | null
     phone: string | null
     townId: number | null
+    isActive: boolean | null
   }
 
   export type CustomerMaxAggregateOutputType = {
@@ -5267,6 +5307,7 @@ export namespace Prisma {
     name: string | null
     phone: string | null
     townId: number | null
+    isActive: boolean | null
   }
 
   export type CustomerCountAggregateOutputType = {
@@ -5274,6 +5315,7 @@ export namespace Prisma {
     name: number
     phone: number
     townId: number
+    isActive: number
     _all: number
   }
 
@@ -5293,6 +5335,7 @@ export namespace Prisma {
     name?: true
     phone?: true
     townId?: true
+    isActive?: true
   }
 
   export type CustomerMaxAggregateInputType = {
@@ -5300,6 +5343,7 @@ export namespace Prisma {
     name?: true
     phone?: true
     townId?: true
+    isActive?: true
   }
 
   export type CustomerCountAggregateInputType = {
@@ -5307,6 +5351,7 @@ export namespace Prisma {
     name?: true
     phone?: true
     townId?: true
+    isActive?: true
     _all?: true
   }
 
@@ -5401,6 +5446,7 @@ export namespace Prisma {
     name: string
     phone: string
     townId: number
+    isActive: boolean
     _count: CustomerCountAggregateOutputType | null
     _avg: CustomerAvgAggregateOutputType | null
     _sum: CustomerSumAggregateOutputType | null
@@ -5427,6 +5473,7 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     townId?: boolean
+    isActive?: boolean
     town?: boolean | TownDefaultArgs<ExtArgs>
     invoices?: boolean | Customer$invoicesArgs<ExtArgs>
     cashRecords?: boolean | Customer$cashRecordsArgs<ExtArgs>
@@ -5438,6 +5485,7 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     townId?: boolean
+    isActive?: boolean
     town?: boolean | TownDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -5446,6 +5494,7 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     townId?: boolean
+    isActive?: boolean
     town?: boolean | TownDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -5454,9 +5503,10 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     townId?: boolean
+    isActive?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "townId", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "townId" | "isActive", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     town?: boolean | TownDefaultArgs<ExtArgs>
     invoices?: boolean | Customer$invoicesArgs<ExtArgs>
@@ -5482,6 +5532,7 @@ export namespace Prisma {
       name: string
       phone: string
       townId: number
+      isActive: boolean
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -5912,6 +5963,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Customer", 'String'>
     readonly phone: FieldRef<"Customer", 'String'>
     readonly townId: FieldRef<"Customer", 'Int'>
+    readonly isActive: FieldRef<"Customer", 'Boolean'>
   }
     
 
@@ -6403,18 +6455,21 @@ export namespace Prisma {
     id: number | null
     name: string | null
     phone: string | null
+    isActive: boolean | null
   }
 
   export type SalesmanMaxAggregateOutputType = {
     id: number | null
     name: string | null
     phone: string | null
+    isActive: boolean | null
   }
 
   export type SalesmanCountAggregateOutputType = {
     id: number
     name: number
     phone: number
+    isActive: number
     _all: number
   }
 
@@ -6431,18 +6486,21 @@ export namespace Prisma {
     id?: true
     name?: true
     phone?: true
+    isActive?: true
   }
 
   export type SalesmanMaxAggregateInputType = {
     id?: true
     name?: true
     phone?: true
+    isActive?: true
   }
 
   export type SalesmanCountAggregateInputType = {
     id?: true
     name?: true
     phone?: true
+    isActive?: true
     _all?: true
   }
 
@@ -6536,6 +6594,7 @@ export namespace Prisma {
     id: number
     name: string
     phone: string
+    isActive: boolean
     _count: SalesmanCountAggregateOutputType | null
     _avg: SalesmanAvgAggregateOutputType | null
     _sum: SalesmanSumAggregateOutputType | null
@@ -6561,6 +6620,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
     invoices?: boolean | Salesman$invoicesArgs<ExtArgs>
     _count?: boolean | SalesmanCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["salesman"]>
@@ -6569,21 +6629,24 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["salesman"]>
 
   export type SalesmanSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["salesman"]>
 
   export type SalesmanSelectScalar = {
     id?: boolean
     name?: boolean
     phone?: boolean
+    isActive?: boolean
   }
 
-  export type SalesmanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone", ExtArgs["result"]["salesman"]>
+  export type SalesmanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "isActive", ExtArgs["result"]["salesman"]>
   export type SalesmanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoices?: boolean | Salesman$invoicesArgs<ExtArgs>
     _count?: boolean | SalesmanCountOutputTypeDefaultArgs<ExtArgs>
@@ -6600,6 +6663,7 @@ export namespace Prisma {
       id: number
       name: string
       phone: string
+      isActive: boolean
     }, ExtArgs["result"]["salesman"]>
     composites: {}
   }
@@ -7027,6 +7091,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Salesman", 'Int'>
     readonly name: FieldRef<"Salesman", 'String'>
     readonly phone: FieldRef<"Salesman", 'String'>
+    readonly isActive: FieldRef<"Salesman", 'Boolean'>
   }
     
 
@@ -11022,16 +11087,19 @@ export namespace Prisma {
   export type RoleMinAggregateOutputType = {
     id: number | null
     name: string | null
+    isActive: boolean | null
   }
 
   export type RoleMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    isActive: boolean | null
   }
 
   export type RoleCountAggregateOutputType = {
     id: number
     name: number
+    isActive: number
     _all: number
   }
 
@@ -11047,16 +11115,19 @@ export namespace Prisma {
   export type RoleMinAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
   }
 
   export type RoleMaxAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
   }
 
   export type RoleCountAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
     _all?: true
   }
 
@@ -11149,6 +11220,7 @@ export namespace Prisma {
   export type RoleGroupByOutputType = {
     id: number
     name: string
+    isActive: boolean
     _count: RoleCountAggregateOutputType | null
     _avg: RoleAvgAggregateOutputType | null
     _sum: RoleSumAggregateOutputType | null
@@ -11173,6 +11245,7 @@ export namespace Prisma {
   export type RoleSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
     users?: boolean | Role$usersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
@@ -11180,19 +11253,22 @@ export namespace Prisma {
   export type RoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["role"]>
 
   export type RoleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
   }, ExtArgs["result"]["role"]>
 
   export type RoleSelectScalar = {
     id?: boolean
     name?: boolean
+    isActive?: boolean
   }
 
-  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["role"]>
+  export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "isActive", ExtArgs["result"]["role"]>
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Role$usersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
@@ -11208,6 +11284,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      isActive: boolean
     }, ExtArgs["result"]["role"]>
     composites: {}
   }
@@ -11634,6 +11711,7 @@ export namespace Prisma {
   interface RoleFieldRefs {
     readonly id: FieldRef<"Role", 'Int'>
     readonly name: FieldRef<"Role", 'String'>
+    readonly isActive: FieldRef<"Role", 'Boolean'>
   }
     
 
@@ -12100,6 +12178,7 @@ export namespace Prisma {
     roleId: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    isActive: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -12111,6 +12190,7 @@ export namespace Prisma {
     roleId: number | null
     createdAt: Date | null
     updatedAt: Date | null
+    isActive: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -12122,6 +12202,7 @@ export namespace Prisma {
     roleId: number
     createdAt: number
     updatedAt: number
+    isActive: number
     _all: number
   }
 
@@ -12145,6 +12226,7 @@ export namespace Prisma {
     roleId?: true
     createdAt?: true
     updatedAt?: true
+    isActive?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -12156,6 +12238,7 @@ export namespace Prisma {
     roleId?: true
     createdAt?: true
     updatedAt?: true
+    isActive?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -12167,6 +12250,7 @@ export namespace Prisma {
     roleId?: true
     createdAt?: true
     updatedAt?: true
+    isActive?: true
     _all?: true
   }
 
@@ -12265,6 +12349,7 @@ export namespace Prisma {
     roleId: number | null
     createdAt: Date
     updatedAt: Date
+    isActive: boolean
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -12295,6 +12380,7 @@ export namespace Prisma {
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isActive?: boolean
     role?: boolean | User$roleArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -12307,6 +12393,7 @@ export namespace Prisma {
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isActive?: boolean
     role?: boolean | User$roleArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -12319,6 +12406,7 @@ export namespace Prisma {
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isActive?: boolean
     role?: boolean | User$roleArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -12331,9 +12419,10 @@ export namespace Prisma {
     roleId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    isActive?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "firstname" | "lastname" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "firstname" | "lastname" | "roleId" | "createdAt" | "updatedAt" | "isActive", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     role?: boolean | User$roleArgs<ExtArgs>
   }
@@ -12358,6 +12447,7 @@ export namespace Prisma {
       roleId: number | null
       createdAt: Date
       updatedAt: Date
+      isActive: boolean
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -12790,6 +12880,7 @@ export namespace Prisma {
     readonly roleId: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly isActive: FieldRef<"User", 'Boolean'>
   }
     
 
@@ -13244,7 +13335,8 @@ export namespace Prisma {
 
   export const TownScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    isActive: 'isActive'
   };
 
   export type TownScalarFieldEnum = (typeof TownScalarFieldEnum)[keyof typeof TownScalarFieldEnum]
@@ -13253,7 +13345,8 @@ export namespace Prisma {
   export const CompanyScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    phone: 'phone'
+    phone: 'phone',
+    isActive: 'isActive'
   };
 
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -13262,7 +13355,8 @@ export namespace Prisma {
   export const ProductScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    companyId: 'companyId'
+    companyId: 'companyId',
+    isActive: 'isActive'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -13272,7 +13366,8 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     phone: 'phone',
-    townId: 'townId'
+    townId: 'townId',
+    isActive: 'isActive'
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -13281,7 +13376,8 @@ export namespace Prisma {
   export const SalesmanScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    phone: 'phone'
+    phone: 'phone',
+    isActive: 'isActive'
   };
 
   export type SalesmanScalarFieldEnum = (typeof SalesmanScalarFieldEnum)[keyof typeof SalesmanScalarFieldEnum]
@@ -13329,7 +13425,8 @@ export namespace Prisma {
 
   export const RoleScalarFieldEnum: {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    isActive: 'isActive'
   };
 
   export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
@@ -13343,7 +13440,8 @@ export namespace Prisma {
     lastname: 'lastname',
     roleId: 'roleId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    isActive: 'isActive'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -13407,6 +13505,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -13443,6 +13548,7 @@ export namespace Prisma {
     NOT?: TownWhereInput | TownWhereInput[]
     id?: IntFilter<"Town"> | number
     name?: StringFilter<"Town"> | string
+    isActive?: BoolFilter<"Town"> | boolean
     customers?: CustomerListRelationFilter
     invoices?: InvoiceListRelationFilter
   }
@@ -13450,6 +13556,7 @@ export namespace Prisma {
   export type TownOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
     customers?: CustomerOrderByRelationAggregateInput
     invoices?: InvoiceOrderByRelationAggregateInput
   }
@@ -13460,6 +13567,7 @@ export namespace Prisma {
     AND?: TownWhereInput | TownWhereInput[]
     OR?: TownWhereInput[]
     NOT?: TownWhereInput | TownWhereInput[]
+    isActive?: BoolFilter<"Town"> | boolean
     customers?: CustomerListRelationFilter
     invoices?: InvoiceListRelationFilter
   }, "id" | "name">
@@ -13467,6 +13575,7 @@ export namespace Prisma {
   export type TownOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
     _count?: TownCountOrderByAggregateInput
     _avg?: TownAvgOrderByAggregateInput
     _max?: TownMaxOrderByAggregateInput
@@ -13480,6 +13589,7 @@ export namespace Prisma {
     NOT?: TownScalarWhereWithAggregatesInput | TownScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Town"> | number
     name?: StringWithAggregatesFilter<"Town"> | string
+    isActive?: BoolWithAggregatesFilter<"Town"> | boolean
   }
 
   export type CompanyWhereInput = {
@@ -13489,6 +13599,7 @@ export namespace Prisma {
     id?: IntFilter<"Company"> | number
     name?: StringFilter<"Company"> | string
     phone?: StringFilter<"Company"> | string
+    isActive?: BoolFilter<"Company"> | boolean
     products?: ProductListRelationFilter
   }
 
@@ -13496,6 +13607,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
     products?: ProductOrderByRelationAggregateInput
   }
 
@@ -13506,6 +13618,7 @@ export namespace Prisma {
     NOT?: CompanyWhereInput | CompanyWhereInput[]
     name?: StringFilter<"Company"> | string
     phone?: StringFilter<"Company"> | string
+    isActive?: BoolFilter<"Company"> | boolean
     products?: ProductListRelationFilter
   }, "id">
 
@@ -13513,6 +13626,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
     _count?: CompanyCountOrderByAggregateInput
     _avg?: CompanyAvgOrderByAggregateInput
     _max?: CompanyMaxOrderByAggregateInput
@@ -13527,6 +13641,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Company"> | number
     name?: StringWithAggregatesFilter<"Company"> | string
     phone?: StringWithAggregatesFilter<"Company"> | string
+    isActive?: BoolWithAggregatesFilter<"Company"> | boolean
   }
 
   export type ProductWhereInput = {
@@ -13536,6 +13651,7 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     companyId?: IntFilter<"Product"> | number
+    isActive?: BoolFilter<"Product"> | boolean
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     invoiceItems?: InvoiceItemListRelationFilter
   }
@@ -13544,6 +13660,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    isActive?: SortOrder
     company?: CompanyOrderByWithRelationInput
     invoiceItems?: InvoiceItemOrderByRelationAggregateInput
   }
@@ -13555,6 +13672,7 @@ export namespace Prisma {
     NOT?: ProductWhereInput | ProductWhereInput[]
     name?: StringFilter<"Product"> | string
     companyId?: IntFilter<"Product"> | number
+    isActive?: BoolFilter<"Product"> | boolean
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
     invoiceItems?: InvoiceItemListRelationFilter
   }, "id">
@@ -13563,6 +13681,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    isActive?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -13577,6 +13696,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Product"> | number
     name?: StringWithAggregatesFilter<"Product"> | string
     companyId?: IntWithAggregatesFilter<"Product"> | number
+    isActive?: BoolWithAggregatesFilter<"Product"> | boolean
   }
 
   export type CustomerWhereInput = {
@@ -13587,6 +13707,7 @@ export namespace Prisma {
     name?: StringFilter<"Customer"> | string
     phone?: StringFilter<"Customer"> | string
     townId?: IntFilter<"Customer"> | number
+    isActive?: BoolFilter<"Customer"> | boolean
     town?: XOR<TownScalarRelationFilter, TownWhereInput>
     invoices?: InvoiceListRelationFilter
     cashRecords?: CashRecordListRelationFilter
@@ -13597,6 +13718,7 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     townId?: SortOrder
+    isActive?: SortOrder
     town?: TownOrderByWithRelationInput
     invoices?: InvoiceOrderByRelationAggregateInput
     cashRecords?: CashRecordOrderByRelationAggregateInput
@@ -13610,6 +13732,7 @@ export namespace Prisma {
     name?: StringFilter<"Customer"> | string
     phone?: StringFilter<"Customer"> | string
     townId?: IntFilter<"Customer"> | number
+    isActive?: BoolFilter<"Customer"> | boolean
     town?: XOR<TownScalarRelationFilter, TownWhereInput>
     invoices?: InvoiceListRelationFilter
     cashRecords?: CashRecordListRelationFilter
@@ -13620,6 +13743,7 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     townId?: SortOrder
+    isActive?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
     _avg?: CustomerAvgOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
@@ -13635,6 +13759,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Customer"> | string
     phone?: StringWithAggregatesFilter<"Customer"> | string
     townId?: IntWithAggregatesFilter<"Customer"> | number
+    isActive?: BoolWithAggregatesFilter<"Customer"> | boolean
   }
 
   export type SalesmanWhereInput = {
@@ -13644,6 +13769,7 @@ export namespace Prisma {
     id?: IntFilter<"Salesman"> | number
     name?: StringFilter<"Salesman"> | string
     phone?: StringFilter<"Salesman"> | string
+    isActive?: BoolFilter<"Salesman"> | boolean
     invoices?: InvoiceListRelationFilter
   }
 
@@ -13651,6 +13777,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
     invoices?: InvoiceOrderByRelationAggregateInput
   }
 
@@ -13661,6 +13788,7 @@ export namespace Prisma {
     NOT?: SalesmanWhereInput | SalesmanWhereInput[]
     name?: StringFilter<"Salesman"> | string
     phone?: StringFilter<"Salesman"> | string
+    isActive?: BoolFilter<"Salesman"> | boolean
     invoices?: InvoiceListRelationFilter
   }, "id">
 
@@ -13668,6 +13796,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
     _count?: SalesmanCountOrderByAggregateInput
     _avg?: SalesmanAvgOrderByAggregateInput
     _max?: SalesmanMaxOrderByAggregateInput
@@ -13682,6 +13811,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Salesman"> | number
     name?: StringWithAggregatesFilter<"Salesman"> | string
     phone?: StringWithAggregatesFilter<"Salesman"> | string
+    isActive?: BoolWithAggregatesFilter<"Salesman"> | boolean
   }
 
   export type InvoiceWhereInput = {
@@ -13908,12 +14038,14 @@ export namespace Prisma {
     NOT?: RoleWhereInput | RoleWhereInput[]
     id?: IntFilter<"Role"> | number
     name?: StringFilter<"Role"> | string
+    isActive?: BoolFilter<"Role"> | boolean
     users?: UserListRelationFilter
   }
 
   export type RoleOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
     users?: UserOrderByRelationAggregateInput
   }
 
@@ -13923,12 +14055,14 @@ export namespace Prisma {
     AND?: RoleWhereInput | RoleWhereInput[]
     OR?: RoleWhereInput[]
     NOT?: RoleWhereInput | RoleWhereInput[]
+    isActive?: BoolFilter<"Role"> | boolean
     users?: UserListRelationFilter
   }, "id" | "name">
 
   export type RoleOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
     _count?: RoleCountOrderByAggregateInput
     _avg?: RoleAvgOrderByAggregateInput
     _max?: RoleMaxOrderByAggregateInput
@@ -13942,6 +14076,7 @@ export namespace Prisma {
     NOT?: RoleScalarWhereWithAggregatesInput | RoleScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Role"> | number
     name?: StringWithAggregatesFilter<"Role"> | string
+    isActive?: BoolWithAggregatesFilter<"Role"> | boolean
   }
 
   export type UserWhereInput = {
@@ -13956,6 +14091,7 @@ export namespace Prisma {
     roleId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    isActive?: BoolFilter<"User"> | boolean
     role?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
   }
 
@@ -13968,6 +14104,7 @@ export namespace Prisma {
     roleId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isActive?: SortOrder
     role?: RoleOrderByWithRelationInput
   }
 
@@ -13983,6 +14120,7 @@ export namespace Prisma {
     roleId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    isActive?: BoolFilter<"User"> | boolean
     role?: XOR<RoleNullableScalarRelationFilter, RoleWhereInput> | null
   }, "id" | "username">
 
@@ -13995,6 +14133,7 @@ export namespace Prisma {
     roleId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isActive?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -14014,10 +14153,12 @@ export namespace Prisma {
     roleId?: IntNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    isActive?: BoolWithAggregatesFilter<"User"> | boolean
   }
 
   export type TownCreateInput = {
     name: string
+    isActive?: boolean
     customers?: CustomerCreateNestedManyWithoutTownInput
     invoices?: InvoiceCreateNestedManyWithoutTownInput
   }
@@ -14025,12 +14166,14 @@ export namespace Prisma {
   export type TownUncheckedCreateInput = {
     id?: number
     name: string
+    isActive?: boolean
     customers?: CustomerUncheckedCreateNestedManyWithoutTownInput
     invoices?: InvoiceUncheckedCreateNestedManyWithoutTownInput
   }
 
   export type TownUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     customers?: CustomerUpdateManyWithoutTownNestedInput
     invoices?: InvoiceUpdateManyWithoutTownNestedInput
   }
@@ -14038,6 +14181,7 @@ export namespace Prisma {
   export type TownUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     customers?: CustomerUncheckedUpdateManyWithoutTownNestedInput
     invoices?: InvoiceUncheckedUpdateManyWithoutTownNestedInput
   }
@@ -14045,20 +14189,24 @@ export namespace Prisma {
   export type TownCreateManyInput = {
     id?: number
     name: string
+    isActive?: boolean
   }
 
   export type TownUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type TownUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CompanyCreateInput = {
     name: string
     phone: string
+    isActive?: boolean
     products?: ProductCreateNestedManyWithoutCompanyInput
   }
 
@@ -14066,12 +14214,14 @@ export namespace Prisma {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
     products?: ProductUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     products?: ProductUpdateManyWithoutCompanyNestedInput
   }
 
@@ -14079,6 +14229,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     products?: ProductUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
@@ -14086,21 +14237,25 @@ export namespace Prisma {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type CompanyUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CompanyUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductCreateInput = {
     name: string
+    isActive?: boolean
     company: CompanyCreateNestedOneWithoutProductsInput
     invoiceItems?: InvoiceItemCreateNestedManyWithoutProductInput
   }
@@ -14109,11 +14264,13 @@ export namespace Prisma {
     id?: number
     name: string
     companyId: number
+    isActive?: boolean
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneRequiredWithoutProductsNestedInput
     invoiceItems?: InvoiceItemUpdateManyWithoutProductNestedInput
   }
@@ -14122,6 +14279,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
@@ -14129,21 +14287,25 @@ export namespace Prisma {
     id?: number
     name: string
     companyId: number
+    isActive?: boolean
   }
 
   export type ProductUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerCreateInput = {
     name: string
     phone: string
+    isActive?: boolean
     town: TownCreateNestedOneWithoutCustomersInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     cashRecords?: CashRecordCreateNestedManyWithoutCustomerInput
@@ -14154,6 +14316,7 @@ export namespace Prisma {
     name: string
     phone: string
     townId: number
+    isActive?: boolean
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     cashRecords?: CashRecordUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -14161,6 +14324,7 @@ export namespace Prisma {
   export type CustomerUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     town?: TownUpdateOneRequiredWithoutCustomersNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     cashRecords?: CashRecordUpdateManyWithoutCustomerNestedInput
@@ -14171,6 +14335,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     cashRecords?: CashRecordUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -14180,11 +14345,13 @@ export namespace Prisma {
     name: string
     phone: string
     townId: number
+    isActive?: boolean
   }
 
   export type CustomerUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerUncheckedUpdateManyInput = {
@@ -14192,11 +14359,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SalesmanCreateInput = {
     name: string
     phone: string
+    isActive?: boolean
     invoices?: InvoiceCreateNestedManyWithoutSalesmanInput
   }
 
@@ -14204,12 +14373,14 @@ export namespace Prisma {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
     invoices?: InvoiceUncheckedCreateNestedManyWithoutSalesmanInput
   }
 
   export type SalesmanUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUpdateManyWithoutSalesmanNestedInput
   }
 
@@ -14217,6 +14388,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUncheckedUpdateManyWithoutSalesmanNestedInput
   }
 
@@ -14224,17 +14396,20 @@ export namespace Prisma {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type SalesmanUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SalesmanUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceCreateInput = {
@@ -14445,38 +14620,45 @@ export namespace Prisma {
 
   export type RoleCreateInput = {
     name: string
+    isActive?: boolean
     users?: UserCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateInput = {
     id?: number
     name: string
+    isActive?: boolean
     users?: UserUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     users?: UserUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     users?: UserUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleCreateManyInput = {
     id?: number
     name: string
+    isActive?: boolean
   }
 
   export type RoleUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type RoleUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserCreateInput = {
@@ -14486,6 +14668,7 @@ export namespace Prisma {
     lastname?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    isActive?: boolean
     role?: RoleCreateNestedOneWithoutUsersInput
   }
 
@@ -14498,6 +14681,7 @@ export namespace Prisma {
     roleId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    isActive?: boolean
   }
 
   export type UserUpdateInput = {
@@ -14507,6 +14691,7 @@ export namespace Prisma {
     lastname?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     role?: RoleUpdateOneWithoutUsersNestedInput
   }
 
@@ -14519,6 +14704,7 @@ export namespace Prisma {
     roleId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserCreateManyInput = {
@@ -14530,6 +14716,7 @@ export namespace Prisma {
     roleId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    isActive?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
@@ -14539,6 +14726,7 @@ export namespace Prisma {
     lastname?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -14550,6 +14738,7 @@ export namespace Prisma {
     roleId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -14578,6 +14767,11 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type CustomerListRelationFilter = {
     every?: CustomerWhereInput
     some?: CustomerWhereInput
@@ -14601,6 +14795,7 @@ export namespace Prisma {
   export type TownCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
   }
 
   export type TownAvgOrderByAggregateInput = {
@@ -14610,11 +14805,13 @@ export namespace Prisma {
   export type TownMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
   }
 
   export type TownMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
   }
 
   export type TownSumOrderByAggregateInput = {
@@ -14655,6 +14852,14 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type ProductListRelationFilter = {
     every?: ProductWhereInput
     some?: ProductWhereInput
@@ -14669,6 +14874,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
   }
 
   export type CompanyAvgOrderByAggregateInput = {
@@ -14679,12 +14885,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
   }
 
   export type CompanyMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
   }
 
   export type CompanySumOrderByAggregateInput = {
@@ -14710,6 +14918,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -14721,12 +14930,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     companyId?: SortOrder
+    isActive?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -14754,6 +14965,7 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     townId?: SortOrder
+    isActive?: SortOrder
   }
 
   export type CustomerAvgOrderByAggregateInput = {
@@ -14766,6 +14978,7 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     townId?: SortOrder
+    isActive?: SortOrder
   }
 
   export type CustomerMinOrderByAggregateInput = {
@@ -14773,6 +14986,7 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     townId?: SortOrder
+    isActive?: SortOrder
   }
 
   export type CustomerSumOrderByAggregateInput = {
@@ -14784,6 +14998,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
   }
 
   export type SalesmanAvgOrderByAggregateInput = {
@@ -14794,12 +15009,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
   }
 
   export type SalesmanMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     phone?: SortOrder
+    isActive?: SortOrder
   }
 
   export type SalesmanSumOrderByAggregateInput = {
@@ -15120,6 +15337,7 @@ export namespace Prisma {
   export type RoleCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
   }
 
   export type RoleAvgOrderByAggregateInput = {
@@ -15129,11 +15347,13 @@ export namespace Prisma {
   export type RoleMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
   }
 
   export type RoleMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
   }
 
   export type RoleSumOrderByAggregateInput = {
@@ -15154,6 +15374,7 @@ export namespace Prisma {
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isActive?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -15170,6 +15391,7 @@ export namespace Prisma {
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isActive?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -15181,6 +15403,7 @@ export namespace Prisma {
     roleId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    isActive?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -15218,6 +15441,10 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type CustomerUpdateManyWithoutTownNestedInput = {
@@ -15765,6 +15992,11 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -15807,6 +16039,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -15947,6 +16187,7 @@ export namespace Prisma {
   export type CustomerCreateWithoutTownInput = {
     name: string
     phone: string
+    isActive?: boolean
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
     cashRecords?: CashRecordCreateNestedManyWithoutCustomerInput
   }
@@ -15955,6 +16196,7 @@ export namespace Prisma {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
     cashRecords?: CashRecordUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -16028,6 +16270,7 @@ export namespace Prisma {
     name?: StringFilter<"Customer"> | string
     phone?: StringFilter<"Customer"> | string
     townId?: IntFilter<"Customer"> | number
+    isActive?: BoolFilter<"Customer"> | boolean
   }
 
   export type InvoiceUpsertWithWhereUniqueWithoutTownInput = {
@@ -16064,12 +16307,14 @@ export namespace Prisma {
 
   export type ProductCreateWithoutCompanyInput = {
     name: string
+    isActive?: boolean
     invoiceItems?: InvoiceItemCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCompanyInput = {
     id?: number
     name: string
+    isActive?: boolean
     invoiceItems?: InvoiceItemUncheckedCreateNestedManyWithoutProductInput
   }
 
@@ -16106,17 +16351,20 @@ export namespace Prisma {
     id?: IntFilter<"Product"> | number
     name?: StringFilter<"Product"> | string
     companyId?: IntFilter<"Product"> | number
+    isActive?: BoolFilter<"Product"> | boolean
   }
 
   export type CompanyCreateWithoutProductsInput = {
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type CompanyUncheckedCreateWithoutProductsInput = {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type CompanyCreateOrConnectWithoutProductsInput = {
@@ -16163,12 +16411,14 @@ export namespace Prisma {
   export type CompanyUpdateWithoutProductsInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CompanyUncheckedUpdateWithoutProductsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceItemUpsertWithWhereUniqueWithoutProductInput = {
@@ -16201,12 +16451,14 @@ export namespace Prisma {
 
   export type TownCreateWithoutCustomersInput = {
     name: string
+    isActive?: boolean
     invoices?: InvoiceCreateNestedManyWithoutTownInput
   }
 
   export type TownUncheckedCreateWithoutCustomersInput = {
     id?: number
     name: string
+    isActive?: boolean
     invoices?: InvoiceUncheckedCreateNestedManyWithoutTownInput
   }
 
@@ -16288,12 +16540,14 @@ export namespace Prisma {
 
   export type TownUpdateWithoutCustomersInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUpdateManyWithoutTownNestedInput
   }
 
   export type TownUncheckedUpdateWithoutCustomersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUncheckedUpdateManyWithoutTownNestedInput
   }
 
@@ -16394,12 +16648,14 @@ export namespace Prisma {
 
   export type TownCreateWithoutInvoicesInput = {
     name: string
+    isActive?: boolean
     customers?: CustomerCreateNestedManyWithoutTownInput
   }
 
   export type TownUncheckedCreateWithoutInvoicesInput = {
     id?: number
     name: string
+    isActive?: boolean
     customers?: CustomerUncheckedCreateNestedManyWithoutTownInput
   }
 
@@ -16411,6 +16667,7 @@ export namespace Prisma {
   export type CustomerCreateWithoutInvoicesInput = {
     name: string
     phone: string
+    isActive?: boolean
     town: TownCreateNestedOneWithoutCustomersInput
     cashRecords?: CashRecordCreateNestedManyWithoutCustomerInput
   }
@@ -16420,6 +16677,7 @@ export namespace Prisma {
     name: string
     phone: string
     townId: number
+    isActive?: boolean
     cashRecords?: CashRecordUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -16431,12 +16689,14 @@ export namespace Prisma {
   export type SalesmanCreateWithoutInvoicesInput = {
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type SalesmanUncheckedCreateWithoutInvoicesInput = {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type SalesmanCreateOrConnectWithoutInvoicesInput = {
@@ -16482,12 +16742,14 @@ export namespace Prisma {
 
   export type TownUpdateWithoutInvoicesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     customers?: CustomerUpdateManyWithoutTownNestedInput
   }
 
   export type TownUncheckedUpdateWithoutInvoicesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     customers?: CustomerUncheckedUpdateManyWithoutTownNestedInput
   }
 
@@ -16505,6 +16767,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutInvoicesInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     town?: TownUpdateOneRequiredWithoutCustomersNestedInput
     cashRecords?: CashRecordUpdateManyWithoutCustomerNestedInput
   }
@@ -16514,6 +16777,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     cashRecords?: CashRecordUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -16531,12 +16795,14 @@ export namespace Prisma {
   export type SalesmanUpdateWithoutInvoicesInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SalesmanUncheckedUpdateWithoutInvoicesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceItemUpsertWithWhereUniqueWithoutInvoiceInput = {
@@ -16587,6 +16853,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutInvoiceItemsInput = {
     name: string
+    isActive?: boolean
     company: CompanyCreateNestedOneWithoutProductsInput
   }
 
@@ -16594,6 +16861,7 @@ export namespace Prisma {
     id?: number
     name: string
     companyId: number
+    isActive?: boolean
   }
 
   export type ProductCreateOrConnectWithoutInvoiceItemsInput = {
@@ -16650,6 +16918,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutInvoiceItemsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     company?: CompanyUpdateOneRequiredWithoutProductsNestedInput
   }
 
@@ -16657,11 +16926,13 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     companyId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerCreateWithoutCashRecordsInput = {
     name: string
     phone: string
+    isActive?: boolean
     town: TownCreateNestedOneWithoutCustomersInput
     invoices?: InvoiceCreateNestedManyWithoutCustomerInput
   }
@@ -16671,6 +16942,7 @@ export namespace Prisma {
     name: string
     phone: string
     townId: number
+    isActive?: boolean
     invoices?: InvoiceUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -16693,6 +16965,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutCashRecordsInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     town?: TownUpdateOneRequiredWithoutCustomersNestedInput
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
   }
@@ -16702,6 +16975,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     townId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -16712,6 +16986,7 @@ export namespace Prisma {
     lastname?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    isActive?: boolean
   }
 
   export type UserUncheckedCreateWithoutRoleInput = {
@@ -16722,6 +16997,7 @@ export namespace Prisma {
     lastname?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    isActive?: boolean
   }
 
   export type UserCreateOrConnectWithoutRoleInput = {
@@ -16762,15 +17038,18 @@ export namespace Prisma {
     roleId?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    isActive?: BoolFilter<"User"> | boolean
   }
 
   export type RoleCreateWithoutUsersInput = {
     name: string
+    isActive?: boolean
   }
 
   export type RoleUncheckedCreateWithoutUsersInput = {
     id?: number
     name: string
+    isActive?: boolean
   }
 
   export type RoleCreateOrConnectWithoutUsersInput = {
@@ -16791,17 +17070,20 @@ export namespace Prisma {
 
   export type RoleUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type RoleUncheckedUpdateWithoutUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerCreateManyTownInput = {
     id?: number
     name: string
     phone: string
+    isActive?: boolean
   }
 
   export type InvoiceCreateManyTownInput = {
@@ -16819,6 +17101,7 @@ export namespace Prisma {
   export type CustomerUpdateWithoutTownInput = {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUpdateManyWithoutCustomerNestedInput
     cashRecords?: CashRecordUpdateManyWithoutCustomerNestedInput
   }
@@ -16827,6 +17110,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
     cashRecords?: CashRecordUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -16835,6 +17119,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceUpdateWithoutTownInput = {
@@ -16877,22 +17162,26 @@ export namespace Prisma {
   export type ProductCreateManyCompanyInput = {
     id?: number
     name: string
+    isActive?: boolean
   }
 
   export type ProductUpdateWithoutCompanyInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoiceItems?: InvoiceItemUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCompanyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     invoiceItems?: InvoiceItemUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCompanyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InvoiceItemCreateManyProductInput = {
@@ -17094,6 +17383,7 @@ export namespace Prisma {
     lastname?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    isActive?: boolean
   }
 
   export type UserUpdateWithoutRoleInput = {
@@ -17103,6 +17393,7 @@ export namespace Prisma {
     lastname?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateWithoutRoleInput = {
@@ -17113,6 +17404,7 @@ export namespace Prisma {
     lastname?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyWithoutRoleInput = {
@@ -17123,6 +17415,7 @@ export namespace Prisma {
     lastname?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

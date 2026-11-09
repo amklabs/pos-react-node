@@ -122,32 +122,37 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.TownScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  isActive: 'isActive'
 };
 
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  phone: 'phone'
+  phone: 'phone',
+  isActive: 'isActive'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  companyId: 'companyId'
+  companyId: 'companyId',
+  isActive: 'isActive'
 };
 
 exports.Prisma.CustomerScalarFieldEnum = {
   id: 'id',
   name: 'name',
   phone: 'phone',
-  townId: 'townId'
+  townId: 'townId',
+  isActive: 'isActive'
 };
 
 exports.Prisma.SalesmanScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  phone: 'phone'
+  phone: 'phone',
+  isActive: 'isActive'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
@@ -183,7 +188,8 @@ exports.Prisma.CashRecordScalarFieldEnum = {
 
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  isActive: 'isActive'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -194,7 +200,8 @@ exports.Prisma.UserScalarFieldEnum = {
   lastname: 'lastname',
   roleId: 'roleId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive'
 };
 
 exports.Prisma.SortOrder = {
