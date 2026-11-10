@@ -80,7 +80,7 @@ export default function InvoiceView() {
                         <td className="p-3 text-center">{item.qty}</td>
                         <td className="p-3 text-right">{item.rate}</td>
                         <td className="p-3 text-right">{item.discount}</td>
-                        <td className="p-3 text-right font-semibold">{(item.qty * item.rate) - item.discount}</td>
+                        <td className="p-3 text-right font-semibold">{((item.qty * item.rate) - item.discount).toFixed(2)}</td>
                     </tr>
                 ))}
                 </tbody>

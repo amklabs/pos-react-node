@@ -50,15 +50,23 @@ router.post('/invoices', async (req, res) => {
 
     // Calculate total
     let total = 0;
+    let totalDiscount = 0;
+    let totalSubTotal = 0;
+
     const formattedItems = items.map(item => {
-        const itemTotal = (item.qty * item.rate) - (item.discount || 0);
-        total += itemTotal;
-        return {
+        const _item = {
             productId: parseInt(item.productId),
-            qty: parseInt(item.qty),
+            qty: parseFloat(item.qty),
             rate: parseFloat(item.rate),
-            discount: item.discount || 0
+            subTotal: parseFloat(item.qty) * parseFloat(item.rate),
+            discount: item.discount || 0,
+            total: parseFloat(item.qty) * parseFloat(item.rate) - parseFloat(item.discount),
         };
+
+        total += (_item.qty * _item.rate) - (_item.discount || 0);
+        totalDiscount += _item.discount;
+        totalSubTotal += _item.subTotal;
+        return _item;
     });
 
     try {
@@ -69,6 +77,8 @@ router.post('/invoices', async (req, res) => {
                 townId: parseInt(townId),
                 customerId: customerId ? parseInt(customerId) : null,
                 salesmanId: salesmanId ? parseInt(salesmanId) : null,
+                totalDiscount: totalDiscount,
+                totalSubTotal: totalSubTotal,
                 totalAmount: total,
                 items: {
                     create: formattedItems
@@ -77,7 +87,11 @@ router.post('/invoices', async (req, res) => {
         });
         res.json(invoice);
     } catch (error) {
-        res.status(500).json({error: "Failed to create invoice", details: error.message});
+        console.log(error);
+        if (error.code === 'P2002') {
+            return res.status(409).json({message: "Invoice number already exists"});
+        }
+        return res.status(500).json({message: "Failed to create invoice"});
     }
 });
 

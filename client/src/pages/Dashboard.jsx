@@ -112,7 +112,7 @@ export default function Dashboard() {
                 {/* Low Stock Alerts */}
                 <div className="bg-white p-6 rounded-lg shadow border-t-4 border-red-500">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-bold text-gray-800">Low Stock Alerts</h2>
+                        <h2 className="text-xl font-bold text-gray-800">Low Stock Alerts <span className="text-sm font-normal text-gray-400">(Qty less than 10)</span></h2>
                         <Link to="/reports/stock" className="text-sm text-blue-600 hover:underline">Full Stock
                             Report</Link>
                     </div>

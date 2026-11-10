@@ -1,0 +1,12 @@
+/* utils/toast.css */
+
+/* White progress bar for all toasts (visible on every colored bg) */
+.my-toast-progress {
+    background-color: #ffffff !important;
+}
+
+/* Optional: make the toast container itself rounded */
+.swal2-toast {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}

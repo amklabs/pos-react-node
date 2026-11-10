@@ -122,32 +122,39 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.TownScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  isActive: 'isActive'
 };
 
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  phone: 'phone'
+  phone: 'phone',
+  isActive: 'isActive'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  companyId: 'companyId'
+  companyId: 'companyId',
+  lastPRate: 'lastPRate',
+  lastSRate: 'lastSRate',
+  isActive: 'isActive'
 };
 
 exports.Prisma.CustomerScalarFieldEnum = {
   id: 'id',
   name: 'name',
   phone: 'phone',
-  townId: 'townId'
+  townId: 'townId',
+  isActive: 'isActive'
 };
 
 exports.Prisma.SalesmanScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  phone: 'phone'
+  phone: 'phone',
+  isActive: 'isActive'
 };
 
 exports.Prisma.InvoiceScalarFieldEnum = {
@@ -158,6 +165,8 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   townId: 'townId',
   customerId: 'customerId',
   salesmanId: 'salesmanId',
+  totalSubTotal: 'totalSubTotal',
+  totalDiscount: 'totalDiscount',
   totalAmount: 'totalAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -169,7 +178,9 @@ exports.Prisma.InvoiceItemScalarFieldEnum = {
   productId: 'productId',
   qty: 'qty',
   rate: 'rate',
-  discount: 'discount'
+  subTotal: 'subTotal',
+  discount: 'discount',
+  total: 'total'
 };
 
 exports.Prisma.CashRecordScalarFieldEnum = {
@@ -183,7 +194,8 @@ exports.Prisma.CashRecordScalarFieldEnum = {
 
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  isActive: 'isActive'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -194,7 +206,8 @@ exports.Prisma.UserScalarFieldEnum = {
   lastname: 'lastname',
   roleId: 'roleId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive'
 };
 
 exports.Prisma.SortOrder = {
