@@ -3,19 +3,37 @@ import {useState, useEffect} from 'react';
 import apiClient from "../apiClient.js";
 import usePageTitle from '../hooks/usePageTitle';
 import MySwal from "../components/MySwal.jsx";
-import { toastSuccess, toastError } from '../utils/toast';
+import {toastSuccess, toastError} from '../utils/toast';
 import {formatNumber} from "../utils/formaters.js";
 
 
 export default function NewSale() {
     usePageTitle('New Sale');
+    const emptyItem = { productId: '', qty: 1, rate: 0, discount: 0 };
 
-    const [invoice, setInvoice] = useState({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
+    const emptyInvoice = {
+        invoiceNo: '',
+        date: '',
+        type: 'SALE',
+        townId: '',
+        customerId: '',
+        salesmanId: '',
+        totalAmount: 0,
+        totalDiscount: 0,
+        totalPayment: 0,
+        totalSubTotal: 0,
+        balance: 0,
+        items: []
+    };
+
+    const [invoice, setInvoice] = useState(emptyInvoice);
     const [items, setItems] = useState([]);
-    const [currentItem, setCurrentItem] = useState({productId: '', qty: 1, rate: 0, discount: 0});
+    const [currentItem, setCurrentItem] = useState(emptyItem);
     const [processing, setProcessing] = useState(false);
+
     // State for editing an existing item in the table
     const [editingIndex, setEditingIndex] = useState(null);
+
     // State for our dropdown lists
     const [towns, setTowns] = useState([]);
     const [customers, setCustomers] = useState([]);
@@ -44,10 +62,37 @@ export default function NewSale() {
         });
     }, []);
 
+    const handleEditItem = (idx) => {
+        setCurrentItem({...items[idx]});
+        setEditingIndex(idx);
+        //updateInvoiceAmounts();
+    };
+
+    useEffect(() => {
+        const { totalSubTotal, totalDiscount } = items.reduce(
+            (acc, item) => {
+                acc.totalSubTotal += (item.qty || 0) * (item.rate || 0);
+                acc.totalDiscount += item.discount || 0;
+                return acc;
+            },
+            { totalSubTotal: 0, totalDiscount: 0 }
+        );
+
+        setInvoice(prev => ({
+            ...prev,
+            totalSubTotal,
+            totalDiscount,
+            totalAmount: totalSubTotal - totalDiscount,
+            balance: totalSubTotal - totalDiscount,
+        }));
+    }, [items]);
+
     const handleAddItem = () => {
-        if (!currentItem.productId) return alert('Please select a product');
+        if (!currentItem.productId) {
+            toastError('Please select a product');
+            return;
+        }
         if (editingIndex !== null) {
-            // Update the existing item
             const updated = [...items];
             updated[editingIndex] = currentItem;
             setItems(updated);
@@ -55,62 +100,41 @@ export default function NewSale() {
         } else {
             setItems([...items, currentItem]);
         }
-        setCurrentItem({productId: '', qty: 1, rate: 0, discount: 0});
-    };
-
-    const handleEditItem = (idx) => {
-        setCurrentItem({...items[idx]});
-        setEditingIndex(idx);
+        setCurrentItem(emptyItem);
     };
 
     const handleDeleteItem = (idx) => {
         setItems(items.filter((_, i) => i !== idx));
         if (editingIndex === idx) {
             setEditingIndex(null);
-            setCurrentItem({productId: '', qty: 1, rate: 0, discount: 0});
+            setCurrentItem(emptyItem);
         } else if (editingIndex !== null && idx < editingIndex) {
             setEditingIndex(editingIndex - 1);
-            setCurrentItem(null);
         }
     };
 
-    // Compute total for footer
-    const grandTotal = items.reduce(
-        (sum, item) => sum + (item.qty * item.rate) - item.discount,
-        0
-    );
-    const grandDiscount = items.reduce(
-        (sum, item) => sum + item.discount,
-        0
-    );
-
     const handleSave = async () => {
         if (!invoice.invoiceNo || !invoice.townId || items.length === 0) {
-            toastError("Invoice No, Town Name and at least one item is required.")
-            return ;
+            toastError('Invoice No, Town and at least one item are required.');
+            return;
         }
-
         try {
             setProcessing(true);
-            await apiClient.post(`/api/invoices`, {
-                ...invoice,
-                type: 'SALE',
-                items: items
-            });
+            await apiClient.post(`/api/invoices`, { ...invoice, type: 'SALE', items });
             setItems([]);
-            setInvoice({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
+            setInvoice(emptyInvoice);
+            setEditingIndex(null);
+            setCurrentItem(emptyItem);
             toastSuccess('Sale Invoice saved successfully!');
         } catch (err) {
-            const message =
-                err.response?.data?.message || err.message || 'Something went wrong';
-            toastError(message);
+            toastError(err.response?.data?.message || err.message || 'Something went wrong');
         } finally {
             setProcessing(false);
         }
     };
 
     return (
-        <div className="bg-white p-6 rounded shadow max-w-6xl">
+        <div className="bg-white p-6 rounded shadow w-full">
             <h1 className="text-2xl font-bold mb-6">New Sales Invoice</h1>
 
             {/* Header Inputs */}
@@ -157,7 +181,7 @@ export default function NewSale() {
             {/* Item Entry Area */}
             <div className="flex gap-2 mb-4 items-end bg-gray-50 p-4 rounded-lg border ">
                 <div className="flex-1">
-                    <label className="block text-sm font-semibold mb-1">Product</label>
+                    <label className="block text-sm font-semibold mb-1">Product Name</label>
                     <select className="border p-2 rounded w-full" value={currentItem.productId}
                             onChange={e => setCurrentItem({...currentItem, productId: e.target.value})}>
                         <option value="">Select Product</option>
@@ -165,19 +189,19 @@ export default function NewSale() {
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold mb-1">Qty</label>
+                    <label className="block text-sm font-semibold mb-1">Quantity</label>
                     <input type="number" className="border p-2 rounded w-24" value={currentItem.qty} step="0.0001"
-                           onChange={e => setCurrentItem({...currentItem, qty: parseFloat(e.target.value)})}/>
+                           onChange={e => setCurrentItem({...currentItem, qty: parseFloat(e.target.value) || 0})}/>
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold mb-1">Rate</label>
+                    <label className="block text-sm font-semibold mb-1">Unit Rate</label>
                     <input type="number" className="border p-2 rounded w-32" value={currentItem.rate} step="0.01"
-                           onChange={e => setCurrentItem({...currentItem, rate: parseFloat(e.target.value)})}/>
+                           onChange={e => setCurrentItem({...currentItem, rate: parseFloat(e.target.value) || 0})}/>
                 </div>
                 <div>
-                    <label className="block text-sm font-semibold mb-1">Discount %</label>
+                    <label className="block text-sm font-semibold mb-1">Discount</label>
                     <input type="number" className="border p-2 rounded w-32" value={currentItem.discount} step="0.01"
-                           onChange={e => setCurrentItem({...currentItem, discount: parseFloat(e.target.value)})}/>
+                           onChange={e => setCurrentItem({...currentItem, discount: parseFloat(e.target.value) || 0})}/>
                 </div>
                 <button onClick={handleAddItem}
                         className="btn btn-primary">{editingIndex !== null ? 'Update Item' : 'Add Item'}
@@ -196,12 +220,12 @@ export default function NewSale() {
                 <table className="w-full border-collapse text-left">
                     <thead>
                     <tr className="bg-gray-50 border-b rounded-lg font-semibold">
+                        <th className="p-2 font-medium text-gray-700 text-center">Actions</th>
                         <th className="p-2 font-medium text-gray-700">Product Name</th>
-                        <th className="p-2 font-medium text-gray-700 text-end">Qty</th>
-                        <th className="p-2 font-medium text-gray-700 text-end">Rate</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Quantity</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Unit Rate</th>
                         <th className="p-2 font-medium text-gray-700 text-end">Discount</th>
-                        <th className="p-2 font-medium text-gray-700 text-end">Sub-Total</th>
-                        <th className="p-2 font-medium text-gray-700 w-30 text-center">Actions</th>
+                        <th className="p-2 font-medium text-gray-700 text-end">Total</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -210,17 +234,19 @@ export default function NewSale() {
                         const productName = products.find(p => p.id === parseInt(item.productId))?.name || item.productId;
                         return (
                             <tr key={idx} className="hover:bg-gray-50">
-                                <td className="p-2 w-[40%]">{productName}</td>
-                                <td className="p-2 w-30 text-end">{item.qty}</td>
-                                <td className="p-2 w-30 text-end">{formatNumber(item.rate)}</td>
-                                <td className="p-2 w-30 text-end">{formatNumber(item.discount)}</td>
-                                <td className="p-2 font-bold w-30 text-end">{formatNumber(((item.qty * item.rate) - item.discount).toFixed(2))}</td>
                                 <td className="p-2 w-30 text-center">
                                     <button onClick={() => handleEditItem(idx)}
-                                            className="text-blue-600 hover:underline mr-3">Edit</button>
+                                            className="text-blue-600 hover:underline mr-3">Edit
+                                    </button>
                                     <button onClick={() => handleDeleteItem(idx)}
-                                            className="text-red-600 hover:underline">Delete</button>
+                                            className="text-red-600 hover:underline">Delete
+                                    </button>
                                 </td>
+                                <td className="p-2 ">{productName}</td>
+                                <td className="p-2 w-24 text-end">{item.qty}</td>
+                                <td className="p-2 w-24 text-end">{formatNumber(item.rate)}</td>
+                                <td className="p-2 w-24 text-end">{formatNumber(item.discount)}</td>
+                                <td className="p-2 font-bold w-24 text-end">{formatNumber(((item.qty * item.rate) - item.discount).toFixed(2))}</td>
                             </tr>
                         )
                     })}
@@ -230,12 +256,53 @@ export default function NewSale() {
                         </tr>
                     )}
                     </tbody>
-                    <tfoot>
-                    <tr className="bg-gray-100 border-t font-semibold">
-                        <td colSpan="3" className="p-2 text-right">Grand Total</td>
-                        <td className="p-2 font-bold text-end">{formatNumber(grandDiscount.toFixed(2))}</td>
-                        <td className="p-2 font-bold text-end">{formatNumber(grandTotal.toFixed(2))}</td>
-                        <td className="p-2 w-30"></td>
+                    <tfoot className="border-t">
+                    <tr className="font-semibold">
+                        <td colSpan="5" className="text-right">Sub Total</td>
+                        <td className="font-bold py-2 w-30 text-right">
+                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28"
+                                   value={formatNumber(invoice.totalSubTotal.toFixed(2))}
+                                   readOnly={true}
+                            />
+                        </td>
+                    </tr>
+                    <tr className="font-semibold">
+                        <td colSpan="5" className="text-right">Discount</td>
+                        <td className="font-bold pb-2 w-30  text-end">
+                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28"
+                                   value={formatNumber(invoice.totalDiscount.toFixed(2))}
+                                   readOnly={true}
+                            />
+                        </td>
+                    </tr>
+                    <tr className="font-semibold">
+                        <td colSpan="5" className="text-right">Payment</td>
+                        <td className="font-bold pb-2 w-30 text-end">
+                            <input
+                                type="text"
+                                inputMode="decimal"
+                                className="border rounded-none mx-2 py-1 text-end w-28"
+                                value={formatNumber(invoice.totalPayment.toFixed(2))}
+                                onChange={e => {
+                                    const cleaned = e.target.value.replace(/,/g, '').replace(/[^\d.]/g, '');
+                                    const parsed = parseFloat(cleaned) || 0;
+                                    setInvoice({
+                                        ...invoice,
+                                        totalPayment: parsed,
+                                        balance: invoice.totalAmount - parsed,
+                                    });
+                                }}
+                            />
+                        </td>
+                    </tr>
+                    <tr className="font-semibold">
+                        <td colSpan="5" className="p-2 text-right">Balance</td>
+                        <td className="font-bold pb-2 w-30 text-end">
+                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28"
+                                   value={formatNumber(invoice.balance.toFixed(2))}
+                                   readOnly={true}
+                            />
+                        </td>
                     </tr>
                     </tfoot>
                 </table>
@@ -247,7 +314,7 @@ export default function NewSale() {
                 </button>
                 <button onClick={() => {
                     setItems([]);
-                    setInvoice({invoiceNo: '', date: '', townId: '', customerId: '', salesmanId: ''});
+                    setInvoice(emptyInvoice);
                 }} className="btn bg-red-300">Cancel
                 </button>
             </div>

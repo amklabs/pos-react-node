@@ -71,6 +71,9 @@ model Invoice {
   totalSubTotal Decimal       @default(0) @db.Decimal(10, 2)
   totalDiscount Decimal       @default(0) @db.Decimal(10, 2)
   totalAmount   Decimal       @db.Decimal(10, 2)
+  payments      CashRecord[]
+  paymentStatus String        @default("Pending") //Pending, PartialPaid, Paid
+  paidOn        DateTime?
   createdAt     DateTime?     @default(now())
   updatedAt     DateTime?     @updatedAt
 }
@@ -96,6 +99,8 @@ model CashRecord {
   customer   Customer? @relation(fields: [customerId], references: [id])
   amount     Float
   note       String?
+  invoiceId  Int?
+  invoice    Invoice?   @relation(fields: [invoiceId], references: [id])
 }
 
 model Role {

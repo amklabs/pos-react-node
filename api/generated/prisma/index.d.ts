@@ -1887,10 +1887,12 @@ export namespace Prisma {
 
   export type InvoiceCountOutputType = {
     items: number
+    payments: number
   }
 
   export type InvoiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | InvoiceCountOutputTypeCountItemsArgs
+    payments?: boolean | InvoiceCountOutputTypeCountPaymentsArgs
   }
 
   // Custom InputTypes
@@ -1909,6 +1911,13 @@ export namespace Prisma {
    */
   export type InvoiceCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvoiceItemWhereInput
+  }
+
+  /**
+   * InvoiceCountOutputType without action
+   */
+  export type InvoiceCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CashRecordWhereInput
   }
 
 
@@ -7604,6 +7613,8 @@ export namespace Prisma {
     totalSubTotal: Decimal | null
     totalDiscount: Decimal | null
     totalAmount: Decimal | null
+    paymentStatus: string | null
+    paidOn: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7619,6 +7630,8 @@ export namespace Prisma {
     totalSubTotal: Decimal | null
     totalDiscount: Decimal | null
     totalAmount: Decimal | null
+    paymentStatus: string | null
+    paidOn: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -7634,6 +7647,8 @@ export namespace Prisma {
     totalSubTotal: number
     totalDiscount: number
     totalAmount: number
+    paymentStatus: number
+    paidOn: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -7671,6 +7686,8 @@ export namespace Prisma {
     totalSubTotal?: true
     totalDiscount?: true
     totalAmount?: true
+    paymentStatus?: true
+    paidOn?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7686,6 +7703,8 @@ export namespace Prisma {
     totalSubTotal?: true
     totalDiscount?: true
     totalAmount?: true
+    paymentStatus?: true
+    paidOn?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -7701,6 +7720,8 @@ export namespace Prisma {
     totalSubTotal?: true
     totalDiscount?: true
     totalAmount?: true
+    paymentStatus?: true
+    paidOn?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -7803,6 +7824,8 @@ export namespace Prisma {
     totalSubTotal: Decimal
     totalDiscount: Decimal
     totalAmount: Decimal
+    paymentStatus: string
+    paidOn: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     _count: InvoiceCountAggregateOutputType | null
@@ -7837,12 +7860,15 @@ export namespace Prisma {
     totalSubTotal?: boolean
     totalDiscount?: boolean
     totalAmount?: boolean
+    paymentStatus?: boolean
+    paidOn?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     town?: boolean | TownDefaultArgs<ExtArgs>
     customer?: boolean | Invoice$customerArgs<ExtArgs>
     salesman?: boolean | Invoice$salesmanArgs<ExtArgs>
     items?: boolean | Invoice$itemsArgs<ExtArgs>
+    payments?: boolean | Invoice$paymentsArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invoice"]>
 
@@ -7857,6 +7883,8 @@ export namespace Prisma {
     totalSubTotal?: boolean
     totalDiscount?: boolean
     totalAmount?: boolean
+    paymentStatus?: boolean
+    paidOn?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     town?: boolean | TownDefaultArgs<ExtArgs>
@@ -7875,6 +7903,8 @@ export namespace Prisma {
     totalSubTotal?: boolean
     totalDiscount?: boolean
     totalAmount?: boolean
+    paymentStatus?: boolean
+    paidOn?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     town?: boolean | TownDefaultArgs<ExtArgs>
@@ -7893,16 +7923,19 @@ export namespace Prisma {
     totalSubTotal?: boolean
     totalDiscount?: boolean
     totalAmount?: boolean
+    paymentStatus?: boolean
+    paidOn?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNo" | "date" | "type" | "townId" | "customerId" | "salesmanId" | "totalSubTotal" | "totalDiscount" | "totalAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+  export type InvoiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceNo" | "date" | "type" | "townId" | "customerId" | "salesmanId" | "totalSubTotal" | "totalDiscount" | "totalAmount" | "paymentStatus" | "paidOn" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
   export type InvoiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     town?: boolean | TownDefaultArgs<ExtArgs>
     customer?: boolean | Invoice$customerArgs<ExtArgs>
     salesman?: boolean | Invoice$salesmanArgs<ExtArgs>
     items?: boolean | Invoice$itemsArgs<ExtArgs>
+    payments?: boolean | Invoice$paymentsArgs<ExtArgs>
     _count?: boolean | InvoiceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7923,6 +7956,7 @@ export namespace Prisma {
       customer: Prisma.$CustomerPayload<ExtArgs> | null
       salesman: Prisma.$SalesmanPayload<ExtArgs> | null
       items: Prisma.$InvoiceItemPayload<ExtArgs>[]
+      payments: Prisma.$CashRecordPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -7935,6 +7969,8 @@ export namespace Prisma {
       totalSubTotal: Prisma.Decimal
       totalDiscount: Prisma.Decimal
       totalAmount: Prisma.Decimal
+      paymentStatus: string
+      paidOn: Date | null
       createdAt: Date | null
       updatedAt: Date | null
     }, ExtArgs["result"]["invoice"]>
@@ -8335,6 +8371,7 @@ export namespace Prisma {
     customer<T extends Invoice$customerArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     salesman<T extends Invoice$salesmanArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$salesmanArgs<ExtArgs>>): Prisma__SalesmanClient<$Result.GetResult<Prisma.$SalesmanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends Invoice$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvoiceItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payments<T extends Invoice$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Invoice$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8374,6 +8411,8 @@ export namespace Prisma {
     readonly totalSubTotal: FieldRef<"Invoice", 'Decimal'>
     readonly totalDiscount: FieldRef<"Invoice", 'Decimal'>
     readonly totalAmount: FieldRef<"Invoice", 'Decimal'>
+    readonly paymentStatus: FieldRef<"Invoice", 'String'>
+    readonly paidOn: FieldRef<"Invoice", 'DateTime'>
     readonly createdAt: FieldRef<"Invoice", 'DateTime'>
     readonly updatedAt: FieldRef<"Invoice", 'DateTime'>
   }
@@ -8836,6 +8875,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: InvoiceItemScalarFieldEnum | InvoiceItemScalarFieldEnum[]
+  }
+
+  /**
+   * Invoice.payments
+   */
+  export type Invoice$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashRecord
+     */
+    select?: CashRecordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashRecord
+     */
+    omit?: CashRecordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashRecordInclude<ExtArgs> | null
+    where?: CashRecordWhereInput
+    orderBy?: CashRecordOrderByWithRelationInput | CashRecordOrderByWithRelationInput[]
+    cursor?: CashRecordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CashRecordScalarFieldEnum | CashRecordScalarFieldEnum[]
   }
 
   /**
@@ -10045,12 +10108,14 @@ export namespace Prisma {
     id: number | null
     customerId: number | null
     amount: number | null
+    invoiceId: number | null
   }
 
   export type CashRecordSumAggregateOutputType = {
     id: number | null
     customerId: number | null
     amount: number | null
+    invoiceId: number | null
   }
 
   export type CashRecordMinAggregateOutputType = {
@@ -10060,6 +10125,7 @@ export namespace Prisma {
     customerId: number | null
     amount: number | null
     note: string | null
+    invoiceId: number | null
   }
 
   export type CashRecordMaxAggregateOutputType = {
@@ -10069,6 +10135,7 @@ export namespace Prisma {
     customerId: number | null
     amount: number | null
     note: string | null
+    invoiceId: number | null
   }
 
   export type CashRecordCountAggregateOutputType = {
@@ -10078,6 +10145,7 @@ export namespace Prisma {
     customerId: number
     amount: number
     note: number
+    invoiceId: number
     _all: number
   }
 
@@ -10086,12 +10154,14 @@ export namespace Prisma {
     id?: true
     customerId?: true
     amount?: true
+    invoiceId?: true
   }
 
   export type CashRecordSumAggregateInputType = {
     id?: true
     customerId?: true
     amount?: true
+    invoiceId?: true
   }
 
   export type CashRecordMinAggregateInputType = {
@@ -10101,6 +10171,7 @@ export namespace Prisma {
     customerId?: true
     amount?: true
     note?: true
+    invoiceId?: true
   }
 
   export type CashRecordMaxAggregateInputType = {
@@ -10110,6 +10181,7 @@ export namespace Prisma {
     customerId?: true
     amount?: true
     note?: true
+    invoiceId?: true
   }
 
   export type CashRecordCountAggregateInputType = {
@@ -10119,6 +10191,7 @@ export namespace Prisma {
     customerId?: true
     amount?: true
     note?: true
+    invoiceId?: true
     _all?: true
   }
 
@@ -10215,6 +10288,7 @@ export namespace Prisma {
     customerId: number | null
     amount: number
     note: string | null
+    invoiceId: number | null
     _count: CashRecordCountAggregateOutputType | null
     _avg: CashRecordAvgAggregateOutputType | null
     _sum: CashRecordSumAggregateOutputType | null
@@ -10243,7 +10317,9 @@ export namespace Prisma {
     customerId?: boolean
     amount?: boolean
     note?: boolean
+    invoiceId?: boolean
     customer?: boolean | CashRecord$customerArgs<ExtArgs>
+    invoice?: boolean | CashRecord$invoiceArgs<ExtArgs>
   }, ExtArgs["result"]["cashRecord"]>
 
   export type CashRecordSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10253,7 +10329,9 @@ export namespace Prisma {
     customerId?: boolean
     amount?: boolean
     note?: boolean
+    invoiceId?: boolean
     customer?: boolean | CashRecord$customerArgs<ExtArgs>
+    invoice?: boolean | CashRecord$invoiceArgs<ExtArgs>
   }, ExtArgs["result"]["cashRecord"]>
 
   export type CashRecordSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10263,7 +10341,9 @@ export namespace Prisma {
     customerId?: boolean
     amount?: boolean
     note?: boolean
+    invoiceId?: boolean
     customer?: boolean | CashRecord$customerArgs<ExtArgs>
+    invoice?: boolean | CashRecord$invoiceArgs<ExtArgs>
   }, ExtArgs["result"]["cashRecord"]>
 
   export type CashRecordSelectScalar = {
@@ -10273,23 +10353,28 @@ export namespace Prisma {
     customerId?: boolean
     amount?: boolean
     note?: boolean
+    invoiceId?: boolean
   }
 
-  export type CashRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "type" | "customerId" | "amount" | "note", ExtArgs["result"]["cashRecord"]>
+  export type CashRecordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "type" | "customerId" | "amount" | "note" | "invoiceId", ExtArgs["result"]["cashRecord"]>
   export type CashRecordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CashRecord$customerArgs<ExtArgs>
+    invoice?: boolean | CashRecord$invoiceArgs<ExtArgs>
   }
   export type CashRecordIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CashRecord$customerArgs<ExtArgs>
+    invoice?: boolean | CashRecord$invoiceArgs<ExtArgs>
   }
   export type CashRecordIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CashRecord$customerArgs<ExtArgs>
+    invoice?: boolean | CashRecord$invoiceArgs<ExtArgs>
   }
 
   export type $CashRecordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CashRecord"
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs> | null
+      invoice: Prisma.$InvoicePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10298,6 +10383,7 @@ export namespace Prisma {
       customerId: number | null
       amount: number
       note: string | null
+      invoiceId: number | null
     }, ExtArgs["result"]["cashRecord"]>
     composites: {}
   }
@@ -10693,6 +10779,7 @@ export namespace Prisma {
   export interface Prisma__CashRecordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends CashRecord$customerArgs<ExtArgs> = {}>(args?: Subset<T, CashRecord$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    invoice<T extends CashRecord$invoiceArgs<ExtArgs> = {}>(args?: Subset<T, CashRecord$invoiceArgs<ExtArgs>>): Prisma__InvoiceClient<$Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10728,6 +10815,7 @@ export namespace Prisma {
     readonly customerId: FieldRef<"CashRecord", 'Int'>
     readonly amount: FieldRef<"CashRecord", 'Float'>
     readonly note: FieldRef<"CashRecord", 'String'>
+    readonly invoiceId: FieldRef<"CashRecord", 'Int'>
   }
     
 
@@ -11145,6 +11233,25 @@ export namespace Prisma {
      */
     include?: CustomerInclude<ExtArgs> | null
     where?: CustomerWhereInput
+  }
+
+  /**
+   * CashRecord.invoice
+   */
+  export type CashRecord$invoiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Invoice
+     */
+    select?: InvoiceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Invoice
+     */
+    omit?: InvoiceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InvoiceInclude<ExtArgs> | null
+    where?: InvoiceWhereInput
   }
 
   /**
@@ -13498,6 +13605,8 @@ export namespace Prisma {
     totalSubTotal: 'totalSubTotal',
     totalDiscount: 'totalDiscount',
     totalAmount: 'totalAmount',
+    paymentStatus: 'paymentStatus',
+    paidOn: 'paidOn',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13525,7 +13634,8 @@ export namespace Prisma {
     type: 'type',
     customerId: 'customerId',
     amount: 'amount',
-    note: 'note'
+    note: 'note',
+    invoiceId: 'invoiceId'
   };
 
   export type CashRecordScalarFieldEnum = (typeof CashRecordScalarFieldEnum)[keyof typeof CashRecordScalarFieldEnum]
@@ -13960,12 +14070,15 @@ export namespace Prisma {
     totalSubTotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFilter<"Invoice"> | string
+    paidOn?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     town?: XOR<TownScalarRelationFilter, TownWhereInput>
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     salesman?: XOR<SalesmanNullableScalarRelationFilter, SalesmanWhereInput> | null
     items?: InvoiceItemListRelationFilter
+    payments?: CashRecordListRelationFilter
   }
 
   export type InvoiceOrderByWithRelationInput = {
@@ -13979,12 +14092,15 @@ export namespace Prisma {
     totalSubTotal?: SortOrder
     totalDiscount?: SortOrder
     totalAmount?: SortOrder
+    paymentStatus?: SortOrder
+    paidOn?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     town?: TownOrderByWithRelationInput
     customer?: CustomerOrderByWithRelationInput
     salesman?: SalesmanOrderByWithRelationInput
     items?: InvoiceItemOrderByRelationAggregateInput
+    payments?: CashRecordOrderByRelationAggregateInput
   }
 
   export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -14001,12 +14117,15 @@ export namespace Prisma {
     totalSubTotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFilter<"Invoice"> | string
+    paidOn?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     town?: XOR<TownScalarRelationFilter, TownWhereInput>
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     salesman?: XOR<SalesmanNullableScalarRelationFilter, SalesmanWhereInput> | null
     items?: InvoiceItemListRelationFilter
+    payments?: CashRecordListRelationFilter
   }, "id" | "invoiceNo">
 
   export type InvoiceOrderByWithAggregationInput = {
@@ -14020,6 +14139,8 @@ export namespace Prisma {
     totalSubTotal?: SortOrder
     totalDiscount?: SortOrder
     totalAmount?: SortOrder
+    paymentStatus?: SortOrder
+    paidOn?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     _count?: InvoiceCountOrderByAggregateInput
@@ -14043,6 +14164,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalWithAggregatesFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringWithAggregatesFilter<"Invoice"> | string
+    paidOn?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"Invoice"> | Date | string | null
   }
@@ -14132,7 +14255,9 @@ export namespace Prisma {
     customerId?: IntNullableFilter<"CashRecord"> | number | null
     amount?: FloatFilter<"CashRecord"> | number
     note?: StringNullableFilter<"CashRecord"> | string | null
+    invoiceId?: IntNullableFilter<"CashRecord"> | number | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
   }
 
   export type CashRecordOrderByWithRelationInput = {
@@ -14142,7 +14267,9 @@ export namespace Prisma {
     customerId?: SortOrderInput | SortOrder
     amount?: SortOrder
     note?: SortOrderInput | SortOrder
+    invoiceId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
+    invoice?: InvoiceOrderByWithRelationInput
   }
 
   export type CashRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -14155,7 +14282,9 @@ export namespace Prisma {
     customerId?: IntNullableFilter<"CashRecord"> | number | null
     amount?: FloatFilter<"CashRecord"> | number
     note?: StringNullableFilter<"CashRecord"> | string | null
+    invoiceId?: IntNullableFilter<"CashRecord"> | number | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
+    invoice?: XOR<InvoiceNullableScalarRelationFilter, InvoiceWhereInput> | null
   }, "id">
 
   export type CashRecordOrderByWithAggregationInput = {
@@ -14165,6 +14294,7 @@ export namespace Prisma {
     customerId?: SortOrderInput | SortOrder
     amount?: SortOrder
     note?: SortOrderInput | SortOrder
+    invoiceId?: SortOrderInput | SortOrder
     _count?: CashRecordCountOrderByAggregateInput
     _avg?: CashRecordAvgOrderByAggregateInput
     _max?: CashRecordMaxOrderByAggregateInput
@@ -14182,6 +14312,7 @@ export namespace Prisma {
     customerId?: IntNullableWithAggregatesFilter<"CashRecord"> | number | null
     amount?: FloatWithAggregatesFilter<"CashRecord"> | number
     note?: StringNullableWithAggregatesFilter<"CashRecord"> | string | null
+    invoiceId?: IntNullableWithAggregatesFilter<"CashRecord"> | number | null
   }
 
   export type RoleWhereInput = {
@@ -14585,12 +14716,15 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
     customer?: CustomerCreateNestedOneWithoutInvoicesInput
     salesman?: SalesmanCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateInput = {
@@ -14604,9 +14738,12 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUpdateInput = {
@@ -14616,12 +14753,15 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
     customer?: CustomerUpdateOneWithoutInvoicesNestedInput
     salesman?: SalesmanUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateInput = {
@@ -14635,9 +14775,12 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceCreateManyInput = {
@@ -14651,6 +14794,8 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -14662,6 +14807,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -14677,6 +14824,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -14759,6 +14908,7 @@ export namespace Prisma {
     amount: number
     note?: string | null
     customer?: CustomerCreateNestedOneWithoutCashRecordsInput
+    invoice?: InvoiceCreateNestedOneWithoutPaymentsInput
   }
 
   export type CashRecordUncheckedCreateInput = {
@@ -14768,6 +14918,7 @@ export namespace Prisma {
     customerId?: number | null
     amount: number
     note?: string | null
+    invoiceId?: number | null
   }
 
   export type CashRecordUpdateInput = {
@@ -14776,6 +14927,7 @@ export namespace Prisma {
     amount?: FloatFieldUpdateOperationsInput | number
     note?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutCashRecordsNestedInput
+    invoice?: InvoiceUpdateOneWithoutPaymentsNestedInput
   }
 
   export type CashRecordUncheckedUpdateInput = {
@@ -14785,6 +14937,7 @@ export namespace Prisma {
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: FloatFieldUpdateOperationsInput | number
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CashRecordCreateManyInput = {
@@ -14794,6 +14947,7 @@ export namespace Prisma {
     customerId?: number | null
     amount: number
     note?: string | null
+    invoiceId?: number | null
   }
 
   export type CashRecordUpdateManyMutationInput = {
@@ -14810,6 +14964,7 @@ export namespace Prisma {
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: FloatFieldUpdateOperationsInput | number
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type RoleCreateInput = {
@@ -15313,6 +15468,8 @@ export namespace Prisma {
     totalSubTotal?: SortOrder
     totalDiscount?: SortOrder
     totalAmount?: SortOrder
+    paymentStatus?: SortOrder
+    paidOn?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15338,6 +15495,8 @@ export namespace Prisma {
     totalSubTotal?: SortOrder
     totalDiscount?: SortOrder
     totalAmount?: SortOrder
+    paymentStatus?: SortOrder
+    paidOn?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15353,6 +15512,8 @@ export namespace Prisma {
     totalSubTotal?: SortOrder
     totalDiscount?: SortOrder
     totalAmount?: SortOrder
+    paymentStatus?: SortOrder
+    paidOn?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15502,6 +15663,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type InvoiceNullableScalarRelationFilter = {
+    is?: InvoiceWhereInput | null
+    isNot?: InvoiceWhereInput | null
+  }
+
   export type CashRecordCountOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
@@ -15509,12 +15675,14 @@ export namespace Prisma {
     customerId?: SortOrder
     amount?: SortOrder
     note?: SortOrder
+    invoiceId?: SortOrder
   }
 
   export type CashRecordAvgOrderByAggregateInput = {
     id?: SortOrder
     customerId?: SortOrder
     amount?: SortOrder
+    invoiceId?: SortOrder
   }
 
   export type CashRecordMaxOrderByAggregateInput = {
@@ -15524,6 +15692,7 @@ export namespace Prisma {
     customerId?: SortOrder
     amount?: SortOrder
     note?: SortOrder
+    invoiceId?: SortOrder
   }
 
   export type CashRecordMinOrderByAggregateInput = {
@@ -15533,12 +15702,14 @@ export namespace Prisma {
     customerId?: SortOrder
     amount?: SortOrder
     note?: SortOrder
+    invoiceId?: SortOrder
   }
 
   export type CashRecordSumOrderByAggregateInput = {
     id?: SortOrder
     customerId?: SortOrder
     amount?: SortOrder
+    invoiceId?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -16033,11 +16204,25 @@ export namespace Prisma {
     connect?: InvoiceItemWhereUniqueInput | InvoiceItemWhereUniqueInput[]
   }
 
+  export type CashRecordCreateNestedManyWithoutInvoiceInput = {
+    create?: XOR<CashRecordCreateWithoutInvoiceInput, CashRecordUncheckedCreateWithoutInvoiceInput> | CashRecordCreateWithoutInvoiceInput[] | CashRecordUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: CashRecordCreateOrConnectWithoutInvoiceInput | CashRecordCreateOrConnectWithoutInvoiceInput[]
+    createMany?: CashRecordCreateManyInvoiceInputEnvelope
+    connect?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+  }
+
   export type InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput = {
     create?: XOR<InvoiceItemCreateWithoutInvoiceInput, InvoiceItemUncheckedCreateWithoutInvoiceInput> | InvoiceItemCreateWithoutInvoiceInput[] | InvoiceItemUncheckedCreateWithoutInvoiceInput[]
     connectOrCreate?: InvoiceItemCreateOrConnectWithoutInvoiceInput | InvoiceItemCreateOrConnectWithoutInvoiceInput[]
     createMany?: InvoiceItemCreateManyInvoiceInputEnvelope
     connect?: InvoiceItemWhereUniqueInput | InvoiceItemWhereUniqueInput[]
+  }
+
+  export type CashRecordUncheckedCreateNestedManyWithoutInvoiceInput = {
+    create?: XOR<CashRecordCreateWithoutInvoiceInput, CashRecordUncheckedCreateWithoutInvoiceInput> | CashRecordCreateWithoutInvoiceInput[] | CashRecordUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: CashRecordCreateOrConnectWithoutInvoiceInput | CashRecordCreateOrConnectWithoutInvoiceInput[]
+    createMany?: CashRecordCreateManyInvoiceInputEnvelope
+    connect?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -16090,6 +16275,20 @@ export namespace Prisma {
     deleteMany?: InvoiceItemScalarWhereInput | InvoiceItemScalarWhereInput[]
   }
 
+  export type CashRecordUpdateManyWithoutInvoiceNestedInput = {
+    create?: XOR<CashRecordCreateWithoutInvoiceInput, CashRecordUncheckedCreateWithoutInvoiceInput> | CashRecordCreateWithoutInvoiceInput[] | CashRecordUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: CashRecordCreateOrConnectWithoutInvoiceInput | CashRecordCreateOrConnectWithoutInvoiceInput[]
+    upsert?: CashRecordUpsertWithWhereUniqueWithoutInvoiceInput | CashRecordUpsertWithWhereUniqueWithoutInvoiceInput[]
+    createMany?: CashRecordCreateManyInvoiceInputEnvelope
+    set?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    disconnect?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    delete?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    connect?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    update?: CashRecordUpdateWithWhereUniqueWithoutInvoiceInput | CashRecordUpdateWithWhereUniqueWithoutInvoiceInput[]
+    updateMany?: CashRecordUpdateManyWithWhereWithoutInvoiceInput | CashRecordUpdateManyWithWhereWithoutInvoiceInput[]
+    deleteMany?: CashRecordScalarWhereInput | CashRecordScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -16110,6 +16309,20 @@ export namespace Prisma {
     update?: InvoiceItemUpdateWithWhereUniqueWithoutInvoiceInput | InvoiceItemUpdateWithWhereUniqueWithoutInvoiceInput[]
     updateMany?: InvoiceItemUpdateManyWithWhereWithoutInvoiceInput | InvoiceItemUpdateManyWithWhereWithoutInvoiceInput[]
     deleteMany?: InvoiceItemScalarWhereInput | InvoiceItemScalarWhereInput[]
+  }
+
+  export type CashRecordUncheckedUpdateManyWithoutInvoiceNestedInput = {
+    create?: XOR<CashRecordCreateWithoutInvoiceInput, CashRecordUncheckedCreateWithoutInvoiceInput> | CashRecordCreateWithoutInvoiceInput[] | CashRecordUncheckedCreateWithoutInvoiceInput[]
+    connectOrCreate?: CashRecordCreateOrConnectWithoutInvoiceInput | CashRecordCreateOrConnectWithoutInvoiceInput[]
+    upsert?: CashRecordUpsertWithWhereUniqueWithoutInvoiceInput | CashRecordUpsertWithWhereUniqueWithoutInvoiceInput[]
+    createMany?: CashRecordCreateManyInvoiceInputEnvelope
+    set?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    disconnect?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    delete?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    connect?: CashRecordWhereUniqueInput | CashRecordWhereUniqueInput[]
+    update?: CashRecordUpdateWithWhereUniqueWithoutInvoiceInput | CashRecordUpdateWithWhereUniqueWithoutInvoiceInput[]
+    updateMany?: CashRecordUpdateManyWithWhereWithoutInvoiceInput | CashRecordUpdateManyWithWhereWithoutInvoiceInput[]
+    deleteMany?: CashRecordScalarWhereInput | CashRecordScalarWhereInput[]
   }
 
   export type InvoiceCreateNestedOneWithoutItemsInput = {
@@ -16146,6 +16359,12 @@ export namespace Prisma {
     connect?: CustomerWhereUniqueInput
   }
 
+  export type InvoiceCreateNestedOneWithoutPaymentsInput = {
+    create?: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentsInput
+    connect?: InvoiceWhereUniqueInput
+  }
+
   export type FloatFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -16166,6 +16385,16 @@ export namespace Prisma {
     delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutCashRecordsInput, CustomerUpdateWithoutCashRecordsInput>, CustomerUncheckedUpdateWithoutCashRecordsInput>
+  }
+
+  export type InvoiceUpdateOneWithoutPaymentsNestedInput = {
+    create?: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: InvoiceCreateOrConnectWithoutPaymentsInput
+    upsert?: InvoiceUpsertWithoutPaymentsInput
+    disconnect?: InvoiceWhereInput | boolean
+    delete?: InvoiceWhereInput | boolean
+    connect?: InvoiceWhereUniqueInput
+    update?: XOR<XOR<InvoiceUpdateToOneWithWhereWithoutPaymentsInput, InvoiceUpdateWithoutPaymentsInput>, InvoiceUncheckedUpdateWithoutPaymentsInput>
   }
 
   export type UserCreateNestedManyWithoutRoleInput = {
@@ -16504,11 +16733,14 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     customer?: CustomerCreateNestedOneWithoutInvoicesInput
     salesman?: SalesmanCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutTownInput = {
@@ -16521,9 +16753,12 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutTownInput = {
@@ -16593,6 +16828,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"Invoice"> | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFilter<"Invoice"> | string
+    paidOn?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     createdAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"Invoice"> | Date | string | null
   }
@@ -16778,11 +17015,14 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
     salesman?: SalesmanCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutCustomerInput = {
@@ -16795,9 +17035,12 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutCustomerInput = {
@@ -16815,6 +17058,7 @@ export namespace Prisma {
     type: string
     amount: number
     note?: string | null
+    invoice?: InvoiceCreateNestedOneWithoutPaymentsInput
   }
 
   export type CashRecordUncheckedCreateWithoutCustomerInput = {
@@ -16823,6 +17067,7 @@ export namespace Prisma {
     type: string
     amount: number
     note?: string | null
+    invoiceId?: number | null
   }
 
   export type CashRecordCreateOrConnectWithoutCustomerInput = {
@@ -16901,6 +17146,7 @@ export namespace Prisma {
     customerId?: IntNullableFilter<"CashRecord"> | number | null
     amount?: FloatFilter<"CashRecord"> | number
     note?: StringNullableFilter<"CashRecord"> | string | null
+    invoiceId?: IntNullableFilter<"CashRecord"> | number | null
   }
 
   export type InvoiceCreateWithoutSalesmanInput = {
@@ -16910,11 +17156,14 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
     customer?: CustomerCreateNestedOneWithoutInvoicesInput
     items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutSalesmanInput = {
@@ -16927,9 +17176,12 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+    payments?: CashRecordUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutSalesmanInput = {
@@ -17045,6 +17297,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CashRecordCreateWithoutInvoiceInput = {
+    date?: Date | string
+    type: string
+    amount: number
+    note?: string | null
+    customer?: CustomerCreateNestedOneWithoutCashRecordsInput
+  }
+
+  export type CashRecordUncheckedCreateWithoutInvoiceInput = {
+    id?: number
+    date?: Date | string
+    type: string
+    customerId?: number | null
+    amount: number
+    note?: string | null
+  }
+
+  export type CashRecordCreateOrConnectWithoutInvoiceInput = {
+    where: CashRecordWhereUniqueInput
+    create: XOR<CashRecordCreateWithoutInvoiceInput, CashRecordUncheckedCreateWithoutInvoiceInput>
+  }
+
+  export type CashRecordCreateManyInvoiceInputEnvelope = {
+    data: CashRecordCreateManyInvoiceInput | CashRecordCreateManyInvoiceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TownUpsertWithoutInvoicesInput = {
     update: XOR<TownUpdateWithoutInvoicesInput, TownUncheckedUpdateWithoutInvoicesInput>
     create: XOR<TownCreateWithoutInvoicesInput, TownUncheckedCreateWithoutInvoicesInput>
@@ -17137,6 +17416,22 @@ export namespace Prisma {
     data: XOR<InvoiceItemUpdateManyMutationInput, InvoiceItemUncheckedUpdateManyWithoutInvoiceInput>
   }
 
+  export type CashRecordUpsertWithWhereUniqueWithoutInvoiceInput = {
+    where: CashRecordWhereUniqueInput
+    update: XOR<CashRecordUpdateWithoutInvoiceInput, CashRecordUncheckedUpdateWithoutInvoiceInput>
+    create: XOR<CashRecordCreateWithoutInvoiceInput, CashRecordUncheckedCreateWithoutInvoiceInput>
+  }
+
+  export type CashRecordUpdateWithWhereUniqueWithoutInvoiceInput = {
+    where: CashRecordWhereUniqueInput
+    data: XOR<CashRecordUpdateWithoutInvoiceInput, CashRecordUncheckedUpdateWithoutInvoiceInput>
+  }
+
+  export type CashRecordUpdateManyWithWhereWithoutInvoiceInput = {
+    where: CashRecordScalarWhereInput
+    data: XOR<CashRecordUpdateManyMutationInput, CashRecordUncheckedUpdateManyWithoutInvoiceInput>
+  }
+
   export type InvoiceCreateWithoutItemsInput = {
     invoiceNo: string
     date?: Date | string
@@ -17144,11 +17439,14 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     town: TownCreateNestedOneWithoutInvoicesInput
     customer?: CustomerCreateNestedOneWithoutInvoicesInput
     salesman?: SalesmanCreateNestedOneWithoutInvoicesInput
+    payments?: CashRecordCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceUncheckedCreateWithoutItemsInput = {
@@ -17162,8 +17460,11 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
+    payments?: CashRecordUncheckedCreateNestedManyWithoutInvoiceInput
   }
 
   export type InvoiceCreateOrConnectWithoutItemsInput = {
@@ -17211,11 +17512,14 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
     customer?: CustomerUpdateOneWithoutInvoicesNestedInput
     salesman?: SalesmanUpdateOneWithoutInvoicesNestedInput
+    payments?: CashRecordUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutItemsInput = {
@@ -17229,8 +17533,11 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    payments?: CashRecordUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type ProductUpsertWithoutInvoiceItemsInput = {
@@ -17283,6 +17590,46 @@ export namespace Prisma {
     create: XOR<CustomerCreateWithoutCashRecordsInput, CustomerUncheckedCreateWithoutCashRecordsInput>
   }
 
+  export type InvoiceCreateWithoutPaymentsInput = {
+    invoiceNo: string
+    date?: Date | string
+    type: string
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    town: TownCreateNestedOneWithoutInvoicesInput
+    customer?: CustomerCreateNestedOneWithoutInvoicesInput
+    salesman?: SalesmanCreateNestedOneWithoutInvoicesInput
+    items?: InvoiceItemCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceUncheckedCreateWithoutPaymentsInput = {
+    id?: number
+    invoiceNo: string
+    date?: Date | string
+    type: string
+    townId: number
+    customerId?: number | null
+    salesmanId?: number | null
+    totalSubTotal?: Decimal | DecimalJsLike | number | string
+    totalDiscount?: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    items?: InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
+  }
+
+  export type InvoiceCreateOrConnectWithoutPaymentsInput = {
+    where: InvoiceWhereUniqueInput
+    create: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+  }
+
   export type CustomerUpsertWithoutCashRecordsInput = {
     update: XOR<CustomerUpdateWithoutCashRecordsInput, CustomerUncheckedUpdateWithoutCashRecordsInput>
     create: XOR<CustomerCreateWithoutCashRecordsInput, CustomerUncheckedCreateWithoutCashRecordsInput>
@@ -17309,6 +17656,52 @@ export namespace Prisma {
     townId?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     invoices?: InvoiceUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type InvoiceUpsertWithoutPaymentsInput = {
+    update: XOR<InvoiceUpdateWithoutPaymentsInput, InvoiceUncheckedUpdateWithoutPaymentsInput>
+    create: XOR<InvoiceCreateWithoutPaymentsInput, InvoiceUncheckedCreateWithoutPaymentsInput>
+    where?: InvoiceWhereInput
+  }
+
+  export type InvoiceUpdateToOneWithWhereWithoutPaymentsInput = {
+    where?: InvoiceWhereInput
+    data: XOR<InvoiceUpdateWithoutPaymentsInput, InvoiceUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type InvoiceUpdateWithoutPaymentsInput = {
+    invoiceNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: StringFieldUpdateOperationsInput | string
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
+    customer?: CustomerUpdateOneWithoutInvoicesNestedInput
+    salesman?: SalesmanUpdateOneWithoutInvoicesNestedInput
+    items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+  }
+
+  export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: StringFieldUpdateOperationsInput | string
+    townId?: IntFieldUpdateOperationsInput | number
+    customerId?: NullableIntFieldUpdateOperationsInput | number | null
+    salesmanId?: NullableIntFieldUpdateOperationsInput | number | null
+    totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type UserCreateWithoutRoleInput = {
@@ -17428,6 +17821,8 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -17463,11 +17858,14 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: CustomerUpdateOneWithoutInvoicesNestedInput
     salesman?: SalesmanUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutTownInput = {
@@ -17480,9 +17878,12 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutTownInput = {
@@ -17495,6 +17896,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17581,6 +17984,8 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -17591,6 +17996,7 @@ export namespace Prisma {
     type: string
     amount: number
     note?: string | null
+    invoiceId?: number | null
   }
 
   export type InvoiceUpdateWithoutCustomerInput = {
@@ -17600,11 +18006,14 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
     salesman?: SalesmanUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutCustomerInput = {
@@ -17617,9 +18026,12 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutCustomerInput = {
@@ -17632,6 +18044,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17641,6 +18055,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    invoice?: InvoiceUpdateOneWithoutPaymentsNestedInput
   }
 
   export type CashRecordUncheckedUpdateWithoutCustomerInput = {
@@ -17649,6 +18064,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CashRecordUncheckedUpdateManyWithoutCustomerInput = {
@@ -17657,6 +18073,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     amount?: FloatFieldUpdateOperationsInput | number
     note?: NullableStringFieldUpdateOperationsInput | string | null
+    invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type InvoiceCreateManySalesmanInput = {
@@ -17669,6 +18086,8 @@ export namespace Prisma {
     totalSubTotal?: Decimal | DecimalJsLike | number | string
     totalDiscount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
+    paymentStatus?: string
+    paidOn?: Date | string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
   }
@@ -17680,11 +18099,14 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     town?: TownUpdateOneRequiredWithoutInvoicesNestedInput
     customer?: CustomerUpdateOneWithoutInvoicesNestedInput
     items?: InvoiceItemUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateWithoutSalesmanInput = {
@@ -17697,9 +18119,12 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     items?: InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
+    payments?: CashRecordUncheckedUpdateManyWithoutInvoiceNestedInput
   }
 
   export type InvoiceUncheckedUpdateManyWithoutSalesmanInput = {
@@ -17712,6 +18137,8 @@ export namespace Prisma {
     totalSubTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalDiscount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    paidOn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17724,6 +18151,15 @@ export namespace Prisma {
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type CashRecordCreateManyInvoiceInput = {
+    id?: number
+    date?: Date | string
+    type: string
+    customerId?: number | null
+    amount: number
+    note?: string | null
   }
 
   export type InvoiceItemUpdateWithoutInvoiceInput = {
@@ -17753,6 +18189,32 @@ export namespace Prisma {
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type CashRecordUpdateWithoutInvoiceInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutCashRecordsNestedInput
+  }
+
+  export type CashRecordUncheckedUpdateWithoutInvoiceInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CashRecordUncheckedUpdateManyWithoutInvoiceInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: FloatFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateManyRoleInput = {

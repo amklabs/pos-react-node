@@ -168,6 +168,8 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   totalSubTotal: 'totalSubTotal',
   totalDiscount: 'totalDiscount',
   totalAmount: 'totalAmount',
+  paymentStatus: 'paymentStatus',
+  paidOn: 'paidOn',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -189,7 +191,8 @@ exports.Prisma.CashRecordScalarFieldEnum = {
   type: 'type',
   customerId: 'customerId',
   amount: 'amount',
-  note: 'note'
+  note: 'note',
+  invoiceId: 'invoiceId'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
