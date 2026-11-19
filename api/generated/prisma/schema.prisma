@@ -97,7 +97,7 @@ model CashRecord {
   type       String // "RECEIVED" or "PAID"
   customerId Int?
   customer   Customer? @relation(fields: [customerId], references: [id])
-  amount     Float
+  amount     Decimal   @db.Decimal(10, 2)
   note       String?
   invoiceId  Int?
   invoice    Invoice?  @relation(fields: [invoiceId], references: [id])

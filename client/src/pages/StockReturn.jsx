@@ -48,14 +48,15 @@ export default function StockReturn() {
         try {
             await apiClient.post(`/api/returns`, {
                 ...invoice,
-                items: items
+                items: items,
+                refundCash: true,
             });
-            alert('Return Processed! Stock added back and Refund recorded.');
+            alert('Return processed. Stock restored and cash refund recorded.');
             setItems([]);
             setInvoice({invoiceNo: '', date: '', townId: '', customerId: ''});
         } catch (err) {
             console.error(err);
-            alert('Error processing return.');
+            alert(err.response?.data?.error || 'Error processing return.');
         }
     };
 

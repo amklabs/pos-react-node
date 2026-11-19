@@ -1,9 +1,16 @@
 const express = require('express');
 const prisma = require('../db');
-const {authenticateToken} = require('../midleware/auth');
+const { authenticateToken, requireRoles } = require('../midleware/auth');
+const { ADMIN_ROLES } = require('../roles');
 
 const router = express.Router();
-router.use(authenticateToken); // everything below is protected
+router.use(authenticateToken);
+
+// Reads allowed for all authenticated users; writes require admin roles
+router.use((req, res, next) => {
+    if (req.method === 'GET' || req.method === 'HEAD') return next();
+    return requireRoles(...ADMIN_ROLES)(req, res, next);
+});
 
 // Add a Town
 router.post('/towns', async (req, res) => {

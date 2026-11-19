@@ -83,7 +83,7 @@ export default function NewSale() {
             totalSubTotal,
             totalDiscount,
             totalAmount: totalSubTotal - totalDiscount,
-            balance: totalSubTotal - totalDiscount,
+            balance: totalSubTotal - totalDiscount - prev.totalPayment,
         }));
     }, [items]);
 
@@ -134,7 +134,7 @@ export default function NewSale() {
     };
 
     return (
-        <div className="bg-white p-6 rounded shadow w-full">
+        <div className="bg-white p-6 rounded-lg border shadow-lg w-full">
             <h1 className="text-2xl font-bold mb-6">New Sales Invoice</h1>
 
             {/* Header Inputs */}
@@ -260,23 +260,23 @@ export default function NewSale() {
                     <tr className="font-semibold">
                         <td colSpan="5" className="text-right">Sub Total</td>
                         <td className="font-bold py-2 w-30 text-right">
-                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28"
+                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28 bg-gray-100"
                                    value={formatNumber(invoice.totalSubTotal.toFixed(2))}
                                    readOnly={true}
                             />
                         </td>
                     </tr>
                     <tr className="font-semibold">
-                        <td colSpan="5" className="text-right">Discount</td>
+                        <td colSpan="5" className="text-right">Total Discount</td>
                         <td className="font-bold pb-2 w-30  text-end">
-                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28"
+                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28 bg-gray-100"
                                    value={formatNumber(invoice.totalDiscount.toFixed(2))}
                                    readOnly={true}
                             />
                         </td>
                     </tr>
                     <tr className="font-semibold">
-                        <td colSpan="5" className="text-right">Payment</td>
+                        <td colSpan="5" className="text-right">Paid</td>
                         <td className="font-bold pb-2 w-30 text-end">
                             <input
                                 type="text"
@@ -296,9 +296,9 @@ export default function NewSale() {
                         </td>
                     </tr>
                     <tr className="font-semibold">
-                        <td colSpan="5" className="p-2 text-right">Balance</td>
+                        <td colSpan="5" className="p-2 text-right">Balance Amount</td>
                         <td className="font-bold pb-2 w-30 text-end">
-                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28"
+                            <input type="text" className="border rounded-none mx-2 py-1 text-end w-28 bg-gray-100"
                                    value={formatNumber(invoice.balance.toFixed(2))}
                                    readOnly={true}
                             />
@@ -308,15 +308,17 @@ export default function NewSale() {
                 </table>
             </div>
             {/* Action Buttons */}
-            <div className="flex gap-4 border-t border-gray-300 pt-4">
-                <button onClick={handleSave} className="btn btn-primary disabled:bg-blue-300" disabled={processing}>Save
-                    Invoice
-                </button>
-                <button onClick={() => {
-                    setItems([]);
-                    setInvoice(emptyInvoice);
-                }} className="btn bg-red-300">Cancel
-                </button>
+            <div className="flex justify-end border-t border-gray-300 pt-4">
+                <div className="flex gap-4">
+                    <button onClick={handleSave} className="btn btn-primary disabled:bg-blue-300" disabled={processing}>Save
+                        Invoice
+                    </button>
+                    <button onClick={() => {
+                        setItems([]);
+                        setInvoice(emptyInvoice);
+                    }} className="btn bg-red-300">Cancel
+                    </button>
+                </div>
             </div>
         </div>
     );

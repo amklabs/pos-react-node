@@ -10107,14 +10107,14 @@ export namespace Prisma {
   export type CashRecordAvgAggregateOutputType = {
     id: number | null
     customerId: number | null
-    amount: number | null
+    amount: Decimal | null
     invoiceId: number | null
   }
 
   export type CashRecordSumAggregateOutputType = {
     id: number | null
     customerId: number | null
-    amount: number | null
+    amount: Decimal | null
     invoiceId: number | null
   }
 
@@ -10123,7 +10123,7 @@ export namespace Prisma {
     date: Date | null
     type: string | null
     customerId: number | null
-    amount: number | null
+    amount: Decimal | null
     note: string | null
     invoiceId: number | null
   }
@@ -10133,7 +10133,7 @@ export namespace Prisma {
     date: Date | null
     type: string | null
     customerId: number | null
-    amount: number | null
+    amount: Decimal | null
     note: string | null
     invoiceId: number | null
   }
@@ -10286,7 +10286,7 @@ export namespace Prisma {
     date: Date
     type: string
     customerId: number | null
-    amount: number
+    amount: Decimal
     note: string | null
     invoiceId: number | null
     _count: CashRecordCountAggregateOutputType | null
@@ -10381,7 +10381,7 @@ export namespace Prisma {
       date: Date
       type: string
       customerId: number | null
-      amount: number
+      amount: Prisma.Decimal
       note: string | null
       invoiceId: number | null
     }, ExtArgs["result"]["cashRecord"]>
@@ -10813,7 +10813,7 @@ export namespace Prisma {
     readonly date: FieldRef<"CashRecord", 'DateTime'>
     readonly type: FieldRef<"CashRecord", 'String'>
     readonly customerId: FieldRef<"CashRecord", 'Int'>
-    readonly amount: FieldRef<"CashRecord", 'Float'>
+    readonly amount: FieldRef<"CashRecord", 'Decimal'>
     readonly note: FieldRef<"CashRecord", 'String'>
     readonly invoiceId: FieldRef<"CashRecord", 'Int'>
   }
@@ -14253,7 +14253,7 @@ export namespace Prisma {
     date?: DateTimeFilter<"CashRecord"> | Date | string
     type?: StringFilter<"CashRecord"> | string
     customerId?: IntNullableFilter<"CashRecord"> | number | null
-    amount?: FloatFilter<"CashRecord"> | number
+    amount?: DecimalFilter<"CashRecord"> | Decimal | DecimalJsLike | number | string
     note?: StringNullableFilter<"CashRecord"> | string | null
     invoiceId?: IntNullableFilter<"CashRecord"> | number | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
@@ -14280,7 +14280,7 @@ export namespace Prisma {
     date?: DateTimeFilter<"CashRecord"> | Date | string
     type?: StringFilter<"CashRecord"> | string
     customerId?: IntNullableFilter<"CashRecord"> | number | null
-    amount?: FloatFilter<"CashRecord"> | number
+    amount?: DecimalFilter<"CashRecord"> | Decimal | DecimalJsLike | number | string
     note?: StringNullableFilter<"CashRecord"> | string | null
     invoiceId?: IntNullableFilter<"CashRecord"> | number | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
@@ -14310,7 +14310,7 @@ export namespace Prisma {
     date?: DateTimeWithAggregatesFilter<"CashRecord"> | Date | string
     type?: StringWithAggregatesFilter<"CashRecord"> | string
     customerId?: IntNullableWithAggregatesFilter<"CashRecord"> | number | null
-    amount?: FloatWithAggregatesFilter<"CashRecord"> | number
+    amount?: DecimalWithAggregatesFilter<"CashRecord"> | Decimal | DecimalJsLike | number | string
     note?: StringNullableWithAggregatesFilter<"CashRecord"> | string | null
     invoiceId?: IntNullableWithAggregatesFilter<"CashRecord"> | number | null
   }
@@ -14905,7 +14905,7 @@ export namespace Prisma {
   export type CashRecordCreateInput = {
     date?: Date | string
     type: string
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     customer?: CustomerCreateNestedOneWithoutCashRecordsInput
     invoice?: InvoiceCreateNestedOneWithoutPaymentsInput
@@ -14916,7 +14916,7 @@ export namespace Prisma {
     date?: Date | string
     type: string
     customerId?: number | null
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     invoiceId?: number | null
   }
@@ -14924,7 +14924,7 @@ export namespace Prisma {
   export type CashRecordUpdateInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutCashRecordsNestedInput
     invoice?: InvoiceUpdateOneWithoutPaymentsNestedInput
@@ -14935,7 +14935,7 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -14945,7 +14945,7 @@ export namespace Prisma {
     date?: Date | string
     type: string
     customerId?: number | null
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     invoiceId?: number | null
   }
@@ -14953,7 +14953,7 @@ export namespace Prisma {
   export type CashRecordUpdateManyMutationInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -14962,7 +14962,7 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -15637,17 +15637,6 @@ export namespace Prisma {
     total?: SortOrder
   }
 
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -15710,22 +15699,6 @@ export namespace Prisma {
     customerId?: SortOrder
     amount?: SortOrder
     invoiceId?: SortOrder
-  }
-
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -16365,14 +16338,6 @@ export namespace Prisma {
     connect?: InvoiceWhereUniqueInput
   }
 
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -16664,22 +16629,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -17056,7 +17005,7 @@ export namespace Prisma {
   export type CashRecordCreateWithoutCustomerInput = {
     date?: Date | string
     type: string
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     invoice?: InvoiceCreateNestedOneWithoutPaymentsInput
   }
@@ -17065,7 +17014,7 @@ export namespace Prisma {
     id?: number
     date?: Date | string
     type: string
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     invoiceId?: number | null
   }
@@ -17144,7 +17093,7 @@ export namespace Prisma {
     date?: DateTimeFilter<"CashRecord"> | Date | string
     type?: StringFilter<"CashRecord"> | string
     customerId?: IntNullableFilter<"CashRecord"> | number | null
-    amount?: FloatFilter<"CashRecord"> | number
+    amount?: DecimalFilter<"CashRecord"> | Decimal | DecimalJsLike | number | string
     note?: StringNullableFilter<"CashRecord"> | string | null
     invoiceId?: IntNullableFilter<"CashRecord"> | number | null
   }
@@ -17300,7 +17249,7 @@ export namespace Prisma {
   export type CashRecordCreateWithoutInvoiceInput = {
     date?: Date | string
     type: string
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     customer?: CustomerCreateNestedOneWithoutCashRecordsInput
   }
@@ -17310,7 +17259,7 @@ export namespace Prisma {
     date?: Date | string
     type: string
     customerId?: number | null
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
   }
 
@@ -17994,7 +17943,7 @@ export namespace Prisma {
     id?: number
     date?: Date | string
     type: string
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
     invoiceId?: number | null
   }
@@ -18053,7 +18002,7 @@ export namespace Prisma {
   export type CashRecordUpdateWithoutCustomerInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     invoice?: InvoiceUpdateOneWithoutPaymentsNestedInput
   }
@@ -18062,7 +18011,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -18071,7 +18020,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceId?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -18158,7 +18107,7 @@ export namespace Prisma {
     date?: Date | string
     type: string
     customerId?: number | null
-    amount: number
+    amount: Decimal | DecimalJsLike | number | string
     note?: string | null
   }
 
@@ -18194,7 +18143,7 @@ export namespace Prisma {
   export type CashRecordUpdateWithoutInvoiceInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutCashRecordsNestedInput
   }
@@ -18204,7 +18153,7 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -18213,7 +18162,7 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: StringFieldUpdateOperationsInput | string
     customerId?: NullableIntFieldUpdateOperationsInput | number | null
-    amount?: FloatFieldUpdateOperationsInput | number
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

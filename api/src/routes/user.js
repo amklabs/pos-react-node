@@ -1,9 +1,6 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const prisma = require('../db');
-const {JWT_SECRET} = require('../config');
-const {authenticateToken} = require('../midleware/auth');
+const { authenticateToken } = require('../midleware/auth');
 
 const router = express.Router();
 
@@ -11,9 +8,7 @@ const router = express.Router();
 // JWTs are stateless, so "logout" is client-side (discard the token).
 // This endpoint exists so clients have a consistent API to call.
 router.post('/logout', authenticateToken, (req, res) => {
-    // If you later add a token blacklist / refresh-token revocation,
-    // do it here. For now, just confirm success.
-    res.json({message: 'Logged out successfully'});
+    res.json({ message: 'Logged out successfully' });
 });
 
 // GET /user
@@ -21,16 +16,17 @@ router.post('/logout', authenticateToken, (req, res) => {
 router.get('/user', authenticateToken, async (req, res) => {
     try {
         const user = await prisma.user.findUnique({
-            where: {id: req.user.userId},
-            include: { role: true}
+            where: { id: req.user.userId },
+            include: { role: true },
         });
-        delete user.password;
-        if (!user) {
-            return res.status(404).json({error: 'User not found'});
+        if (!user || !user.isActive) {
+            return res.status(401).json({ error: 'User not found or inactive' });
         }
-        res.json({user});
+
+        const { password, ...safeUser } = user;
+        res.json({ user: safeUser });
     } catch (error) {
-        res.status(500).json({error: error.message});
+        res.status(500).json({ error: 'Failed to load user' });
     }
 });
 

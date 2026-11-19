@@ -56,7 +56,7 @@ router.get('/dashboard', async (req, res) => {
 
         // Cash in hand
         const totalCash = cashAgg.reduce((sum, row) => {
-            const amount = row._sum.amount || 0;
+            const amount = Number(row._sum.amount || 0);
             return row.type === 'RECEIVED' ? sum + amount : sum - amount;
         }, 0);
 

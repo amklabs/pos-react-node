@@ -15,7 +15,7 @@ router.post('/cash', async (req, res) => {
                 date: new Date(date),
                 type: 'RECEIVED',
                 customerId: customerId ? parseInt(customerId) : null,
-                amount: parseFloat(amount),
+                amount: Number(parseFloat(amount).toFixed(2)),
                 note
             }
         });

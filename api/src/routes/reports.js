@@ -188,7 +188,8 @@ router.get('/reports/cash-summary', async (req, res) => {
         });
 
         const totalCash = records.reduce((sum, record) => {
-            return record.type === 'RECEIVED' ? sum + record.amount : sum - record.amount;
+            const amount = Number(record.amount);
+            return record.type === 'RECEIVED' ? sum + amount : sum - amount;
         }, 0);
 
         res.json({records, totalCash});
