@@ -43,7 +43,7 @@ export default function InvoiceLookup() {
                 <input
                     type="text"
                     placeholder="Search by Invoice #, Customer, or Town..."
-                    className="border p-2 rounded w-80 print:hidden"
+                    className="border p-2 rounded-input w-80 print:hidden"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -58,6 +58,7 @@ export default function InvoiceLookup() {
                         <th className="p-2 border">Customer / Company</th>
                         <th className="p-2 border">Town</th>
                         <th className="p-2 border">Salesman</th>
+                        <th className="p-2 border">Payment</th>
                         <th className="p-2 border text-end pe-4">Total Amount</th>
                         <th className="p-2 border">Action</th>
                     </tr>
@@ -69,13 +70,30 @@ export default function InvoiceLookup() {
                             <td className="p-2 border">{formatDate(inv.date)}</td>
                             <td className="p-2 border">
                             <span
-                                className={`px-2 py-1 rounded text-xs font-bold ${inv.type === 'SALE' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+                                className={`px-2 py-1 rounded text-xs font-bold ${inv.type === 'SALE' ? 'bg-green-100 text-green-800' : inv.type === 'RETURN' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>
                               {inv.type}
                             </span>
                             </td>
                             <td className="p-2 border">{inv.customer?.name || 'N/A (Purchase)'}</td>
                             <td className="p-2 border">{inv.town?.name}</td>
                             <td className="p-2 border">{inv.salesman?.name || '-'}</td>
+                            <td className="p-2 border">
+                                {inv.type === 'SALE' ? (
+                                    <span
+                                        className={`px-2 py-1 rounded text-xs font-bold ${
+                                            inv.paymentStatus === 'Paid'
+                                                ? 'bg-green-100 text-green-800'
+                                                : inv.paymentStatus === 'PartialPaid'
+                                                    ? 'bg-amber-100 text-amber-800'
+                                                    : 'bg-gray-100 text-gray-700'
+                                        }`}
+                                    >
+                                        {inv.paymentStatus || 'Pending'}
+                                    </span>
+                                ) : (
+                                    '—'
+                                )}
+                            </td>
                             <td className="p-2 border font-bold text-end pe-4">{formatNumber(inv.totalAmount)}</td>
                             <td className="p-2 border">
                                 <Link to={`/invoice/${inv.id}`}
@@ -86,14 +104,14 @@ export default function InvoiceLookup() {
                     ))}
                     {loading && (
                         <tr>
-                            <td colSpan="8" className="p-4 text-center text-gray-500">
+                            <td colSpan="9" className="p-4 text-center text-gray-500">
                                 <Spinner size="4" label="Loading invoices..." />
                             </td>
                         </tr>
                     )}
                     {!loading && filteredInvoices.length === 0 && (
                         <tr>
-                            <td colSpan="8" className="p-4 text-center text-gray-500">No invoices found.</td>
+                            <td colSpan="9" className="p-4 text-center text-gray-500">No invoices found.</td>
                         </tr>
                     )}
 

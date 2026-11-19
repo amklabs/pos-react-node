@@ -129,17 +129,23 @@
 
   input,
   textarea,
-  select {
-    @apply rounded-input border border-gray-300 bg-white px-3 py-2 text-sm
+  select,
+  .form-input,
+  .form-select {
+    @apply border border-gray-300 bg-white px-3 py-2 text-sm
     text-gray-900 placeholder:text-gray-400
     focus:outline-none focus:ring-2 focus:ring-brand-500/40
     focus:border-brand-500
     disabled:bg-gray-100 disabled:text-gray-500;
+    /* Single source of truth — wins over ad-hoc `rounded` utilities on fields */
+    border-radius: var(--radius-input);
   }
 
   .dark input,
   .dark textarea,
-  .dark select {
+  .dark select,
+  .dark .form-input,
+  .dark .form-select {
     @apply bg-gray-900 border-gray-700 text-gray-100
     placeholder:text-gray-500
     disabled:bg-gray-800 disabled:text-gray-500;

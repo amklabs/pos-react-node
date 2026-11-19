@@ -1,42 +1,82 @@
 const express = require('express');
 const prisma = require('../db');
-const {authenticateToken} = require('../midleware/auth');
+const { authenticateToken } = require('../midleware/auth');
+const { PAYMENT_STATUS } = require('../utils/payments');
 
 const router = express.Router();
-router.use(authenticateToken); // everything below is protected
+router.use(authenticateToken);
 
-router.get('/dashboard', async (req, res) => {
+const LOW_STOCK_THRESHOLD = 10;
+
+function dayBounds(now = new Date()) {
+    const startOfDay = new Date(now);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
+    return { startOfDay, endOfDay };
+}
+
+router.get('/dashboard', async (req, res, next) => {
     try {
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999);
+        const { startOfDay, endOfDay } = dayBounds();
+        const todayFilter = { gte: startOfDay, lte: endOfDay };
 
-        // Run independent queries in parallel
         const [
             todaySalesAgg,
+            todaySalesCount,
+            todayPurchasesAgg,
+            todayReturnsAgg,
+            todayCashReceivedAgg,
             cashAgg,
+            unpaidSales,
             totalProducts,
             products,
             purchasedGroups,
             soldGroups,
             returnedGroups,
+            recentSales,
         ] = await Promise.all([
             prisma.invoice.aggregate({
                 _sum: { totalAmount: true },
-                where: { type: 'SALE', date: { gte: startOfDay, lte: endOfDay } },
+                where: { type: 'SALE', date: todayFilter },
             }),
-
-            // Aggregate cash in DB instead of loading every row
+            prisma.invoice.count({
+                where: { type: 'SALE', date: todayFilter },
+            }),
+            prisma.invoice.aggregate({
+                _sum: { totalAmount: true },
+                where: { type: 'PURCHASE', date: todayFilter },
+            }),
+            prisma.invoice.aggregate({
+                _sum: { totalAmount: true },
+                where: { type: 'RETURN', date: todayFilter },
+            }),
+            prisma.cashRecord.aggregate({
+                _sum: { amount: true },
+                where: { type: 'RECEIVED', date: todayFilter },
+            }),
             prisma.cashRecord.groupBy({
                 by: ['type'],
                 _sum: { amount: true },
             }),
-
-            prisma.product.count(),
-
-            prisma.product.findMany({ select: { id: true, name: true } }),
-
+            prisma.invoice.findMany({
+                where: {
+                    type: 'SALE',
+                    paymentStatus: { not: PAYMENT_STATUS.PAID },
+                },
+                select: {
+                    totalAmount: true,
+                    payments: {
+                        where: { type: 'RECEIVED' },
+                        select: { amount: true },
+                    },
+                },
+            }),
+            prisma.product.count({ where: { isActive: true } }),
+            prisma.product.findMany({
+                where: { isActive: true },
+                select: { id: true, name: true },
+            }),
             prisma.invoiceItem.groupBy({
                 by: ['productId'],
                 _sum: { qty: true },
@@ -52,68 +92,79 @@ router.get('/dashboard', async (req, res) => {
                 _sum: { qty: true },
                 where: { invoice: { type: 'RETURN' } },
             }),
+            prisma.invoice.findMany({
+                where: { type: 'SALE' },
+                orderBy: { date: 'desc' },
+                take: 8,
+                select: {
+                    id: true,
+                    invoiceNo: true,
+                    date: true,
+                    totalAmount: true,
+                    paymentStatus: true,
+                    customer: { select: { name: true } },
+                    town: { select: { name: true } },
+                },
+            }),
         ]);
 
-        // Cash in hand
         const totalCash = cashAgg.reduce((sum, row) => {
-            const amount = row._sum.amount || 0;
+            const amount = Number(row._sum.amount || 0);
             return row.type === 'RECEIVED' ? sum + amount : sum - amount;
         }, 0);
 
-        // Build lookup maps — O(1) per product
+        const outstandingReceivables = unpaidSales.reduce((sum, inv) => {
+            const paid = (inv.payments || []).reduce(
+                (s, p) => s + Number(p.amount || 0),
+                0
+            );
+            return sum + Math.max(0, Number(inv.totalAmount) - paid);
+        }, 0);
+
         const toMap = (rows) =>
-            new Map(rows.map((r) => [r.productId, r._sum.qty || 0]));
+            new Map(rows.map((r) => [r.productId, Number(r._sum.qty || 0)]));
         const purchasedMap = toMap(purchasedGroups);
         const soldMap = toMap(soldGroups);
         const returnedMap = toMap(returnedGroups);
 
-        // Compute balances for all products in memory
-        const balances = products.map((p) => ({
-            name: p.name,
-            balance:
-                (purchasedMap.get(p.id) || 0) -
-                (soldMap.get(p.id) || 0) +
-                (returnedMap.get(p.id) || 0),
-        }));
-
-        // Lowest 5 that are actually below threshold
-        const LOW_STOCK_THRESHOLD = 10;
-        const lowStockItems = balances
+        const lowStockItems = products
+            .map((p) => ({
+                id: p.id,
+                name: p.name,
+                balance:
+                    (purchasedMap.get(p.id) || 0) -
+                    (soldMap.get(p.id) || 0) +
+                    (returnedMap.get(p.id) || 0),
+            }))
             .filter((b) => b.balance < LOW_STOCK_THRESHOLD)
-            .sort((a, b) => a.balance - b.balance) // ascending → lowest first
-            .slice(0, 5);
+            .sort((a, b) => a.balance - b.balance)
+            .slice(0, 8);
 
         res.json({
-            todaySales: todaySalesAgg._sum.totalAmount || 0,
+            todaySales: Number(todaySalesAgg._sum.totalAmount || 0),
+            todaySalesCount,
+            todayPurchases: Number(todayPurchasesAgg._sum.totalAmount || 0),
+            todayReturns: Number(todayReturnsAgg._sum.totalAmount || 0),
+            todayCashReceived: Number(todayCashReceivedAgg._sum.amount || 0),
             totalCash,
+            outstandingReceivables: Number(outstandingReceivables.toFixed(2)),
+            unpaidInvoiceCount: unpaidSales.length,
             totalProducts,
+            lowStockThreshold: LOW_STOCK_THRESHOLD,
             lowStockItems,
+            recentSales: recentSales.map((inv) => ({
+                id: inv.id,
+                invoiceNo: inv.invoiceNo,
+                date: inv.date,
+                totalAmount: Number(inv.totalAmount),
+                paymentStatus: inv.paymentStatus,
+                customerName: inv.customer?.name || 'Cash Sale',
+                townName: inv.town?.name || '',
+            })),
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);
     }
 });
 
 module.exports = router;
-
-// This can be used to even improve load time
-// const stockRows = await prisma.$queryRaw`
-//   SELECT
-//     p.id,
-//     p.name,
-//     COALESCE(SUM(CASE WHEN i.type = 'PURCHASE' THEN ii.qty END), 0)::int
-//       - COALESCE(SUM(CASE WHEN i.type = 'SALE'    THEN ii.qty END), 0)::int
-//       + COALESCE(SUM(CASE WHEN i.type = 'RETURN'  THEN ii.qty END), 0)::int
-//       AS balance
-//   FROM "Product" p
-//   LEFT JOIN "InvoiceItem" ii ON ii."productId" = p.id
-//   LEFT JOIN "Invoice"     i  ON i.id = ii."invoiceId"
-//   GROUP BY p.id, p.name
-//   HAVING (
-//     COALESCE(SUM(CASE WHEN i.type = 'PURCHASE' THEN ii.qty END), 0)
-//     - COALESCE(SUM(CASE WHEN i.type = 'SALE'   THEN ii.qty END), 0)
-//     + COALESCE(SUM(CASE WHEN i.type = 'RETURN' THEN ii.qty END), 0)
-//   ) < 10
-//   ORDER BY balance ASC
-//   LIMIT 5;
-// `;

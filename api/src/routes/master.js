@@ -1,272 +1,339 @@
 const express = require('express');
 const prisma = require('../db');
-const {authenticateToken} = require('../midleware/auth');
+const { authenticateToken, requireRoles } = require('../midleware/auth');
+const { ADMIN_ROLES } = require('../roles');
 
 const router = express.Router();
-router.use(authenticateToken); // everything below is protected
+router.use(authenticateToken);
 
-// Add a Town
-router.post('/towns', async (req, res) => {
+// Reads allowed for all authenticated users; writes require admin roles
+router.use((req, res, next) => {
+    if (req.method === 'GET' || req.method === 'HEAD') return next();
+    return requireRoles(...ADMIN_ROLES)(req, res, next);
+});
+
+function activeFlag(value, fallback = true) {
+    if (value === undefined || value === null) return fallback;
+    return Boolean(value);
+}
+
+// ---- Towns ----
+router.post('/towns', async (req, res, next) => {
     try {
-        const {name, isActive} = req.body;
-        const town = await prisma.town.create({data: {name}});
-        res.json(town);
+        const { name } = req.body;
+        if (!name?.trim()) return res.status(400).json({ error: 'Town name is required' });
+        const town = await prisma.town.create({
+            data: { name: name.trim(), isActive: activeFlag(req.body.isActive, true) },
+        });
+        res.status(201).json(town);
     } catch (error) {
-        res.status(500).json({error: "Town already exists or invalid data"});
+        if (error.code === 'P2002') {
+            return res.status(409).json({ error: 'Town already exists' });
+        }
+        next(error);
     }
 });
 
-// Update a Town
-router.put('/towns/:id', async (req, res) => {
+router.put('/towns/:id', async (req, res, next) => {
     try {
         const town = await prisma.town.update({
-            where: {id: Number(req.params.id)},
-            data: {name: req.body.name, isActive: req.body.isActive },
+            where: { id: Number(req.params.id) },
+            data: {
+                name: req.body.name?.trim(),
+                isActive: activeFlag(req.body.isActive, true),
+            },
         });
         res.json(town);
     } catch (e) {
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Delete A Town
-router.delete('/towns/:id', async (req, res) => {
+router.delete('/towns/:id', async (req, res, next) => {
     try {
-        await prisma.town.delete({where: {id: Number(req.params.id)}});
+        await prisma.town.delete({ where: { id: Number(req.params.id) } });
         res.status(204).end();
     } catch (e) {
-        // Prisma P2003 = foreign key constraint violation
         if (e.code === 'P2003') {
             return res.status(409).json({
                 error: 'Cannot delete: this town is referenced by customers.',
             });
         }
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Add a Customer
-router.post('/customers', async (req, res) => {
-    const {name, phone, townId} = req.body;
-    const customer = await prisma.customer.create({
-        data: {name, phone, townId: parseInt(townId)}
-    });
-    res.json(customer);
+// ---- Customers ----
+router.post('/customers', async (req, res, next) => {
+    try {
+        const { name, phone, townId } = req.body;
+        if (!name?.trim()) return res.status(400).json({ error: 'Customer name is required' });
+        if (!townId) return res.status(400).json({ error: 'Town is required' });
+        const customer = await prisma.customer.create({
+            data: {
+                name: name.trim(),
+                phone: phone || '',
+                townId: parseInt(townId, 10),
+                isActive: activeFlag(req.body.isActive, true),
+            },
+            include: { town: true },
+        });
+        res.status(201).json(customer);
+    } catch (e) {
+        next(e);
+    }
 });
 
-// Update a Customer
-router.put('/customers/:id', async (req, res) => {
+router.put('/customers/:id', async (req, res, next) => {
     try {
-        const {name, phone, townId} = req.body;
+        const { name, phone, townId } = req.body;
         const customer = await prisma.customer.update({
-            where: {id: Number(req.params.id)},
+            where: { id: Number(req.params.id) },
             data: {
-                name,
-                phone,
-                townId: parseInt(townId),
+                name: name?.trim(),
+                phone: phone || '',
+                townId: parseInt(townId, 10),
+                isActive: activeFlag(req.body.isActive, true),
             },
+            include: { town: true },
         });
         res.json(customer);
     } catch (e) {
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Delete a Customer
-router.delete('/customers/:id', async (req, res) => {
+router.delete('/customers/:id', async (req, res, next) => {
     try {
-        await prisma.customer.delete({where: {id: Number(req.params.id)}});
+        await prisma.customer.delete({ where: { id: Number(req.params.id) } });
         res.status(204).end();
     } catch (e) {
-        // Prisma P2003 = foreign key constraint violation
         if (e.code === 'P2003') {
             return res.status(409).json({
-                error: 'Cannot delete: this Customer is referenced by other tables.',
+                error: 'Cannot delete: this customer is referenced by other records.',
             });
         }
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Add a Salesmen
-router.post('/salesmen', async (req, res) => {
-    const {name, phone} = req.body;
-    const salesman = await prisma.salesman.create({
-        data: {name, phone}
-    });
-    res.json(salesman);
+// ---- Salesmen ----
+router.post('/salesmen', async (req, res, next) => {
+    try {
+        const { name, phone } = req.body;
+        if (!name?.trim()) return res.status(400).json({ error: 'Salesman name is required' });
+        const salesman = await prisma.salesman.create({
+            data: {
+                name: name.trim(),
+                phone: phone || '',
+                isActive: activeFlag(req.body.isActive, true),
+            },
+        });
+        res.status(201).json(salesman);
+    } catch (e) {
+        next(e);
+    }
 });
 
-// Update a Salesman
-router.put('/salesmen/:id', async (req, res) => {
+router.put('/salesmen/:id', async (req, res, next) => {
     try {
-        const {name, phone} = req.body;
+        const { name, phone } = req.body;
         const salesman = await prisma.salesman.update({
-            where: {id: Number(req.params.id)},
+            where: { id: Number(req.params.id) },
             data: {
-                name,
-                phone,
+                name: name?.trim(),
+                phone: phone || '',
+                isActive: activeFlag(req.body.isActive, true),
             },
         });
         res.json(salesman);
     } catch (e) {
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Delete a Salesman
-router.delete('/salesmen/:id', async (req, res) => {
+router.delete('/salesmen/:id', async (req, res, next) => {
     try {
-        await prisma.salesman.delete({where: {id: Number(req.params.id)}});
+        await prisma.salesman.delete({ where: { id: Number(req.params.id) } });
         res.status(204).end();
     } catch (e) {
-        // Prisma P2003 = foreign key constraint violation
         if (e.code === 'P2003') {
             return res.status(409).json({
-                error: 'Cannot delete: this Salesman is referenced by other tables.',
+                error: 'Cannot delete: this salesman is referenced by other records.',
             });
         }
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-
-// Add a Products
-router.post('/products', async (req, res) => {
-    const {name, companyId} = req.body;
-    const product = await prisma.product.create({
-        data: {
-            name,
-            companyId: companyId ? parseInt(companyId) : null,
-            isActive : req.body.isActive,
-        }
-    });
-    res.json(product);
+// ---- Products ----
+router.post('/products', async (req, res, next) => {
+    try {
+        const { name, companyId } = req.body;
+        if (!name?.trim()) return res.status(400).json({ error: 'Product name is required' });
+        if (!companyId) return res.status(400).json({ error: 'Company is required' });
+        const product = await prisma.product.create({
+            data: {
+                name: name.trim(),
+                companyId: parseInt(companyId, 10),
+                isActive: activeFlag(req.body.isActive, true),
+            },
+            include: { company: true },
+        });
+        res.status(201).json(product);
+    } catch (e) {
+        next(e);
+    }
 });
 
-// Update a Products
-router.put('/products/:id', async (req, res) => {
+router.put('/products/:id', async (req, res, next) => {
     try {
-        const {name, companyId} = req.body;
+        const { name, companyId } = req.body;
+        if (!companyId) return res.status(400).json({ error: 'Company is required' });
         const product = await prisma.product.update({
-            where: {id: Number(req.params.id)},
+            where: { id: Number(req.params.id) },
             data: {
-                name,
-                companyId: companyId ? parseInt(companyId) : null,
-                isActive : req.body.isActive,
+                name: name?.trim(),
+                companyId: parseInt(companyId, 10),
+                isActive: activeFlag(req.body.isActive, true),
             },
+            include: { company: true },
         });
         res.json(product);
     } catch (e) {
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Delete a Product
-router.delete('/products/:id', async (req, res) => {
+router.delete('/products/:id', async (req, res, next) => {
     try {
-        await prisma.product.delete({where: {id: Number(req.params.id)}});
+        await prisma.product.delete({ where: { id: Number(req.params.id) } });
         res.status(204).end();
     } catch (e) {
-        // Prisma P2003 = foreign key constraint violation
         if (e.code === 'P2003') {
             return res.status(409).json({
-                error: 'Cannot delete: this Product is referenced by other tables.',
+                error: 'Cannot delete: this product is referenced by invoices.',
             });
         }
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Add a New Company
-router.post('/companies', async (req, res) => {
-    const {name, phone} = req.body;
-    const company = await prisma.company.create({
-        data: {
-            name,
-            phone
-        }
-    });
-    res.json(company);
+// ---- Companies ----
+router.post('/companies', async (req, res, next) => {
+    try {
+        const { name, phone } = req.body;
+        if (!name?.trim()) return res.status(400).json({ error: 'Company name is required' });
+        const company = await prisma.company.create({
+            data: {
+                name: name.trim(),
+                phone: phone || '',
+                isActive: activeFlag(req.body.isActive, true),
+            },
+        });
+        res.status(201).json(company);
+    } catch (e) {
+        next(e);
+    }
 });
 
-// Update a Products
-router.put('/companies/:id', async (req, res) => {
+router.put('/companies/:id', async (req, res, next) => {
     try {
-        const {name, phone} = req.body;
+        const { name, phone } = req.body;
         const company = await prisma.company.update({
-            where: {id: Number(req.params.id)},
+            where: { id: Number(req.params.id) },
             data: {
-                name,
-                phone
+                name: name?.trim(),
+                phone: phone || '',
+                isActive: activeFlag(req.body.isActive, true),
             },
         });
         res.json(company);
     } catch (e) {
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-// Delete a Product
-router.delete('/companies/:id', async (req, res) => {
+router.delete('/companies/:id', async (req, res, next) => {
     try {
-        await prisma.company.delete({where: {id: Number(req.params.id)}});
+        await prisma.company.delete({ where: { id: Number(req.params.id) } });
         res.status(204).end();
     } catch (e) {
-        // Prisma P2003 = foreign key constraint violation
         if (e.code === 'P2003') {
             return res.status(409).json({
-                error: 'Cannot delete: this Company is referenced by other tables.',
+                error: 'Cannot delete: this company is referenced by products.',
             });
         }
-        res.status(400).json({error: e.message});
+        next(e);
     }
 });
 
-
-//Dropdown Routes
-router.get('/customers', async (req, res) => {
-    const customers = await prisma.customer.findMany({
-        where: {isActive: true},
-        include: {town: true}
-    });
-    res.json(customers);
+// ---- List / dropdown routes ----
+router.get('/customers', async (req, res, next) => {
+    try {
+        const showAll = req.query.showAll === 'true';
+        const customers = await prisma.customer.findMany({
+            where: showAll ? {} : { isActive: true },
+            include: { town: true },
+            orderBy: { name: 'asc' },
+        });
+        res.json(customers);
+    } catch (e) {
+        next(e);
+    }
 });
 
-router.get('/products', async (req, res) => {
-    const showAll = req.query.showAll === 'true';
-    const products = await prisma.product.findMany({
-        where: showAll ? {} : { isActive: true },
-        orderBy: { name: 'asc' }, // optional
-        include: {company: true}
-    });
-    res.json(products);
+router.get('/products', async (req, res, next) => {
+    try {
+        const showAll = req.query.showAll === 'true';
+        const products = await prisma.product.findMany({
+            where: showAll ? {} : { isActive: true },
+            orderBy: { name: 'asc' },
+            include: { company: true },
+        });
+        res.json(products);
+    } catch (e) {
+        next(e);
+    }
 });
 
-router.get('/companies', async (req, res) => {
-    const companies = await prisma.company.findMany({
-        where: {isActive: true},
-    });
-    res.json(companies);
+router.get('/companies', async (req, res, next) => {
+    try {
+        const showAll = req.query.showAll === 'true';
+        const companies = await prisma.company.findMany({
+            where: showAll ? {} : { isActive: true },
+            orderBy: { name: 'asc' },
+        });
+        res.json(companies);
+    } catch (e) {
+        next(e);
+    }
 });
 
-router.get('/salesmen', async (req, res) => {
-    const salesmen = await prisma.salesman.findMany({
-        where: {isActive: true},
-    });
-    res.json(salesmen);
+router.get('/salesmen', async (req, res, next) => {
+    try {
+        const showAll = req.query.showAll === 'true';
+        const salesmen = await prisma.salesman.findMany({
+            where: showAll ? {} : { isActive: true },
+            orderBy: { name: 'asc' },
+        });
+        res.json(salesmen);
+    } catch (e) {
+        next(e);
+    }
 });
 
-//-----Towns --------
-router.get('/towns', async (req, res) => {
-    const showAll = req.query.showAll === 'true';
-
-    const towns = await prisma.town.findMany({
-        where: showAll ? {} : { isActive: true },
-        orderBy: { name: 'asc' }, // optional
-    });
-
-    res.json(towns);
+router.get('/towns', async (req, res, next) => {
+    try {
+        const showAll = req.query.showAll === 'true';
+        const towns = await prisma.town.findMany({
+            where: showAll ? {} : { isActive: true },
+            orderBy: { name: 'asc' },
+        });
+        res.json(towns);
+    } catch (e) {
+        next(e);
+    }
 });
 
 module.exports = router;

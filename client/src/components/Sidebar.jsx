@@ -1,5 +1,6 @@
-import {NavLink, useNavigate} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
+import { ADMIN_ROLES, hasRole } from '../utils/roles';
 import {
     LayoutDashboard,
     ShoppingCart,
@@ -17,10 +18,10 @@ import {
     BookOpen,
     LogOut
 } from 'lucide-react';
+import { STORE_NAME } from '../constants/store.js';
 
 export default function Sidebar() {
     const { user, logout } = useAuthContext();
-    const navigate = useNavigate();
     const navLinkClass = ({isActive}) =>
         `group flex w-full items-center justify-start text-left gap-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
             isActive
@@ -39,7 +40,7 @@ export default function Sidebar() {
             title: 'Transactions',
             items: [
                 {name: 'New Sale', path: '/sale', icon: ShoppingCart},
-                {name: 'New Purchase', path: '/purchase', icon: ShoppingBag},
+                {name: 'New Purchase', path: '/purchase', icon: ShoppingBag, roles: ADMIN_ROLES},
                 {name: 'Cash Received', path: '/cash', icon: Wallet}
             ]
         },
@@ -48,7 +49,7 @@ export default function Sidebar() {
             items: [
                 {name: 'Invoice Lookup', path: '/invoice-lookup', icon: Search},
                 {name: 'Purchase Lookup', path: '/purchase-lookup', icon: Search},
-                {name: 'Master Data', path: '/master-data', icon: Database}
+                {name: 'Master Data', path: '/master-data', icon: Database, roles: ADMIN_ROLES}
             ]
         },
         {
@@ -68,12 +69,18 @@ export default function Sidebar() {
         }
     ];
 
+    const visibleSections = sections
+        .map((section) => ({
+            ...section,
+            items: section.items.filter(
+                (item) => !item.roles || hasRole(user, item.roles)
+            ),
+        }))
+        .filter((section) => section.items.length > 0);
+
     const handleLogout = () => {
-        console.log('Logout');
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        navigate('/login');
-    }
+        logout();
+    };
     return (
         <aside className="w-64 min-w-64 bg-slate-950 text-white flex flex-col h-full shadow-xl print:hidden">
 
@@ -85,12 +92,12 @@ export default function Sidebar() {
                         <Store size={23} className="text-white"/>
                     </div>
 
-                    <div>
-                        <span className="text-xl font-extrabold tracking-wide text-white mb-0">
-                            POINT OF SALE
+                    <div className="min-w-0">
+                        <span className="block text-[11px] font-extrabold leading-snug tracking-wide text-white uppercase">
+                            {STORE_NAME}
                         </span>
-                        <p className="text-[10px] font-semibold tracking-[2px] text-blue-400 uppercase">
-                            By AMK Labs
+                        <p className="text-[10px] font-semibold tracking-[2px] text-blue-400 uppercase mt-0.5">
+                            Point of Sale
                         </p>
                     </div>
                 </div>
@@ -99,7 +106,7 @@ export default function Sidebar() {
             {/* Navigation */}
             <nav className="flex-1 px-3 py-5 overflow-y-auto space-y-2 text-left">
 
-                {sections.map((section) => (
+                {visibleSections.map((section) => (
                     <div key={section.title}>
 
                         <h3 className="px-3 mb-2 text-[10px] font-bold uppercase tracking-[1.5px] text-slate-500">
@@ -157,8 +164,12 @@ export default function Sidebar() {
                     </div>
 
                     <div className="ml-auto">
-                        <button className="hover:cursor-pointer hover:text-gray-500"
-                                onClick={handleLogout}>
+                        <button
+                            type="button"
+                            aria-label="Log out"
+                            className="hover:cursor-pointer hover:text-gray-500"
+                            onClick={handleLogout}
+                        >
                             <LogOut size={18}/>
                         </button>
                     </div>

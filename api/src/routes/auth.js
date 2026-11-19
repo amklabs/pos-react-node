@@ -6,62 +6,50 @@ const { JWT_SECRET } = require('../config');
 
 const router = express.Router();
 
+function toSafeUser(user) {
+    if (!user) return null;
+    const { password, ...safeUser } = user;
+    return safeUser;
+}
+
 // POST /login
 router.post('/login', async (req, res) => {
-    console.log(req.body);
-    const { username, password } = req.body;
-    try {
-        const user = await prisma.user.findUnique({
-            where: { username },
-            include: { role : true},
-        });
-        if (!user) return res.status(401).json({ error: 'Invalid username or password' });
-
-        const valid = await bcrypt.compare(password, user.password);
-        if (!valid) return res.status(401).json({ error: 'Invalid username or password' });
-
-        const token = jwt.sign(
-            { userId: user.id, user: user },
-            JWT_SECRET,
-            { expiresIn: '1d' }
-        );
-        delete user.password;
-
-        res.json({ token, user: user});
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// POST /register
-router.post('/register', async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required' });
     }
-    if (password.length < 6) {
-        return res.status(400).json({ error: 'Password must be at least 6 characters' });
-    }
+
     try {
-        const existing = await prisma.user.findUnique({ where: { username } });
-        if (existing) {
-            return res.status(409).json({ error: 'Username already taken' });
+        const user = await prisma.user.findUnique({
+            where: { username },
+            include: { role: true },
+        });
+        if (!user || !user.isActive) {
+            return res.status(401).json({ error: 'Invalid username or password' });
         }
 
-        const hashed = await bcrypt.hash(password, 10);
-        const user = await prisma.user.create({
-            data: { username, password: hashed },
-        });
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
 
         const token = jwt.sign(
-            { userId: user.id, username: user.username },
+            { userId: user.id },
             JWT_SECRET,
             { expiresIn: '1d' }
         );
-        res.status(201).json({ token, username: user.username });
+
+        res.json({ token, user: toSafeUser(user) });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Login failed' });
     }
+});
+
+// POST /register — disabled; users must be created by an administrator
+router.post('/register', (_req, res) => {
+    res.status(403).json({
+        error: 'Public registration is disabled. Contact an administrator.',
+    });
 });
 
 module.exports = router;

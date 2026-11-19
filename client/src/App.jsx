@@ -18,6 +18,8 @@ import Login from "./pages/Login.jsx";
 
 import { AuthProvider, useAuthContext } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import RoleRoute from './components/RoleRoute';
+import { ADMIN_ROLES } from './utils/roles';
 import usePageTitle from "./hooks/usePageTitle.js";
 
 function AppLayout() {
@@ -58,10 +60,8 @@ function AppRoutes() {
                 <Route element={<AppLayout />}>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/sale" element={<NewSale />} />
-                    <Route path="/purchase" element={<NewPurchase />} />
                     <Route path="/cash" element={<CashReceived />} />
                     <Route path="/invoice-lookup" element={<InvoiceLookup />} />
-                    <Route path="/master-data" element={<MasterData />} />
                     <Route path="/reports/sales" element={<SalesReport />} />
                     <Route path="/reports/stock" element={<StockReport />} />
                     <Route path="/reports/cash" element={<CashSummary />} />
@@ -69,6 +69,12 @@ function AppRoutes() {
                     <Route path="/purchase-lookup" element={<PurchaseLookup />} />
                     <Route path="/invoice/:id" element={<InvoiceView />} />
                     <Route path="/ledger" element={<CustomerLedger />} />
+
+                    {/* Admin-only: master data + new purchase */}
+                    <Route element={<RoleRoute roles={ADMIN_ROLES} />}>
+                        <Route path="/purchase" element={<NewPurchase />} />
+                        <Route path="/master-data" element={<MasterData />} />
+                    </Route>
                 </Route>
             </Route>
         </Routes>

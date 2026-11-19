@@ -1,31 +1,17 @@
-import {createContext, useContext, useEffect, useState, useCallback} from 'react';
-import apiClient, {setUnauthorizedHandler} from '../apiClient';
-import {useNavigate} from "react-router-dom";
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import apiClient, { setUnauthorizedHandler } from '../apiClient';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 
-export function AuthProvider({children}) {
+export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(true); // verifying token on mount
-
-    // Verify token with the backend
-    const checkAuth = useCallback(async () => {
-        try {
-            const res = await apiClient('/api/user');
-            if (res.status === 200) {
-                setUser(res.data.user);
-            }
-        } catch {
-            localStorage.removeItem('token');
-            setUser(null);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+    const [loading, setLoading] = useState(true);
 
     const clearAuth = useCallback(() => {
         localStorage.removeItem('token');
+        localStorage.removeItem('username');
         setUser(null);
     }, []);
 
@@ -33,7 +19,7 @@ export function AuthProvider({children}) {
     useEffect(() => {
         setUnauthorizedHandler(() => {
             clearAuth();
-            navigate('/login', {replace: true});
+            navigate('/login', { replace: true });
         });
         return () => setUnauthorizedHandler(null);
     }, [clearAuth, navigate]);
@@ -45,10 +31,11 @@ export function AuthProvider({children}) {
             setLoading(false);
             return;
         }
+
         let cancelled = false;
         (async () => {
             try {
-                const {data} = await apiClient.get('/api/user');
+                const { data } = await apiClient.get('/api/user');
                 if (!cancelled) setUser(data.user);
             } catch {
                 if (!cancelled) clearAuth();
@@ -56,6 +43,7 @@ export function AuthProvider({children}) {
                 if (!cancelled) setLoading(false);
             }
         })();
+
         return () => {
             cancelled = true;
         };
@@ -67,30 +55,19 @@ export function AuthProvider({children}) {
         setUser(userData);
     };
 
-    const logout = async () => {
+    const logout = useCallback(async () => {
         try {
-            const res = await apiClient.post(`/api/login`, {username, password});
-
-            // Save token and user info to browser storage
-            localStorage.setItem('token', res.data.token);
-            localStorage.setItem('username', res.data.username);
-            // Redirect to dashboard
-            navigate('/');
-            window.location.reload(); // Refresh to update app state
-        } catch (err) {
-            console.error(err);
+            await apiClient.post('/api/logout');
+        } catch {
+            // Still clear local session even if the server call fails
         } finally {
-            setUser(null);
+            clearAuth();
+            navigate('/login', { replace: true });
         }
-    };
-
-    useEffect(() => {
-        checkAuth().then(() => {
-        });
-    }, [checkAuth]);
+    }, [clearAuth, navigate]);
 
     return (
-        <AuthContext.Provider value={{user, loading, login, logout, checkAuth}}>
+        <AuthContext.Provider value={{ user, loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

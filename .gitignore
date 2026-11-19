@@ -30,9 +30,14 @@ api/out/
 .env.test.local
 .env.production.local
 *.env
+!*.env.example
 
-api/.env*
-client/.env*
+api/.env
+api/.env.*
+!api/.env.example
+client/.env
+client/.env.*
+!client/.env.example
 
 # ==========================================
 # Logs and Diagnostics
