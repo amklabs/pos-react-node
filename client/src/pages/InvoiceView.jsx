@@ -133,7 +133,7 @@ export default function InvoiceView() {
     const isReturn = invoice.type === 'RETURN';
 
     return (
-        <div className="w-full min-w-0">
+        <div className="w-full min-w-0 max-w-4xl mx-auto">
             {/* Screen actions */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6 print:hidden no-print">
                 <button
