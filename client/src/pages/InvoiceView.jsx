@@ -1,9 +1,40 @@
 // src/pages/InvoiceView.jsx
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import apiClient from "../apiClient.js";
-import usePageTitle from "../hooks/usePageTitle.js";
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import apiClient from '../apiClient.js';
+import usePageTitle from '../hooks/usePageTitle.js';
+import Spinner from '../components/Spinner.jsx';
 import { STORE_NAME } from '../constants/store.js';
+import { toastError } from '../utils/toast';
+import { formatNumber, formatDate, formatDateTime } from '../utils/formaters.js';
+
+function money(value) {
+    return `Rs. ${formatNumber(value)}`;
+}
+
+function typeLabel(type) {
+    if (type === 'PURCHASE') return 'Purchase Invoice';
+    if (type === 'RETURN') return 'Stock Return';
+    return 'Sale Invoice';
+}
+
+function PaymentBadge({ status }) {
+    const s = status || 'Pending';
+    const styles =
+        s === 'Paid'
+            ? 'bg-green-100 text-green-800 border-green-200'
+            : s === 'PartialPaid'
+              ? 'bg-amber-100 text-amber-800 border-amber-200'
+              : 'bg-red-50 text-red-700 border-red-200';
+    const label = s === 'PartialPaid' ? 'Partial Paid' : s;
+    return (
+        <span
+            className={`inline-block px-2.5 py-0.5 rounded border text-xs font-bold ${styles}`}
+        >
+            {label}
+        </span>
+    );
+}
 
 export default function InvoiceView() {
     usePageTitle('Invoice Details');
@@ -11,130 +42,403 @@ export default function InvoiceView() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [invoice, setInvoice] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchInvoice = async () => {
+        let cancelled = false;
+        (async () => {
             try {
+                setLoading(true);
                 const res = await apiClient.get(`/api/invoices/${id}`);
-                setInvoice(res.data);
-            } catch (err) { alert('Invoice not found'); navigate(-1); }
+                if (!cancelled) setInvoice(res.data);
+            } catch (err) {
+                toastError(err.response?.data?.error || 'Invoice not found');
+                if (!cancelled) navigate(-1);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        })();
+        return () => {
+            cancelled = true;
         };
-        fetchInvoice().then((response) => {});
     }, [id, navigate]);
 
-    if (!invoice) return <div>Loading...</div>;
+    const showDiscountCol = useMemo(() => {
+        if (!invoice?.items?.length) return false;
+        return invoice.items.some((item) => Number(item.discount || 0) !== 0);
+    }, [invoice]);
+
+    const lineRows = useMemo(() => {
+        if (!invoice?.items) return [];
+        return invoice.items.map((item, index) => {
+            const qty = Number(item.qty || 0);
+            const rate = Number(item.rate || 0);
+            const discount = Number(item.discount || 0);
+            const lineTotal = Number(
+                (item.total != null ? Number(item.total) : qty * rate - discount).toFixed(2)
+            );
+            return {
+                key: item.id ?? index,
+                sr: index + 1,
+                name: item.product?.name || '—',
+                company: item.product?.company?.name || null,
+                qty,
+                rate,
+                discount,
+                lineTotal,
+            };
+        });
+    }, [invoice]);
+
+    const totals = useMemo(() => {
+        if (!invoice) return null;
+        const subTotal = lineRows.reduce((s, r) => s + r.qty * r.rate, 0);
+        const discountTotal = Number(
+            invoice.totalDiscount != null
+                ? Number(invoice.totalDiscount)
+                : lineRows.reduce((s, r) => s + r.discount, 0)
+        );
+        const grandTotal = Number(invoice.totalAmount || 0);
+        const paidAmount = Number(invoice.paidAmount || 0);
+        const balanceDue = Number(
+            invoice.balanceDue != null
+                ? invoice.balanceDue
+                : Math.max(0, grandTotal - paidAmount)
+        );
+        return {
+            subTotal: Number(subTotal.toFixed(2)),
+            discountTotal: Number(discountTotal.toFixed(2)),
+            grandTotal,
+            paidAmount,
+            balanceDue,
+        };
+    }, [invoice, lineRows]);
+
+    const receivedPayments = useMemo(() => {
+        return (invoice?.payments || []).filter((p) => p.type === 'RECEIVED');
+    }, [invoice]);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <Spinner label="Loading invoice..." />
+            </div>
+        );
+    }
+
+    if (!invoice || !totals) return null;
+
+    const isSale = invoice.type === 'SALE';
+    const isPurchase = invoice.type === 'PURCHASE';
+    const isReturn = invoice.type === 'RETURN';
 
     return (
-        <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow border print:shadow-none print:p-0 print:border-0">
-
-            {/* Print & Back Buttons */}
-            <div className="flex justify-between mb-8 print:hidden">
-                <button onClick={() => navigate(-1)} className="text-gray-600 hover:underline">&larr; Back to Lookup</button>
-                <button onClick={() => window.print()} className="bg-blue-600 text-white px-6 py-2 rounded font-bold">Print Invoice</button>
+        <div className="w-full min-w-0">
+            {/* Screen actions */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 print:hidden no-print">
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="text-gray-600 hover:underline text-sm"
+                >
+                    ← Back
+                </button>
+                <div className="flex gap-2">
+                    <Link to="/invoice-lookup" className="btn btn-secondary">
+                        Invoice lookup
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={() => window.print()}
+                        className="btn btn-primary"
+                    >
+                        Print invoice
+                    </button>
+                </div>
             </div>
 
-            {/* Invoice Header */}
-            <div className="flex justify-between border-b pb-6 mb-6">
-                <div>
-                    <h1 className="text-3xl text-muted uppercase">{invoice.type} INVOICE</h1>
-                    <p className="text-gray-600 mt-2">Invoice #: <span className="font-semibold text-black">{invoice.invoiceNo}</span></p>
-                    <p className="text-gray-600">Date: <span className="font-semibold text-black">{new Date(invoice.date).toLocaleDateString()}</span></p>
-                    {invoice.sourceInvoice && (
-                        <p className="text-gray-600">
-                            Against sale:{' '}
-                            <span className="font-semibold text-black">#{invoice.sourceInvoice.invoiceNo}</span>
+            {/* Printable sheet */}
+            <div className="bg-white p-6 sm:p-8 rounded-xl shadow border border-gray-200 print:shadow-none print:border-0 print:rounded-none print:p-0 invoice-print">
+                {/* Brand header */}
+                <div className="text-center border-b-2 border-gray-900 pb-4 mb-5">
+                    <h1 className="text-xl sm:text-2xl font-extrabold tracking-wide uppercase text-gray-900 leading-snug">
+                        {STORE_NAME}
+                    </h1>
+                    <p className="mt-2 text-sm font-semibold uppercase tracking-[0.18em] text-gray-600">
+                        {typeLabel(invoice.type)}
+                    </p>
+                </div>
+
+                {/* Meta */}
+                <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                    <div className="space-y-1">
+                        <p>
+                            <span className="text-gray-500">Invoice #</span>{' '}
+                            <span className="font-bold text-gray-900">
+                                {invoice.invoiceNo}
+                            </span>
+                        </p>
+                        <p>
+                            <span className="text-gray-500">Date</span>{' '}
+                            <span className="font-semibold text-gray-900">
+                                {formatDate(invoice.date)}
+                            </span>
+                        </p>
+                        {invoice.sourceInvoice && (
+                            <p>
+                                <span className="text-gray-500">Against sale</span>{' '}
+                                <span className="font-semibold">
+                                    #{invoice.sourceInvoice.invoiceNo}
+                                </span>
+                            </p>
+                        )}
+                    </div>
+                    <div className="text-right space-y-1">
+                        {isSale && (
+                            <div className="flex justify-end">
+                                <PaymentBadge status={invoice.paymentStatus} />
+                            </div>
+                        )}
+                        {invoice.town?.name && (
+                            <p>
+                                <span className="text-gray-500">Town</span>{' '}
+                                <span className="font-semibold">{invoice.town.name}</span>
+                            </p>
+                        )}
+                        {invoice.salesman?.name && (
+                            <p>
+                                <span className="text-gray-500">Salesman</span>{' '}
+                                <span className="font-semibold">
+                                    {invoice.salesman.name}
+                                </span>
+                            </p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Parties */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 text-sm">
+                    <div className="rounded-lg border border-gray-200 p-3 print:border-gray-400">
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                            {isPurchase ? 'Supplier' : 'Billed to'}
+                        </p>
+                        {isPurchase ? (
+                            <>
+                                <p className="font-bold text-base text-gray-900">
+                                    {invoice.company?.name || '—'}
+                                </p>
+                                {invoice.company?.phone ? (
+                                    <p className="text-gray-600">{invoice.company.phone}</p>
+                                ) : null}
+                            </>
+                        ) : (
+                            <>
+                                <p className="font-bold text-base text-gray-900">
+                                    {invoice.customer?.name || 'Cash Sale'}
+                                </p>
+                                {invoice.customer?.phone ? (
+                                    <p className="text-gray-600">{invoice.customer.phone}</p>
+                                ) : null}
+                            </>
+                        )}
+                    </div>
+                    <div className="rounded-lg border border-gray-200 p-3 print:border-gray-400">
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                            Summary
+                        </p>
+                        <p className="text-gray-700">
+                            Items:{' '}
+                            <span className="font-semibold">{lineRows.length}</span>
+                        </p>
+                        <p className="text-gray-700">
+                            Qty:{' '}
+                            <span className="font-semibold">
+                                {formatNumber(
+                                    lineRows.reduce((s, r) => s + r.qty, 0)
+                                )}
+                            </span>
+                        </p>
+                        <p className="text-gray-700">
+                            Amount:{' '}
+                            <span className="font-bold">{money(totals.grandTotal)}</span>
+                        </p>
+                    </div>
+                </div>
+
+                {/* Items */}
+                <table className="w-full border-collapse text-sm mb-4">
+                    <thead>
+                        <tr className="bg-gray-100 print:bg-gray-200">
+                            <th className="border border-gray-300 p-2 text-center w-10">
+                                #
+                            </th>
+                            <th className="border border-gray-300 p-2 text-left">
+                                Item
+                            </th>
+                            <th className="border border-gray-300 p-2 text-right w-20">
+                                Qty
+                            </th>
+                            <th className="border border-gray-300 p-2 text-right w-24">
+                                Rate
+                            </th>
+                            {showDiscountCol && (
+                                <th className="border border-gray-300 p-2 text-right w-20">
+                                    Disc.
+                                </th>
+                            )}
+                            <th className="border border-gray-300 p-2 text-right w-28">
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {lineRows.map((row) => (
+                            <tr key={row.key}>
+                                <td className="border border-gray-300 p-2 text-center text-gray-600">
+                                    {row.sr}
+                                </td>
+                                <td className="border border-gray-300 p-2">
+                                    <span className="font-medium">{row.name}</span>
+                                    {row.company ? (
+                                        <span className="block text-xs text-gray-500">
+                                            {row.company}
+                                        </span>
+                                    ) : null}
+                                </td>
+                                <td className="border border-gray-300 p-2 text-right tabular-nums">
+                                    {formatNumber(row.qty)}
+                                </td>
+                                <td className="border border-gray-300 p-2 text-right tabular-nums">
+                                    {formatNumber(row.rate)}
+                                </td>
+                                {showDiscountCol && (
+                                    <td className="border border-gray-300 p-2 text-right tabular-nums">
+                                        {formatNumber(row.discount)}
+                                    </td>
+                                )}
+                                <td className="border border-gray-300 p-2 text-right tabular-nums font-semibold">
+                                    {formatNumber(row.lineTotal)}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {/* Totals */}
+                <div className="flex justify-end mb-8">
+                    <div className="w-full max-w-xs text-sm space-y-1.5">
+                        <div className="flex justify-between gap-6">
+                            <span className="text-gray-600">Subtotal</span>
+                            <span className="font-semibold tabular-nums">
+                                {money(totals.subTotal)}
+                            </span>
+                        </div>
+                        {totals.discountTotal > 0 && (
+                            <div className="flex justify-between gap-6">
+                                <span className="text-gray-600">Discount</span>
+                                <span className="font-semibold tabular-nums">
+                                    − {money(totals.discountTotal)}
+                                </span>
+                            </div>
+                        )}
+                        <div className="flex justify-between gap-6 border-t-2 border-gray-900 pt-2 mt-1">
+                            <span className="font-bold text-base">Grand total</span>
+                            <span className="font-bold text-base tabular-nums">
+                                {money(totals.grandTotal)}
+                            </span>
+                        </div>
+
+                        {isSale && (
+                            <>
+                                <div className="flex justify-between gap-6 pt-1">
+                                    <span className="text-gray-600">Paid</span>
+                                    <span className="font-semibold tabular-nums text-green-700">
+                                        {money(totals.paidAmount)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between gap-6">
+                                    <span className="text-gray-600">Balance due</span>
+                                    <span
+                                        className={`font-bold tabular-nums ${
+                                            totals.balanceDue > 0
+                                                ? 'text-red-700'
+                                                : 'text-green-700'
+                                        }`}
+                                    >
+                                        {money(totals.balanceDue)}
+                                    </span>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {/* Payments (sale only, if any) */}
+                {isSale && receivedPayments.length > 0 && (
+                    <div className="mb-8">
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+                            Payments received
+                        </h3>
+                        <table className="w-full border-collapse text-sm">
+                            <thead>
+                                <tr className="bg-gray-50">
+                                    <th className="border border-gray-300 p-2 text-left">
+                                        Date
+                                    </th>
+                                    <th className="border border-gray-300 p-2 text-left">
+                                        Note
+                                    </th>
+                                    <th className="border border-gray-300 p-2 text-right">
+                                        Amount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {receivedPayments.map((p) => (
+                                    <tr key={p.id}>
+                                        <td className="border border-gray-300 p-2 whitespace-nowrap">
+                                            {formatDateTime(p.date)}
+                                        </td>
+                                        <td className="border border-gray-300 p-2 text-gray-600">
+                                            {p.note || '—'}
+                                        </td>
+                                        <td className="border border-gray-300 p-2 text-right tabular-nums font-semibold">
+                                            {formatNumber(p.amount)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {/* Signatures — print focused */}
+                <div className="grid grid-cols-2 gap-10 mt-10 pt-4 text-sm">
+                    <div className="text-center">
+                        <div className="h-10 border-b border-gray-400 mb-1" />
+                        <p className="text-gray-600 text-xs uppercase tracking-wide">
+                            {isPurchase ? 'Supplier signature' : 'Customer signature'}
+                        </p>
+                    </div>
+                    <div className="text-center">
+                        <div className="h-10 border-b border-gray-400 mb-1" />
+                        <p className="text-gray-600 text-xs uppercase tracking-wide">
+                            Authorized signature
+                        </p>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-8 pt-3 border-t border-gray-200 text-center text-xs text-gray-500">
+                    <p>Thank you for your business.</p>
+                    <p className="mt-0.5 font-medium text-gray-600">{STORE_NAME}</p>
+                    {(isReturn || isPurchase) && (
+                        <p className="mt-1 uppercase tracking-wide">
+                            {typeLabel(invoice.type)}
                         </p>
                     )}
                 </div>
-                <div className="text-right">
-                    <h2 className="text-lg sm:text-xl font-bold uppercase leading-snug">
-                        {STORE_NAME}
-                    </h2>
-                </div>
             </div>
-
-            {/* Bill To / Details */}
-            <div className="grid grid-cols-2 gap-8 mb-8">
-                <div>
-                    <h3 className="text-gray-500 font-semibold text-sm mb-1 uppercase">
-                        {invoice.type === 'PURCHASE' ? 'Supplier:' : 'Billed To:'}
-                    </h3>
-                    {invoice.type === 'PURCHASE' ? (
-                        <>
-                            <p className="font-bold text-lg">{invoice.company?.name || '—'}</p>
-                            <p className="text-gray-600">{invoice.company?.phone || ''}</p>
-                        </>
-                    ) : (
-                        <>
-                            <p className="font-bold text-lg">{invoice.customer?.name || 'Cash Sale'}</p>
-                            <p className="text-gray-600">{invoice.customer?.phone || ''}</p>
-                        </>
-                    )}
-                </div>
-                <div>
-                    <h3 className="text-gray-500 font-semibold text-sm mb-1 uppercase">Location / Info:</h3>
-                    <p className="font-bold">{invoice.town?.name}</p>
-                    {invoice.salesman && <p className="text-gray-600">Salesman: {invoice.salesman.name}</p>}
-                </div>
-            </div>
-
-            {/* Items Table */}
-            <table className="w-full mb-8 border-collapse text-left">
-                <thead>
-                <tr className="bg-gray-100">
-                    <th className="p-3 border-b-2 border-gray-300">Item Description</th>
-                    <th className="p-3 border-b-2 border-gray-300 text-center">Qty</th>
-                    <th className="p-3 border-b-2 border-gray-300 text-right">Rate</th>
-                    <th className="p-3 border-b-2 border-gray-300 text-right">Discount</th>
-                    <th className="p-3 border-b-2 border-gray-300 text-right">Total</th>
-                </tr>
-                </thead>
-                <tbody>
-                {invoice.items.map((item) => (
-                    <tr key={item.id} className="border-b">
-                        <td className="p-3">{item.product?.name}</td>
-                        <td className="p-3 text-center">{item.qty}</td>
-                        <td className="p-3 text-right">{item.rate}</td>
-                        <td className="p-3 text-right">{item.discount}</td>
-                        <td className="p-3 text-right font-semibold">{((item.qty * item.rate) - item.discount).toFixed(2)}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-
-            {/* Total Section */}
-            <div className="flex justify-end border-t-2 border-gray-300 pt-4">
-                <div className="text-right space-y-1">
-                    {invoice.type === 'SALE' && (
-                        <>
-                            <p className="text-gray-600">
-                                Payment Status:{' '}
-                                <span className="font-semibold text-black">
-                                    {invoice.paymentStatus || 'Pending'}
-                                </span>
-                            </p>
-                            <p className="text-gray-600">
-                                Paid: <span className="font-semibold text-black">Rs. {Number(invoice.paidAmount || 0).toFixed(2)}</span>
-                            </p>
-                            <p className="text-gray-600">
-                                Balance Due:{' '}
-                                <span className="font-semibold text-black">
-                                    Rs. {Number(invoice.balanceDue ?? invoice.totalAmount).toFixed(2)}
-                                </span>
-                            </p>
-                        </>
-                    )}
-                    <p className="text-gray-600">Grand Total:</p>
-                    <p className="text-3xl font-bold">Rs. {invoice.totalAmount}</p>
-                </div>
-            </div>
-
-            {/* Footer Note */}
-            <div className="mt-16 text-center text-gray-400 text-sm">
-                <p>Thank you for your business!</p>
-                <p>{STORE_NAME}</p>
-            </div>
-
         </div>
     );
 }

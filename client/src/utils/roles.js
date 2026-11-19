@@ -7,6 +7,9 @@ export const ROLES = {
 /** Roles that can manage master data and create purchases */
 export const ADMIN_ROLES = [ROLES.SUPER_ADMIN, ROLES.STORE_ADMIN];
 
+/** Only Super Admin can manage users */
+export const SUPER_ADMIN_ROLES = [ROLES.SUPER_ADMIN];
+
 export function getUserRole(user) {
     return user?.role?.name || null;
 }
@@ -19,4 +22,8 @@ export function hasRole(user, roles) {
 
 export function isAdmin(user) {
     return hasRole(user, ADMIN_ROLES);
+}
+
+export function isSuperAdmin(user) {
+    return hasRole(user, SUPER_ADMIN_ROLES);
 }

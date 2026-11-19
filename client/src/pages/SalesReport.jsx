@@ -178,7 +178,7 @@ export default function SalesReport() {
     }, [fromDate, toDate]);
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Sales Report</h1>

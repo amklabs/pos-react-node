@@ -175,7 +175,7 @@ export default function StockReturn() {
     };
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="bg-white p-6 rounded shadow border-t-4 border-red-500 print:hidden">
                 <h1 className="text-2xl font-bold mb-2 text-red-600">Process Stock Return</h1>
                 <p className="text-sm text-gray-500 mb-6">

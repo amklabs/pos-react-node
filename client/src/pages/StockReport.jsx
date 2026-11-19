@@ -95,7 +95,7 @@ export default function StockReport() {
     }, [filtered]);
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Stock Report</h1>
@@ -209,7 +209,7 @@ export default function StockReport() {
                 </label>
             </div>
 
-            <div className="overflow-hidden rounded-lg border border-gray-300 bg-white">
+            <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white">
                 <table className="w-full bg-white border-collapse text-left text-sm">
                     <thead className="bg-gray-200">
                         <tr>

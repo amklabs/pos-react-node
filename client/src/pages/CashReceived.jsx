@@ -190,7 +190,7 @@ export default function CashReceived() {
     };
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0 ">
             <div className="bg-white p-6 rounded-lg border shadow-lg border-t-4 border-green-600 mb-6">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-6">
                     <div>
@@ -415,7 +415,7 @@ export default function CashReceived() {
                     />
                 </div>
 
-                <div className="overflow-hidden rounded-lg border border-gray-300">
+                <div className="overflow-x-auto rounded-lg border border-gray-300">
                     <table className="w-full border-collapse text-left text-sm">
                         <thead className="bg-gray-200">
                             <tr>
