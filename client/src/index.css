@@ -246,4 +246,75 @@
   .dark .table-striped tbody tr:nth-child(odd) {
     @apply bg-gray-900/40;
   }
+
+  /* Thin dark scrollbar for sidebar nav */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(51 65 85 / 0.55) transparent;
+  }
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(51 65 85 / 0.45);
+    border-radius: 9999px;
+  }
+  .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(71 85 105 / 0.85);
+  }
+  .sidebar-scroll::-webkit-scrollbar-thumb:active {
+    background-color: rgb(100 116 139);
+  }
+  .sidebar-scroll::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Content area scrollbar */
+  .page-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(148 163 184 / 0.7) transparent;
+  }
+  .page-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .page-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .page-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(148 163 184 / 0.55);
+    border-radius: 9999px;
+  }
+  .page-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(100 116 139 / 0.8);
+  }
+}
+
+/* ============================================================
+   7. PRINT
+   ============================================================ */
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm 12mm;
+  }
+
+  html,
+  body,
+  #root {
+    height: auto !important;
+    background: #fff !important;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
 }

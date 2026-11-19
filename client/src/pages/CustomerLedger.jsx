@@ -100,7 +100,7 @@ export default function CustomerLedger() {
 
     if (selectedId) {
         return (
-            <div className="max-w-5xl">
+            <div className="w-full min-w-0">
                 <div className="flex items-center justify-between mb-4 print:hidden">
                     <button
                         type="button"
@@ -232,7 +232,7 @@ export default function CustomerLedger() {
     }
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0 max-w-6xl">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">Customer Ledger</h1>
@@ -270,7 +270,7 @@ export default function CustomerLedger() {
                 </div>
             )}
 
-            <div className="overflow-hidden rounded-lg border border-gray-300 bg-white">
+            <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white">
                 <table className="w-full border-collapse text-left text-sm">
                     <thead className="bg-gray-200">
                         <tr>

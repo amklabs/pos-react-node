@@ -75,7 +75,7 @@ export default function MasterData() {
     const activeMeta = TABS.find((t) => t.key === activeTab);
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">Master Data Setup</h1>
                 <p className="text-sm text-gray-500">

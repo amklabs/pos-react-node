@@ -130,7 +130,7 @@ export default function Dashboard() {
 
     if (!stats) {
         return (
-            <div className="max-w-6xl">
+            <div className="w-full min-w-0 mx-auto">
                 <p className="text-red-600 mb-3">Could not load dashboard data.</p>
                 <button
                     type="button"
@@ -147,7 +147,7 @@ export default function Dashboard() {
     const todayLabel = formatDate(new Date());
 
     return (
-        <div className="max-w-6xl space-y-6">
+        <div className="w-full min-w-0 max-w-6xl space-y-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
                 <div>

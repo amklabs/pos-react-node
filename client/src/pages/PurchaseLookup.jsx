@@ -56,7 +56,7 @@ export default function PurchaseLookup() {
     );
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">Purchase Lookup</h1>
@@ -85,7 +85,7 @@ export default function PurchaseLookup() {
                 </div>
             </div>
 
-            <div className="overflow-hidden rounded-lg border border-gray-300 bg-white mb-6">
+            <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white mb-6">
                 <table className="w-full border-collapse text-left text-sm">
                     <thead className="bg-gray-200">
                         <tr>

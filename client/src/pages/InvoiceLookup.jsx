@@ -37,18 +37,18 @@ export default function InvoiceLookup() {
     });
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Invoice Lookup (All Invoices)</h1>
                 <input
                     type="text"
                     placeholder="Search by Invoice #, Customer, or Town..."
-                    className="border p-2 rounded-input w-80 print:hidden"
+                    className="border p-2 rounded-input w-full max-w-md print:hidden"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <div className="overflow-hidden rounded-lg border border-gray-300 bg-white  mb-6">
+            <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white  mb-6">
                 <table className="w-full bg-white shadow rounded border-collapse text-left">
                     <thead className="bg-gray-200">
                     <tr>

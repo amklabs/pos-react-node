@@ -40,7 +40,13 @@ router.get('/invoices/:id', async (req, res, next) => {
                 salesman: true,
                 town: true,
                 company: true,
-                items: { include: { product: true } },
+                items: {
+                    include: {
+                        product: {
+                            include: { company: { select: { id: true, name: true } } },
+                        },
+                    },
+                },
                 sourceInvoice: { select: { id: true, invoiceNo: true } },
                 payments: {
                     orderBy: { date: 'asc' },

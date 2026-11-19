@@ -24,7 +24,7 @@ export default function CashSummary() {
     }, []);
 
     return (
-        <div className="max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="flex justify-between items-center mb-6 print:hidden">
                 <h1 className="text-2xl font-bold">Overall Cash Summary</h1>
                 <button onClick={() => window.print()} className="bg-gray-800 text-white px-6 py-2 rounded">Print
