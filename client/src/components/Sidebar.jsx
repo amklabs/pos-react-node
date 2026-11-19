@@ -18,6 +18,7 @@ import {
     BookOpen,
     LogOut
 } from 'lucide-react';
+import { STORE_NAME } from '../constants/store.js';
 
 export default function Sidebar() {
     const { user, logout } = useAuthContext();
@@ -91,12 +92,12 @@ export default function Sidebar() {
                         <Store size={23} className="text-white"/>
                     </div>
 
-                    <div>
-                        <span className="text-xl font-extrabold tracking-wide text-white mb-0">
-                            POINT OF SALE
+                    <div className="min-w-0">
+                        <span className="block text-[11px] font-extrabold leading-snug tracking-wide text-white uppercase">
+                            {STORE_NAME}
                         </span>
-                        <p className="text-[10px] font-semibold tracking-[2px] text-blue-400 uppercase">
-                            By AMK Labs
+                        <p className="text-[10px] font-semibold tracking-[2px] text-blue-400 uppercase mt-0.5">
+                            Point of Sale
                         </p>
                     </div>
                 </div>

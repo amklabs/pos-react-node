@@ -5,107 +5,190 @@ const {authenticateToken} = require('../midleware/auth');
 const router = express.Router();
 router.use(authenticateToken); // everything below is protected
 
-// Get Sales Report (Page 3)
-router.get('/reports/sales', async (req, res) => {
-    const {from, to} = req.query;
-    const invoices = await prisma.invoice.findMany({
-        where: {
-            type: 'SALE',
-            date: {
-                gte: new Date(from),
-                lte: new Date(to)
-            }
-        },
-        include: {
-            customer: true,
-            salesman: true,
-            items: {include: {product: true}}
-        }
-    });
-    res.json(invoices);
-});
+function dayStart(iso) {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return null;
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
 
-// 1. Sales Report (Filtered by Date)
-router.get('/reports/sales', async (req, res) => {
-    const {from, to} = req.query;
+function dayEnd(iso) {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return null;
+    d.setHours(23, 59, 59, 999);
+    return d;
+}
+
+// Sales Report (Filtered by Date)
+router.get('/reports/sales', async (req, res, next) => {
+    const { from, to, salesmanId, townId, paymentStatus } = req.query;
 
     try {
-        const whereClause = {type: 'SALE'};
-        if (from && to) {
-            whereClause.date = {
-                gte: new Date(from),
-                lte: new Date(to)
-            };
+        const whereClause = { type: 'SALE' };
+
+        if (from || to) {
+            whereClause.date = {};
+            if (from) {
+                const start = dayStart(from);
+                if (!start) return res.status(400).json({ error: 'Invalid from date' });
+                whereClause.date.gte = start;
+            }
+            if (to) {
+                const end = dayEnd(to);
+                if (!end) return res.status(400).json({ error: 'Invalid to date' });
+                whereClause.date.lte = end;
+            }
+        }
+
+        if (salesmanId) whereClause.salesmanId = Number(salesmanId);
+        if (townId) whereClause.townId = Number(townId);
+        if (paymentStatus && paymentStatus !== 'all') {
+            whereClause.paymentStatus = String(paymentStatus);
         }
 
         const invoices = await prisma.invoice.findMany({
             where: whereClause,
             include: {
-                customer: true,
-                salesman: true,
-                items: {include: {product: true}}
+                customer: { select: { id: true, name: true, phone: true } },
+                salesman: { select: { id: true, name: true } },
+                town: { select: { id: true, name: true } },
+                items: {
+                    include: {
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                                company: { select: { id: true, name: true } },
+                            },
+                        },
+                    },
+                },
+                payments: {
+                    where: { type: 'RECEIVED' },
+                    select: { amount: true },
+                },
             },
-            orderBy: {date: 'desc'}
+            orderBy: [{ date: 'desc' }, { id: 'desc' }],
         });
-        res.json(invoices);
+
+        const rows = invoices.map((inv) => {
+            const paidAmount = (inv.payments || []).reduce(
+                (s, p) => s + Number(p.amount || 0),
+                0
+            );
+            const totalAmount = Number(inv.totalAmount || 0);
+            const totalDiscount = Number(inv.totalDiscount || 0);
+            const items = (inv.items || []).map((item) => {
+                const qty = Number(item.qty || 0);
+                const rate = Number(item.rate || 0);
+                const discount = Number(item.discount || 0);
+                const lineTotal = Number(
+                    (item.total != null
+                        ? Number(item.total)
+                        : qty * rate - discount
+                    ).toFixed(2)
+                );
+                return {
+                    id: item.id,
+                    productId: item.productId,
+                    productName: item.product?.name || '—',
+                    companyName: item.product?.company?.name || null,
+                    qty,
+                    rate,
+                    discount,
+                    lineTotal,
+                };
+            });
+
+            return {
+                id: inv.id,
+                invoiceNo: inv.invoiceNo,
+                date: inv.date,
+                paymentStatus: inv.paymentStatus,
+                customerId: inv.customer?.id || null,
+                customerName: inv.customer?.name || 'Cash Sale',
+                salesmanId: inv.salesman?.id || null,
+                salesmanName: inv.salesman?.name || null,
+                townId: inv.town?.id || null,
+                townName: inv.town?.name || null,
+                totalDiscount,
+                totalAmount,
+                paidAmount: Number(paidAmount.toFixed(2)),
+                balanceDue: Number(Math.max(0, totalAmount - paidAmount).toFixed(2)),
+                items,
+            };
+        });
+
+        const summary = rows.reduce(
+            (acc, inv) => {
+                acc.invoiceCount += 1;
+                acc.totalAmount += inv.totalAmount;
+                acc.totalDiscount += inv.totalDiscount;
+                acc.paidAmount += inv.paidAmount;
+                acc.balanceDue += inv.balanceDue;
+                for (const item of inv.items) {
+                    acc.lineCount += 1;
+                    acc.totalQty += item.qty;
+                }
+                if (inv.paymentStatus === 'Paid') acc.paidCount += 1;
+                else if (inv.paymentStatus === 'PartialPaid') acc.partialCount += 1;
+                else acc.pendingCount += 1;
+                return acc;
+            },
+            {
+                invoiceCount: 0,
+                lineCount: 0,
+                totalQty: 0,
+                totalAmount: 0,
+                totalDiscount: 0,
+                paidAmount: 0,
+                balanceDue: 0,
+                paidCount: 0,
+                partialCount: 0,
+                pendingCount: 0,
+            }
+        );
+
+        res.json({
+            from: from || null,
+            to: to || null,
+            invoices: rows,
+            summary: {
+                ...summary,
+                totalQty: Number(summary.totalQty.toFixed(4)),
+                totalAmount: Number(summary.totalAmount.toFixed(2)),
+                totalDiscount: Number(summary.totalDiscount.toFixed(2)),
+                paidAmount: Number(summary.paidAmount.toFixed(2)),
+                balanceDue: Number(summary.balanceDue.toFixed(2)),
+            },
+        });
     } catch (error) {
-        res.status(500).json({error: error.message});
+        next(error);
     }
 });
 
-// 2. Stock Report with N+1 Query Problem
-// router.get('/reports/stock', async (req, res) => {
-//     try {
-//         // Get all products
-//         const products = await prisma.product.findMany();
-//
-//         // For each product, calculate purchased, sold, returned, and balance
-//         const stockData = await Promise.all(products.map(async (product) => {
-//             // Total Purchased
-//             const purchased = await prisma.invoiceItem.aggregate({
-//                 _sum: {qty: true},
-//                 where: {productId: product.id, invoice: {type: 'PURCHASE'}}
-//             });
-//
-//             // Total Sold
-//             const sold = await prisma.invoiceItem.aggregate({
-//                 _sum: {qty: true},
-//                 where: {productId: product.id, invoice: {type: 'SALE'}}
-//             });
-//
-//             // Total Returned
-//             const returned = await prisma.invoiceItem.aggregate({
-//                 _sum: {qty: true},
-//                 where: {productId: product.id, invoice: {type: 'RETURN'}}
-//             });
-//
-//             const pQty = purchased._sum.qty || 0;
-//             const sQty = sold._sum.qty || 0;
-//             const rQty = returned._sum.qty || 0;
-//             const balance = pQty - sQty + rQty;
-//
-//             return {
-//                 id: product.id,
-//                 name: product.name,
-//                 purchasedQty: pQty,
-//                 soldQty: sQty,
-//                 returnQty: rQty,
-//                 balanceQty: balance
-//             };
-//         }));
-//
-//         res.json(stockData);
-//     } catch (error) {
-//         res.status(500).json({error: error.message});
-//     }
-// });
-router.get('/reports/stock', async (req, res) => {
+// Stock Report: on-hand = PURCHASE - SALE + RETURN (customer returns add stock back)
+router.get('/reports/stock', async (req, res, next) => {
     try {
+        const showInactive = req.query.showInactive === 'true';
+        const lowStockThreshold = Math.max(
+            0,
+            Number(req.query.lowStockThreshold ?? 10) || 10
+        );
+
         const products = await prisma.product.findMany({
-            select: { id: true, name: true },
+            where: showInactive ? {} : { isActive: true },
+            select: {
+                id: true,
+                name: true,
+                isActive: true,
+                lastPRate: true,
+                lastSRate: true,
+                company: { select: { id: true, name: true } },
+            },
+            orderBy: { name: 'asc' },
         });
 
-        // One query each for PURCHASE, SALE, RETURN
         const [purchased, sold, returned] = await Promise.all([
             prisma.invoiceItem.groupBy({
                 by: ['productId'],
@@ -124,67 +207,87 @@ router.get('/reports/stock', async (req, res) => {
             }),
         ]);
 
-        // Build lookup maps
         const toMap = (rows) =>
-            new Map(rows.map((r) => [r.productId, r._sum.qty || 0]));
+            new Map(rows.map((r) => [r.productId, Number(r._sum.qty || 0)]));
 
         const purchasedMap = toMap(purchased);
         const soldMap = toMap(sold);
         const returnedMap = toMap(returned);
 
-        const stockData = products.map((p) => {
-            const pQty = purchasedMap.get(p.id) || 0;
-            const sQty = soldMap.get(p.id) || 0;
-            const rQty = returnedMap.get(p.id) || 0;
+        const items = products.map((p) => {
+            const purchasedQty = purchasedMap.get(p.id) || 0;
+            const soldQty = soldMap.get(p.id) || 0;
+            const returnQty = returnedMap.get(p.id) || 0;
+            const balanceQty = Number((purchasedQty - soldQty + returnQty).toFixed(4));
+            const lastPRate = Number(p.lastPRate || 0);
+            const lastSRate = Number(p.lastSRate || 0);
+            const stockValue = Number((balanceQty * lastPRate).toFixed(2));
+
             return {
                 id: p.id,
                 name: p.name,
-                purchasedQty: pQty,
-                soldQty: sQty,
-                returnQty: rQty,
-                balanceQty: pQty - sQty + rQty,
+                isActive: p.isActive,
+                companyId: p.company?.id || null,
+                companyName: p.company?.name || null,
+                purchasedQty: Number(purchasedQty.toFixed(4)),
+                soldQty: Number(soldQty.toFixed(4)),
+                returnQty: Number(returnQty.toFixed(4)),
+                balanceQty,
+                lastPRate,
+                lastSRate,
+                stockValue,
+                isLowStock: balanceQty < lowStockThreshold,
+                isOutOfStock: balanceQty <= 0,
             };
         });
 
-        res.json(stockData);
+        const totals = items.reduce(
+            (acc, row) => {
+                acc.purchasedQty += row.purchasedQty;
+                acc.soldQty += row.soldQty;
+                acc.returnQty += row.returnQty;
+                acc.balanceQty += row.balanceQty;
+                acc.stockValue += row.stockValue;
+                if (row.isLowStock) acc.lowStockCount += 1;
+                if (row.isOutOfStock) acc.outOfStockCount += 1;
+                return acc;
+            },
+            {
+                purchasedQty: 0,
+                soldQty: 0,
+                returnQty: 0,
+                balanceQty: 0,
+                stockValue: 0,
+                lowStockCount: 0,
+                outOfStockCount: 0,
+            }
+        );
+
+        res.json({
+            lowStockThreshold,
+            items,
+            totals: {
+                productCount: items.length,
+                purchasedQty: Number(totals.purchasedQty.toFixed(4)),
+                soldQty: Number(totals.soldQty.toFixed(4)),
+                returnQty: Number(totals.returnQty.toFixed(4)),
+                balanceQty: Number(totals.balanceQty.toFixed(4)),
+                stockValue: Number(totals.stockValue.toFixed(2)),
+                lowStockCount: totals.lowStockCount,
+                outOfStockCount: totals.outOfStockCount,
+            },
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);
     }
 });
 
-// Same Stock Report with 1 Raw Query
-// router.get('/reports/stock', async (req, res) => {
-//     try {
-//         const rows = await prisma.$queryRaw`
-//       SELECT
-//         p.id,
-//         p.name,
-//         COALESCE(SUM(CASE WHEN i.type = 'PURCHASE' THEN ii.qty END), 0)::int AS "purchasedQty",
-//         COALESCE(SUM(CASE WHEN i.type = 'SALE'     THEN ii.qty END), 0)::int AS "soldQty",
-//         COALESCE(SUM(CASE WHEN i.type = 'RETURN'   THEN ii.qty END), 0)::int AS "returnQty",
-//         (
-//           COALESCE(SUM(CASE WHEN i.type = 'PURCHASE' THEN ii.qty END), 0)
-//           - COALESCE(SUM(CASE WHEN i.type = 'SALE'   THEN ii.qty END), 0)
-//           + COALESCE(SUM(CASE WHEN i.type = 'RETURN' THEN ii.qty END), 0)
-//         )::int AS "balanceQty"
-//       FROM "Product" p
-//       LEFT JOIN "InvoiceItem" ii ON ii."productId" = p.id
-//       LEFT JOIN "Invoice"     i  ON i.id = ii."invoiceId"
-//       GROUP BY p.id, p.name
-//       ORDER BY p.name;
-//     `;
-//         res.json(rows);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// });
-
 // 3. All Cash Record (Overall Summary)
-router.get('/reports/cash-summary', async (req, res) => {
+router.get('/reports/cash-summary', async (req, res, next) => {
     try {
         const records = await prisma.cashRecord.findMany({
-            include: {customer: true},
-            orderBy: {date: 'desc'}
+            include: { customer: true },
+            orderBy: { date: 'desc' },
         });
 
         const totalCash = records.reduce((sum, record) => {
@@ -192,9 +295,9 @@ router.get('/reports/cash-summary', async (req, res) => {
             return record.type === 'RECEIVED' ? sum + amount : sum - amount;
         }, 0);
 
-        res.json({records, totalCash});
+        res.json({ records, totalCash });
     } catch (error) {
-        res.status(500).json({error: error.message});
+        next(error);
     }
 });
 

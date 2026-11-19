@@ -165,11 +165,13 @@ exports.Prisma.InvoiceScalarFieldEnum = {
   townId: 'townId',
   customerId: 'customerId',
   salesmanId: 'salesmanId',
+  companyId: 'companyId',
   totalSubTotal: 'totalSubTotal',
   totalDiscount: 'totalDiscount',
   totalAmount: 'totalAmount',
   paymentStatus: 'paymentStatus',
   paidOn: 'paidOn',
+  sourceInvoiceId: 'sourceInvoiceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
