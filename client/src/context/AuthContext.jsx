@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [loggingOut, setLoggingOut] = useState(false);
 
     const clearAuth = useCallback(() => {
         localStorage.removeItem('token');
@@ -56,19 +57,40 @@ export function AuthProvider({ children }) {
     };
 
     const logout = useCallback(async () => {
+        if (loggingOut) return;
+        setLoggingOut(true);
         try {
             await apiClient.post('/api/logout');
         } catch {
             // Still clear local session even if the server call fails
         } finally {
             clearAuth();
+            setLoggingOut(false);
             navigate('/login', { replace: true });
         }
-    }, [clearAuth, navigate]);
+    }, [clearAuth, navigate, loggingOut]);
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, loggingOut, login, logout }}>
             {children}
+            {loggingOut && (
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/55 backdrop-blur-[2px] print:hidden"
+                    role="status"
+                    aria-live="polite"
+                    aria-busy="true"
+                >
+                    <div className="mx-4 flex items-center gap-3 rounded-xl bg-white px-5 py-4 shadow-lg">
+                        <span
+                            className="h-5 w-5 animate-spin rounded-full border-2 border-brand-600 border-t-transparent"
+                            aria-hidden
+                        />
+                        <span className="text-sm font-semibold text-gray-800">
+                            Signing out…
+                        </span>
+                    </div>
+                </div>
+            )}
         </AuthContext.Provider>
     );
 }

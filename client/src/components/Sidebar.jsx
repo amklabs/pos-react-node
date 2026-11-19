@@ -23,7 +23,7 @@ import {
 import { STORE_NAME } from '../constants/store.js';
 
 export default function Sidebar({ open = false, onClose }) {
-    const { user, logout } = useAuthContext();
+    const { user, logout, loggingOut } = useAuthContext();
     const navLinkClass = ({ isActive }) =>
         `group flex w-full items-center justify-start text-left gap-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
             isActive
@@ -182,11 +182,19 @@ export default function Sidebar({ open = false, onClose }) {
 
                     <button
                         type="button"
-                        aria-label="Log out"
-                        className="shrink-0 p-1.5 rounded-lg hover:bg-slate-800 hover:text-white text-slate-300"
+                        aria-label={loggingOut ? 'Signing out' : 'Log out'}
+                        className="shrink-0 p-1.5 rounded-lg hover:bg-slate-800 hover:text-white text-slate-300 disabled:opacity-50 disabled:pointer-events-none"
                         onClick={handleLogout}
+                        disabled={loggingOut}
                     >
-                        <LogOut size={18} />
+                        {loggingOut ? (
+                            <span
+                                className="inline-block h-[18px] w-[18px] animate-spin rounded-full border-2 border-slate-400 border-t-transparent"
+                                aria-hidden
+                            />
+                        ) : (
+                            <LogOut size={18} />
+                        )}
                     </button>
                 </div>
             </div>
