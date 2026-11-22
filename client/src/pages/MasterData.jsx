@@ -4,6 +4,7 @@ import apiClient from '../apiClient.js';
 import usePageTitle from '../hooks/usePageTitle.js';
 import Spinner from '../components/Spinner.jsx';
 import { toastSuccess, toastError } from '../utils/toast';
+import { formatNumber } from '../utils/formaters.js';
 import { useConfirm } from '../context/ConfirmDialogContext.jsx';
 
 const TABS = [
@@ -262,7 +263,14 @@ function EntitySection({
                             <thead className="bg-gray-100">
                                 <tr>
                                     {columns.map((c) => (
-                                        <th key={c.key} className="text-left p-2 border">
+                                        <th
+                                            key={c.key}
+                                            className={`p-2 border ${
+                                                c.align === 'right'
+                                                    ? 'text-right'
+                                                    : 'text-left'
+                                            }`}
+                                        >
                                             {c.label}
                                         </th>
                                     ))}
@@ -831,7 +839,14 @@ function CompanyTab({ title, list, loading, error, onMutated }) {
 /* ---- Products ---- */
 function ProductTab({ title, companies, list, loading, error, onMutated }) {
     const confirm = useConfirm();
-    const empty = { id: null, name: '', companyId: '', isActive: true };
+    const empty = {
+        id: null,
+        name: '',
+        companyId: '',
+        lastPRate: '',
+        lastSRate: '',
+        isActive: true,
+    };
     const [form, setForm] = useState(empty);
     const [processing, setProcessing] = useState(false);
     const isEditing = form.id != null;
@@ -842,6 +857,14 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
             toastError('Select a company');
             return;
         }
+        const lastPRate =
+            form.lastPRate === '' || form.lastPRate == null ? 0 : Number(form.lastPRate);
+        const lastSRate =
+            form.lastSRate === '' || form.lastSRate == null ? 0 : Number(form.lastSRate);
+        if (!(lastPRate >= 0) || !(lastSRate >= 0)) {
+            toastError('Purchase and sale prices must be 0 or greater');
+            return;
+        }
         setProcessing(true);
         await saveEntity({
             isEditing,
@@ -850,6 +873,8 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
             payload: {
                 name: form.name,
                 companyId: Number(form.companyId),
+                lastPRate,
+                lastSRate,
                 isActive: form.isActive,
             },
             empty,
@@ -870,11 +895,16 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
             columns={[
                 { key: 'name', label: 'Product' },
                 { key: 'company', label: 'Company' },
+                { key: 'lastPRate', label: 'Last P. Price', align: 'right' },
+                { key: 'lastSRate', label: 'Last S. Price', align: 'right' },
                 { key: 'status', label: 'Status' },
             ]}
             form={
-                <form onSubmit={submit} className="grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
-                    <div className="md:col-span-2">
+                <form
+                    onSubmit={submit}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 items-end"
+                >
+                    <div className="lg:col-span-2">
                         <label className="block text-sm font-semibold mb-1">Product name</label>
                         <input
                             className="border p-2 rounded-input w-full"
@@ -900,12 +930,44 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
                             ))}
                         </select>
                     </div>
-                    <ActiveToggle
-                        id="product-active"
-                        checked={form.isActive}
-                        onChange={(isActive) => setForm({ ...form, isActive })}
-                    />
-                    <div className="flex gap-2">
+                    <div>
+                        <label className="block text-sm font-semibold mb-1">
+                            Last purchase price
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            step="any"
+                            className="border p-2 rounded-input w-full"
+                            placeholder="0"
+                            value={form.lastPRate}
+                            onChange={(e) =>
+                                setForm({ ...form, lastPRate: e.target.value })
+                            }
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold mb-1">
+                            Last sale price
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            step="any"
+                            className="border p-2 rounded-input w-full"
+                            placeholder="0"
+                            value={form.lastSRate}
+                            onChange={(e) =>
+                                setForm({ ...form, lastSRate: e.target.value })
+                            }
+                        />
+                    </div>
+                    <div className="flex flex-wrap items-end gap-2">
+                        <ActiveToggle
+                            id="product-active"
+                            checked={form.isActive}
+                            onChange={(isActive) => setForm({ ...form, isActive })}
+                        />
                         <button type="submit" className="btn btn-primary" disabled={processing}>
                             {processing ? 'Saving…' : isEditing ? 'Update' : 'Add'}
                         </button>
@@ -922,9 +984,18 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
                 </form>
             }
             renderRow={(row) => (
-                <tr key={row.id} className={`border-b hover:bg-gray-50 ${!row.isActive ? 'opacity-70' : ''}`}>
+                <tr
+                    key={row.id}
+                    className={`border-b hover:bg-gray-50 ${!row.isActive ? 'opacity-70' : ''}`}
+                >
                     <td className="p-2 border font-medium">{row.name}</td>
                     <td className="p-2 border">{row.company?.name || '—'}</td>
+                    <td className="p-2 border text-right tabular-nums">
+                        {formatNumber(row.lastPRate)}
+                    </td>
+                    <td className="p-2 border text-right tabular-nums">
+                        {formatNumber(row.lastSRate)}
+                    </td>
                     <td className="p-2 border">
                         <StatusBadge active={row.isActive} />
                     </td>
@@ -937,6 +1008,14 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
                                     id: row.id,
                                     name: row.name,
                                     companyId: row.companyId || '',
+                                    lastPRate:
+                                        row.lastPRate != null && row.lastPRate !== ''
+                                            ? String(Number(row.lastPRate))
+                                            : '',
+                                    lastSRate:
+                                        row.lastSRate != null && row.lastSRate !== ''
+                                            ? String(Number(row.lastSRate))
+                                            : '',
                                     isActive: row.isActive !== false,
                                 })
                             }

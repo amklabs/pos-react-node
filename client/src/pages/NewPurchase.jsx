@@ -294,7 +294,7 @@ export default function NewPurchase() {
                         </div>
 
                         <div className="flex flex-wrap gap-2 mb-4 items-end bg-emerald-50 p-4 rounded border border-emerald-200">
-                            <div className="flex-1 min-w-[200px]">
+                            <div className="flex-1 min-w-50">
                                 <label className="block text-sm font-semibold mb-1">Product</label>
                                 <select
                                     className="border p-2 rounded-input w-full"
@@ -383,7 +383,7 @@ export default function NewPurchase() {
                             <button
                                 type="button"
                                 onClick={handleAddItem}
-                                className="bg-emerald-600 text-white px-6 py-2 rounded h-10 font-semibold hover:bg-emerald-700"
+                                className="btn btn-primary"
                             >
                                 {editingIndex !== null ? 'Update Item' : 'Add Item'}
                             </button>
@@ -394,7 +394,7 @@ export default function NewPurchase() {
                                         setEditingIndex(null);
                                         setCurrentItem(emptyItem);
                                     }}
-                                    className="text-sm text-gray-600 hover:underline h-10"
+                                    className="btn btn-secondary text-sm py-1.5 px-3 h-10"
                                 >
                                     Cancel edit
                                 </button>
@@ -499,12 +499,12 @@ export default function NewPurchase() {
                                     ({items.length} line{items.length === 1 ? '' : 's'})
                                 </span>
                             </div>
-                            <div className="flex flex-wrap gap-3 print:hidden">
+                            <div className="flex flex-wrap gap-2 print:hidden">
                                 <button
                                     type="button"
                                     onClick={handleSave}
                                     disabled={processing}
-                                    className="bg-emerald-600 text-white px-8 py-2 rounded font-bold hover:bg-emerald-700 disabled:opacity-60"
+                                    className="btn btn-primary"
                                 >
                                     {processing ? 'Saving…' : 'Save Purchase'}
                                 </button>
@@ -512,7 +512,7 @@ export default function NewPurchase() {
                                     type="button"
                                     onClick={resetForm}
                                     disabled={processing}
-                                    className="bg-gray-600 text-white px-6 py-2 rounded font-bold"
+                                    className="btn btn-secondary"
                                 >
                                     Cancel
                                 </button>

@@ -169,20 +169,31 @@ export default function Users() {
                 </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-t-4 border-t-blue-600 mb-6">
-                <h2 className="text-lg font-semibold mb-4 border-b pb-2">
-                    {isEditing ? 'Edit user' : 'Add user'}
-                </h2>
+            <div className="bg-white px-3 py-2.5 rounded-xl border border-gray-200 shadow-sm border-t-4 border-t-blue-600 mb-4">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                    <h2 className="text-sm font-semibold">
+                        {isEditing ? 'Edit user' : 'Add user'}
+                    </h2>
+                    {isEditing && (
+                        <button
+                            type="button"
+                            className="text-xs text-gray-600 hover:underline cursor-pointer"
+                            onClick={resetForm}
+                        >
+                            Cancel edit
+                        </button>
+                    )}
+                </div>
                 <form
                     onSubmit={submit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    className="flex flex-wrap xl:flex-nowrap items-end gap-2"
                 >
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
+                    <div className="min-w-[8rem] flex-1">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
                             Username
                         </label>
                         <input
-                            className="border p-2 rounded-input w-full"
+                            className="border p-1.5 rounded-input w-full text-sm"
                             value={form.username}
                             onChange={(e) =>
                                 setForm({ ...form, username: e.target.value })
@@ -191,59 +202,61 @@ export default function Users() {
                             required
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
-                            {isEditing ? 'New password (optional)' : 'Password'}
+                    <div className="min-w-[9rem] flex-1">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            {isEditing ? 'New password' : 'Password'}
                         </label>
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
-                                className="border p-2 pr-20 rounded-input w-full"
+                                className="border p-1.5 pr-14 rounded-input w-full text-sm"
                                 value={form.password}
                                 onChange={(e) =>
                                     setForm({ ...form, password: e.target.value })
                                 }
                                 autoComplete="new-password"
-                                placeholder={isEditing ? 'Leave blank to keep' : ''}
+                                placeholder={isEditing ? 'Keep current' : ''}
                                 required={!isEditing}
                             />
                             <button
                                 type="button"
-                                className="absolute inset-y-0 right-0 px-3 text-xs font-semibold text-gray-500 hover:text-brand-700"
+                                className="absolute inset-y-0 right-0 px-2 text-[11px] font-semibold text-gray-500 hover:text-brand-700 cursor-pointer"
                                 onClick={() => setShowPassword((v) => !v)}
                             >
                                 {showPassword ? 'Hide' : 'Show'}
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
+                    <div className="min-w-[7rem] flex-1">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
                             First name
                         </label>
                         <input
-                            className="border p-2 rounded-input w-full"
+                            className="border p-1.5 rounded-input w-full text-sm"
                             value={form.firstname}
                             onChange={(e) =>
                                 setForm({ ...form, firstname: e.target.value })
                             }
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
+                    <div className="min-w-[7rem] flex-1">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
                             Last name
                         </label>
                         <input
-                            className="border p-2 rounded-input w-full"
+                            className="border p-1.5 rounded-input w-full text-sm"
                             value={form.lastname}
                             onChange={(e) =>
                                 setForm({ ...form, lastname: e.target.value })
                             }
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">Role</label>
+                    <div className="min-w-[8rem] shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Role
+                        </label>
                         <select
-                            className="border p-2 rounded-input w-full"
+                            className="border p-1.5 rounded-input w-full text-sm min-w-32"
                             value={form.roleId}
                             onChange={(e) =>
                                 setForm({ ...form, roleId: e.target.value })
@@ -258,41 +271,29 @@ export default function Users() {
                             ))}
                         </select>
                     </div>
-                    <div className="flex items-end">
-                        <label className="flex items-center gap-2 h-10 text-sm cursor-pointer select-none">
-                            <input
-                                type="checkbox"
-                                checked={form.isActive}
-                                onChange={(e) =>
-                                    setForm({ ...form, isActive: e.target.checked })
-                                }
-                                disabled={isEditing && form.id === currentUser?.id}
-                            />
-                            <span>Active</span>
-                        </label>
-                    </div>
-                    <div className="md:col-span-2 flex gap-2">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={saving}
-                        >
-                            {saving
-                                ? 'Saving…'
-                                : isEditing
-                                  ? 'Update user'
-                                  : 'Add user'}
-                        </button>
-                        {isEditing && (
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={resetForm}
-                            >
-                                Cancel
-                            </button>
-                        )}
-                    </div>
+                    <label className="flex items-center gap-1.5 h-[34px] text-sm cursor-pointer select-none shrink-0">
+                        <input
+                            type="checkbox"
+                            checked={form.isActive}
+                            onChange={(e) =>
+                                setForm({ ...form, isActive: e.target.checked })
+                            }
+                            disabled={isEditing && form.id === currentUser?.id}
+                            className="cursor-pointer"
+                        />
+                        <span>Active</span>
+                    </label>
+                    <button
+                        type="submit"
+                        className="btn btn-primary text-sm py-1.5 px-4 shrink-0"
+                        disabled={saving}
+                    >
+                        {saving
+                            ? 'Saving…'
+                            : isEditing
+                              ? 'Update'
+                              : 'Add'}
+                    </button>
                 </form>
             </div>
 

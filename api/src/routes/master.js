@@ -2,6 +2,7 @@ const express = require('express');
 const prisma = require('../db');
 const { authenticateToken, requireRoles } = require('../midleware/auth');
 const { ADMIN_ROLES } = require('../roles');
+const { nonNegativeNumber } = require('../utils/validate');
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -15,6 +16,11 @@ router.use((req, res, next) => {
 function activeFlag(value, fallback = true) {
     if (value === undefined || value === null) return fallback;
     return Boolean(value);
+}
+
+function optionalRate(value, label) {
+    if (value === undefined || value === null || value === '') return 0;
+    return nonNegativeNumber(value, label);
 }
 
 // ---- Towns ----
@@ -169,38 +175,44 @@ router.delete('/salesmen/:id', async (req, res, next) => {
 // ---- Products ----
 router.post('/products', async (req, res, next) => {
     try {
-        const { name, companyId } = req.body;
+        const { name, companyId, lastPRate, lastSRate } = req.body;
         if (!name?.trim()) return res.status(400).json({ error: 'Product name is required' });
         if (!companyId) return res.status(400).json({ error: 'Company is required' });
         const product = await prisma.product.create({
             data: {
                 name: name.trim(),
                 companyId: parseInt(companyId, 10),
+                lastPRate: optionalRate(lastPRate, 'Last purchase price'),
+                lastSRate: optionalRate(lastSRate, 'Last sale price'),
                 isActive: activeFlag(req.body.isActive, true),
             },
             include: { company: true },
         });
         res.status(201).json(product);
     } catch (e) {
+        if (e.status) return res.status(e.status).json({ error: e.message });
         next(e);
     }
 });
 
 router.put('/products/:id', async (req, res, next) => {
     try {
-        const { name, companyId } = req.body;
+        const { name, companyId, lastPRate, lastSRate } = req.body;
         if (!companyId) return res.status(400).json({ error: 'Company is required' });
         const product = await prisma.product.update({
             where: { id: Number(req.params.id) },
             data: {
                 name: name?.trim(),
                 companyId: parseInt(companyId, 10),
+                lastPRate: optionalRate(lastPRate, 'Last purchase price'),
+                lastSRate: optionalRate(lastSRate, 'Last sale price'),
                 isActive: activeFlag(req.body.isActive, true),
             },
             include: { company: true },
         });
         res.json(product);
     } catch (e) {
+        if (e.status) return res.status(e.status).json({ error: e.message });
         next(e);
     }
 });

@@ -107,7 +107,7 @@ function StatCard({ label, value, hint, to, linkLabel, theme = 'blue', icon: Ico
 
     return (
         <div
-            className={`relative overflow-hidden rounded-2xl border bg-linear-to-br ${t.card} p-5 shadow-md flex flex-col justify-between min-h-37 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg`}
+            className={`relative overflow-hidden rounded-2xl border border-sky-100 bg-linear-to-br ${t.card} p-5 shadow-md flex flex-col justify-between min-h-37 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg`}
         >
             <div className={`pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full blur-2xl ${t.glow}`} />
             <div className={`absolute inset-x-0 top-0 h-1 bg-linear-to-r ${t.bar}`} />

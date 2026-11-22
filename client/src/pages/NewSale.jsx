@@ -272,7 +272,7 @@ export default function NewSale() {
                                     <button
                                         type="button"
                                         title="Generate invoice number"
-                                        className="border px-2 rounded-input text-xs font-semibold text-blue-700 hover:bg-blue-50 shrink-0"
+                                        className="btn btn-secondary text-xs px-2.5 py-1.5 shrink-0"
                                         onClick={() =>
                                             setInvoice({
                                                 ...invoice,
@@ -353,7 +353,7 @@ export default function NewSale() {
                         </div>
 
                         <div className="flex flex-wrap gap-2 mb-4 items-end bg-blue-50 p-4 rounded-lg border border-blue-200">
-                            <div className="flex-1 min-w-[200px]">
+                            <div className="flex-1 min-w-50">
                                 <label className="block text-sm font-semibold mb-1">
                                     Product
                                 </label>
@@ -435,7 +435,7 @@ export default function NewSale() {
                             <button
                                 type="button"
                                 onClick={handleAddItem}
-                                className="bg-blue-600 text-white px-6 py-2 rounded h-10 font-semibold hover:bg-blue-700"
+                                className="btn btn-primary"
                             >
                                 {editingIndex !== null ? 'Update Item' : 'Add Item'}
                             </button>
@@ -446,7 +446,7 @@ export default function NewSale() {
                                         setEditingIndex(null);
                                         setCurrentItem(emptyItem);
                                     }}
-                                    className="text-sm text-gray-600 hover:underline h-10"
+                                    className="btn btn-secondary text-sm py-1.5 px-3 h-10"
                                 >
                                     Cancel edit
                                 </button>
@@ -572,7 +572,7 @@ export default function NewSale() {
                                     />
                                     <button
                                         type="button"
-                                        className="border px-3 rounded-input text-xs font-semibold text-blue-700 hover:bg-blue-50 shrink-0"
+                                        className="btn btn-secondary text-xs px-3 py-1.5 shrink-0"
                                         onClick={() =>
                                             setInvoice({
                                                 ...invoice,
@@ -598,12 +598,12 @@ export default function NewSale() {
                             </div>
                         </div>
 
-                        <div className="flex justify-end gap-3 border-t mt-6 pt-4 print:hidden">
+                        <div className="flex justify-end gap-2 border-t mt-6 pt-4 print:hidden">
                             <button
                                 type="button"
                                 onClick={handleSave}
                                 disabled={processing}
-                                className="bg-blue-600 text-white px-8 py-2 rounded font-bold hover:bg-blue-700 disabled:opacity-60"
+                                className="btn btn-primary"
                             >
                                 {processing ? 'Saving…' : 'Save Invoice'}
                             </button>
@@ -611,7 +611,7 @@ export default function NewSale() {
                                 type="button"
                                 onClick={resetForm}
                                 disabled={processing}
-                                className="bg-gray-600 text-white px-6 py-2 rounded font-bold"
+                                className="btn btn-secondary"
                             >
                                 Cancel
                             </button>

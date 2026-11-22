@@ -139,7 +139,7 @@ export default function PurchaseLookup() {
                     {canDelete && selectedIds.size > 0 && (
                         <button
                             type="button"
-                            className="btn btn-danger"
+                            className="btn btn-danger text-sm py-1.5 px-4"
                             disabled={deleting || loading}
                             onClick={deleteSelected}
                         >
@@ -150,7 +150,7 @@ export default function PurchaseLookup() {
                     )}
                     <Link
                         to="/purchase"
-                        className="bg-emerald-600 text-white px-4 py-2 rounded font-semibold text-center hover:bg-emerald-700"
+                        className="btn btn-primary text-sm py-1.5 px-4"
                     >
                         + New Purchase
                     </Link>
@@ -190,7 +190,7 @@ export default function PurchaseLookup() {
                     {(fromDate || toDate || searchTerm) && (
                         <button
                             type="button"
-                            className="btn btn-secondary"
+                            className="btn btn-secondary text-sm py-1.5 px-4"
                             onClick={() => {
                                 setSearchTerm('');
                                 setFromDate('');
@@ -279,7 +279,7 @@ export default function PurchaseLookup() {
                                             <Link
                                                 to={`/invoice/${inv.id}`}
                                                 title="View / Print"
-                                                className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+                                                className="btn btn-secondary text-xs py-1 px-2"
                                             >
                                                 <Eye size={14} aria-hidden />
                                                 View
@@ -288,7 +288,7 @@ export default function PurchaseLookup() {
                                                 <Link
                                                     to={`/invoice/${inv.id}/edit`}
                                                     title="Edit purchase"
-                                                    className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-green-100 px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-green-200"
+                                                    className="btn btn-primary text-xs py-1 px-2"
                                                 >
                                                     <Pencil size={14} aria-hidden />
                                                     Edit
