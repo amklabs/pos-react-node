@@ -112,8 +112,8 @@ export default function ProfitReport() {
     }, [fromDate, toDate]);
 
     return (
-        <div className="w-full min-w-0 max-w-6xl">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 print:hidden">
+        <div className="w-full min-w-0">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-2 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Profit Report</h1>
                     <p className="text-sm text-gray-500">
@@ -146,60 +146,72 @@ export default function ProfitReport() {
                 <p className="text-sm text-gray-600">{periodLabel}</p>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4 print:hidden space-y-3">
-                <div className="flex flex-wrap gap-3 items-end">
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">From</label>
+            <div className="bg-white px-3 py-2.5 rounded-xl shadow-sm border border-gray-200 mb-4 print:hidden">
+                <div className="flex flex-wrap xl:flex-nowrap items-end gap-2">
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            From
+                        </label>
                         <DateField
                             value={fromDate}
                             onChange={setFromDate}
                             max={toDate || undefined}
-                            className="w-44"
+                            className="w-36"
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">To</label>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            To
+                        </label>
                         <DateField
                             value={toDate}
                             onChange={setToDate}
                             min={fromDate || undefined}
-                            className="w-44"
+                            className="w-36"
                         />
                     </div>
-                    <div className="flex flex-wrap gap-2 pb-0.5">
+                    <div className="flex items-center gap-1 pb-0.5 shrink-0">
                         {[
                             ['today', 'Today'],
-                            ['7d', 'Last 7 days'],
-                            ['month', 'This month'],
+                            ['7d', '7 days'],
+                            ['month', 'Month'],
                         ].map(([key, label]) => (
                             <button
                                 key={key}
                                 type="button"
-                                className="btn btn-secondary text-xs px-3 py-1.5"
+                                className="btn btn-secondary text-xs px-2.5 py-1.5"
                                 onClick={() => applyPreset(key)}
                             >
                                 {label}
                             </button>
                         ))}
                     </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                        type="search"
-                        className="border p-2 rounded-input w-full sm:flex-1"
-                        placeholder="Search invoice, customer, town…"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <select
-                        className="border p-2 rounded-input"
-                        value={typeFilter}
-                        onChange={(e) => setTypeFilter(e.target.value)}
-                    >
-                        <option value="all">All types</option>
-                        <option value="SALE">Sales only</option>
-                        <option value="RETURN">Returns only</option>
-                    </select>
+                    <div className="flex-1 min-w-40">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Search
+                        </label>
+                        <input
+                            type="search"
+                            className="border p-1.5 rounded-input w-full text-sm"
+                            placeholder="Invoice, customer, town…"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Type
+                        </label>
+                        <select
+                            className="border p-1.5 rounded-input text-sm min-w-28"
+                            value={typeFilter}
+                            onChange={(e) => setTypeFilter(e.target.value)}
+                        >
+                            <option value="all">All types</option>
+                            <option value="SALE">Sales only</option>
+                            <option value="RETURN">Returns only</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -210,14 +222,27 @@ export default function ProfitReport() {
                         value={formatNumber(summary.saleCount, {
                             maximumFractionDigits: 0,
                         })}
+                        theme="sky"
                     />
-                    <SummaryCard label="Sale net" value={money(summary.saleNet)} />
-                    <SummaryCard label="Sale cost" value={money(summary.saleCost)} />
-                    <SummaryCard label="Sale profit" value={money(summary.saleProfit)} />
+                    <SummaryCard
+                        label="Sale net"
+                        value={money(summary.saleNet)}
+                        theme="blue"
+                    />
+                    <SummaryCard
+                        label="Sale cost"
+                        value={money(summary.saleCost)}
+                        theme="amber"
+                    />
+                    <SummaryCard
+                        label="Sale profit"
+                        value={money(summary.saleProfit)}
+                        theme="teal"
+                    />
                     <SummaryCard
                         label="Net profit"
                         value={money(summary.netProfit)}
-                        emphasize={Number(summary.netProfit) >= 0 ? 'good' : 'bad'}
+                        theme={Number(summary.netProfit) >= 0 ? 'emerald' : 'rose'}
                         hint={
                             summary.marginPct != null
                                 ? `Margin ${formatNumber(summary.marginPct)}% · Returns reversed ${money(summary.returnProfitReversed)}`
@@ -343,23 +368,75 @@ export default function ProfitReport() {
     );
 }
 
-function SummaryCard({ label, value, emphasize, hint }) {
-    const color =
-        emphasize === 'good'
-            ? 'text-green-700'
-            : emphasize === 'bad'
-              ? 'text-red-700'
-              : 'text-gray-900';
+const SUMMARY_THEMES = {
+    sky: {
+        card: 'from-sky-50 via-white to-white border-sky-200',
+        bar: 'from-sky-500 to-blue-600',
+        label: 'text-sky-700',
+        value: 'text-slate-900',
+        glow: 'bg-sky-400/25',
+    },
+    blue: {
+        card: 'from-blue-50 via-white to-white border-blue-200',
+        bar: 'from-blue-500 to-indigo-600',
+        label: 'text-blue-700',
+        value: 'text-slate-900',
+        glow: 'bg-blue-400/25',
+    },
+    amber: {
+        card: 'from-amber-50 via-white to-white border-amber-200',
+        bar: 'from-amber-500 to-orange-500',
+        label: 'text-amber-800',
+        value: 'text-slate-900',
+        glow: 'bg-amber-400/30',
+    },
+    teal: {
+        card: 'from-teal-50 via-white to-white border-teal-200',
+        bar: 'from-teal-500 to-cyan-600',
+        label: 'text-teal-700',
+        value: 'text-slate-900',
+        glow: 'bg-teal-400/25',
+    },
+    emerald: {
+        card: 'from-emerald-50 via-white to-white border-emerald-200',
+        bar: 'from-emerald-500 to-teal-600',
+        label: 'text-emerald-700',
+        value: 'text-emerald-800',
+        glow: 'bg-emerald-400/25',
+    },
+    rose: {
+        card: 'from-rose-50 via-white to-white border-rose-200',
+        bar: 'from-rose-500 to-red-600',
+        label: 'text-rose-700',
+        value: 'text-rose-800',
+        glow: 'bg-rose-400/25',
+    },
+};
+
+function SummaryCard({ label, value, hint, theme = 'sky' }) {
+    const t = SUMMARY_THEMES[theme] || SUMMARY_THEMES.sky;
     return (
-        <div className="bg-white border border-gray-200 rounded-xl px-3 py-3 shadow-sm">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+        <div
+            className={`relative overflow-hidden rounded-xl border bg-gradient-to-br ${t.card} px-3 py-3 shadow-sm`}
+        >
+            <div
+                className={`pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full blur-2xl ${t.glow}`}
+            />
+            <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${t.bar}`} />
+            <p
+                className={`relative text-[11px] font-bold uppercase tracking-wider ${t.label}`}
+            >
                 {label}
             </p>
-            <p className={`mt-1 text-lg font-bold tabular-nums break-all ${color}`}>
+            <p
+                className={`relative mt-1.5 text-lg font-extrabold tabular-nums break-all ${t.value}`}
+            >
                 {value}
             </p>
             {hint ? (
-                <p className="mt-1 text-[11px] text-gray-500 leading-snug">{hint}</p>
+                <p className="relative mt-1 text-[11px] text-slate-500 leading-snug">
+                    {hint}
+                </p>
             ) : null}
         </div>
     );

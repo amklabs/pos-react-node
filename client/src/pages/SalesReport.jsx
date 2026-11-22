@@ -47,7 +47,7 @@ export default function SalesReport() {
     const [paymentFilter, setPaymentFilter] = useState('all');
     const [salesmanFilter, setSalesmanFilter] = useState('all');
     const [townFilter, setTownFilter] = useState('all');
-    const [viewMode, setViewMode] = useState('lines'); // lines | invoices
+    const [viewMode, setViewMode] = useState('invoices'); // lines | invoices
 
     const fetchReport = useCallback(async (from = fromDate, to = toDate) => {
         try {
@@ -179,7 +179,7 @@ export default function SalesReport() {
 
     return (
         <div className="w-full min-w-0">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 print:hidden">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-2 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Sales Report</h1>
                     <p className="text-sm text-gray-500">
@@ -189,7 +189,7 @@ export default function SalesReport() {
                 <div className="flex gap-2">
                     <button
                         type="button"
-                        onClick={fetchReport}
+                        onClick={() => fetchReport()}
                         className="btn btn-primary"
                         disabled={loading}
                     >
@@ -214,60 +214,64 @@ export default function SalesReport() {
             </div>
 
             {/* Filters */}
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-4 print:hidden space-y-3">
-                <div className="flex flex-wrap gap-3 items-end">
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">From</label>
+            <div className="bg-white px-3 py-2.5 rounded-xl shadow-sm border border-gray-200 mb-4 print:hidden">
+                <div className="flex flex-wrap xl:flex-nowrap items-end gap-2">
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            From
+                        </label>
                         <DateField
                             value={fromDate}
                             onChange={setFromDate}
                             max={toDate || undefined}
-                            className="w-44"
+                            className="w-36"
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">To</label>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            To
+                        </label>
                         <DateField
                             value={toDate}
                             onChange={setToDate}
                             min={fromDate || undefined}
-                            className="w-44"
+                            className="w-36"
                         />
                     </div>
-                    <div className="flex flex-wrap gap-2 pb-0.5">
+                    <div className="flex items-center gap-1 pb-0.5 shrink-0">
                         {[
                             ['today', 'Today'],
-                            ['7d', 'Last 7 days'],
-                            ['month', 'This month'],
-                            ['clear', 'All dates'],
+                            ['7d', '7 days'],
+                            ['month', 'Month'],
                         ].map(([key, label]) => (
                             <button
                                 key={key}
                                 type="button"
-                                className="btn btn-secondary text-xs px-3 py-1.5"
+                                className="btn btn-secondary text-xs px-2.5 py-1.5"
                                 onClick={() => applyPreset(key)}
                             >
                                 {label}
                             </button>
                         ))}
                     </div>
-                </div>
-
-                <div className="flex flex-col lg:flex-row gap-3 lg:items-end">
-                    <div className="flex-1">
-                        <label className="block text-sm font-semibold mb-1">Search</label>
+                    <div className="flex-1 min-w-[9rem]">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Search
+                        </label>
                         <input
                             type="search"
-                            className="border p-2 rounded-input w-full"
-                            placeholder="Invoice, customer, product, salesman…"
+                            className="border p-1.5 rounded-input w-full text-sm"
+                            placeholder="Invoice, customer, product…"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">Payment</label>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Payment
+                        </label>
                         <select
-                            className="border p-2 rounded-input min-w-[140px]"
+                            className="border p-1.5 rounded-input text-sm min-w-24"
                             value={paymentFilter}
                             onChange={(e) => setPaymentFilter(e.target.value)}
                         >
@@ -277,10 +281,12 @@ export default function SalesReport() {
                             <option value="Pending">Pending</option>
                         </select>
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">Salesman</label>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Salesman
+                        </label>
                         <select
-                            className="border p-2 rounded-input min-w-[140px]"
+                            className="border p-1.5 rounded-input text-sm min-w-28"
                             value={salesmanFilter}
                             onChange={(e) => setSalesmanFilter(e.target.value)}
                         >
@@ -292,10 +298,12 @@ export default function SalesReport() {
                             ))}
                         </select>
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">Town</label>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Town
+                        </label>
                         <select
-                            className="border p-2 rounded-input min-w-[140px]"
+                            className="border p-1.5 rounded-input text-sm min-w-24"
                             value={townFilter}
                             onChange={(e) => setTownFilter(e.target.value)}
                         >
@@ -307,10 +315,12 @@ export default function SalesReport() {
                             ))}
                         </select>
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">View</label>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            View
+                        </label>
                         <select
-                            className="border p-2 rounded-input min-w-[140px]"
+                            className="border p-1.5 rounded-input text-sm min-w-28"
                             value={viewMode}
                             onChange={(e) => setViewMode(e.target.value)}
                         >
@@ -329,27 +339,34 @@ export default function SalesReport() {
                         value={formatNumber(filteredSummary.invoiceCount, {
                             maximumFractionDigits: 0,
                         })}
+                        theme="sky"
                     />
                     <SummaryCard
                         label="Qty sold"
                         value={formatNumber(filteredSummary.totalQty)}
+                        theme="blue"
                     />
                     <SummaryCard
                         label="Gross sales"
                         value={money(filteredSummary.totalAmount)}
+                        theme="teal"
                     />
                     <SummaryCard
                         label="Discount"
                         value={money(filteredSummary.totalDiscount)}
+                        theme="violet"
                     />
                     <SummaryCard
                         label="Collected"
                         value={money(filteredSummary.paidAmount)}
+                        theme="emerald"
                     />
                     <SummaryCard
                         label="Outstanding"
                         value={money(filteredSummary.balanceDue)}
-                        emphasize
+                        theme={
+                            Number(filteredSummary.balanceDue) > 0 ? 'amber' : 'emerald'
+                        }
                     />
                 </div>
             )}
@@ -563,16 +580,68 @@ export default function SalesReport() {
     );
 }
 
-function SummaryCard({ label, value, emphasize }) {
+const SUMMARY_THEMES = {
+    sky: {
+        card: 'from-sky-50 via-white to-white border-sky-200',
+        bar: 'from-sky-500 to-blue-600',
+        label: 'text-sky-700',
+        value: 'text-slate-900',
+        glow: 'bg-sky-400/25',
+    },
+    blue: {
+        card: 'from-blue-50 via-white to-white border-blue-200',
+        bar: 'from-blue-500 to-indigo-600',
+        label: 'text-blue-700',
+        value: 'text-slate-900',
+        glow: 'bg-blue-400/25',
+    },
+    teal: {
+        card: 'from-teal-50 via-white to-white border-teal-200',
+        bar: 'from-teal-500 to-cyan-600',
+        label: 'text-teal-700',
+        value: 'text-slate-900',
+        glow: 'bg-teal-400/25',
+    },
+    violet: {
+        card: 'from-violet-50 via-white to-white border-violet-200',
+        bar: 'from-violet-500 to-purple-600',
+        label: 'text-violet-700',
+        value: 'text-slate-900',
+        glow: 'bg-violet-400/25',
+    },
+    emerald: {
+        card: 'from-emerald-50 via-white to-white border-emerald-200',
+        bar: 'from-emerald-500 to-teal-600',
+        label: 'text-emerald-700',
+        value: 'text-emerald-800',
+        glow: 'bg-emerald-400/25',
+    },
+    amber: {
+        card: 'from-amber-50 via-white to-white border-amber-200',
+        bar: 'from-amber-500 to-orange-500',
+        label: 'text-amber-800',
+        value: 'text-amber-900',
+        glow: 'bg-amber-400/30',
+    },
+};
+
+function SummaryCard({ label, value, theme = 'sky' }) {
+    const t = SUMMARY_THEMES[theme] || SUMMARY_THEMES.sky;
     return (
-        <div className="bg-white border border-gray-200 rounded-xl px-3 py-3 shadow-sm">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+        <div
+            className={`relative overflow-hidden rounded-xl border bg-gradient-to-br ${t.card} px-3 py-3 shadow-sm`}
+        >
+            <div
+                className={`pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full blur-2xl ${t.glow}`}
+            />
+            <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${t.bar}`} />
+            <p
+                className={`relative text-[11px] font-bold uppercase tracking-wider ${t.label}`}
+            >
                 {label}
             </p>
             <p
-                className={`mt-1 text-lg font-bold tabular-nums break-all ${
-                    emphasize ? 'text-amber-700' : 'text-gray-900'
-                }`}
+                className={`relative mt-1.5 text-lg font-extrabold tabular-nums break-all ${t.value}`}
             >
                 {value}
             </p>

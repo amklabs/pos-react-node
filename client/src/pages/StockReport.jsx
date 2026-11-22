@@ -96,7 +96,7 @@ export default function StockReport() {
 
     return (
         <div className="w-full min-w-0">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 print:hidden">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-2 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Stock Report</h1>
                     <p className="text-sm text-gray-500">
@@ -121,92 +121,109 @@ export default function StockReport() {
                 </div>
             </div>
 
+            {/* Filters */}
+            <div className="bg-white px-3 py-2.5 rounded-xl shadow-sm border border-gray-200 mb-4 print:hidden">
+                <div className="flex flex-wrap xl:flex-nowrap items-end gap-2">
+                    <div className="flex-1 min-w-[10rem]">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Search
+                        </label>
+                        <input
+                            type="search"
+                            className="border p-1.5 rounded-input w-full text-sm"
+                            placeholder="Product or company…"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Company
+                        </label>
+                        <select
+                            className="border p-1.5 rounded-input text-sm min-w-36"
+                            value={companyFilter}
+                            onChange={(e) => setCompanyFilter(e.target.value)}
+                        >
+                            <option value="all">All companies</option>
+                            {companies.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Status
+                        </label>
+                        <select
+                            className="border p-1.5 rounded-input text-sm min-w-28"
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="all">All</option>
+                            <option value="in">In stock</option>
+                            <option value="low">Low stock</option>
+                            <option value="out">Out of stock</option>
+                        </select>
+                    </div>
+                    <div className="shrink-0">
+                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                            Sort
+                        </label>
+                        <select
+                            className="border p-1.5 rounded-input text-sm min-w-36"
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                        >
+                            <option value="name">Name</option>
+                            <option value="balance">Balance (low first)</option>
+                            <option value="value">Value (high first)</option>
+                        </select>
+                    </div>
+                    <label className="flex items-center gap-2 text-sm h-[34px] cursor-pointer shrink-0 select-none">
+                        <input
+                            type="checkbox"
+                            checked={showInactive}
+                            onChange={(e) => setShowInactive(e.target.checked)}
+                            className="cursor-pointer"
+                        />
+                        Include inactive
+                    </label>
+                </div>
+            </div>
+
             {/* Summary */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                 <SummaryCard
                     label="Products shown"
                     value={filtered.length}
-                    sub={totals ? `${totals.productCount} loaded` : null}
+                    hint={totals ? `${totals.productCount} loaded` : null}
+                    theme="sky"
                 />
                 <SummaryCard
                     label="Balance qty"
                     value={formatNumber(filteredTotals.balanceQty)}
-                    tone={filteredTotals.balanceQty < 0 ? 'red' : 'green'}
+                    theme={filteredTotals.balanceQty < 0 ? 'rose' : 'emerald'}
                 />
                 <SummaryCard
                     label="Stock value"
                     value={`Rs. ${formatNumber(filteredTotals.stockValue)}`}
-                    sub="at last purchase rate"
-                    tone="blue"
+                    hint="at last purchase rate"
+                    theme="teal"
                 />
                 <SummaryCard
                     label="Low / Out"
                     value={`${filteredTotals.lowStockCount} / ${filteredTotals.outOfStockCount}`}
-                    sub={`Low < ${lowStockThreshold}`}
-                    tone="amber"
+                    hint={`Low < ${lowStockThreshold}`}
+                    theme={
+                        filteredTotals.outOfStockCount > 0 ||
+                        filteredTotals.lowStockCount > 0
+                            ? 'amber'
+                            : 'emerald'
+                    }
                 />
-            </div>
-
-            {/* Filters */}
-            <div className="bg-white p-4 rounded shadow mb-6 flex flex-col lg:flex-row gap-3 lg:items-end print:hidden">
-                <div className="flex-1">
-                    <label className="block text-sm font-semibold mb-1">Search</label>
-                    <input
-                        type="search"
-                        className="border p-2 rounded-input w-full"
-                        placeholder="Product or company..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-semibold mb-1">Company</label>
-                    <select
-                        className="border p-2 rounded-input"
-                        value={companyFilter}
-                        onChange={(e) => setCompanyFilter(e.target.value)}
-                    >
-                        <option value="all">All companies</option>
-                        {companies.map((c) => (
-                            <option key={c.id} value={c.id}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-semibold mb-1">Stock status</label>
-                    <select
-                        className="border p-2 rounded-input"
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                        <option value="all">All</option>
-                        <option value="in">In stock</option>
-                        <option value="low">Low stock</option>
-                        <option value="out">Out of stock</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-semibold mb-1">Sort</label>
-                    <select
-                        className="border p-2 rounded-input"
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                    >
-                        <option value="name">Name</option>
-                        <option value="balance">Balance (low first)</option>
-                        <option value="value">Value (high first)</option>
-                    </select>
-                </div>
-                <label className="flex items-center gap-2 text-sm pb-2 cursor-pointer">
-                    <input
-                        type="checkbox"
-                        checked={showInactive}
-                        onChange={(e) => setShowInactive(e.target.checked)}
-                    />
-                    Include inactive
-                </label>
             </div>
 
             <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white">
@@ -344,23 +361,69 @@ function StatusBadge({ item }) {
     );
 }
 
-function SummaryCard({ label, value, sub, tone }) {
-    const color =
-        tone === 'red'
-            ? 'text-red-600'
-            : tone === 'green'
-              ? 'text-green-600'
-              : tone === 'blue'
-                ? 'text-blue-700'
-                : tone === 'amber'
-                  ? 'text-amber-600'
-                  : 'text-gray-900';
+const SUMMARY_THEMES = {
+    sky: {
+        card: 'from-sky-50 via-white to-white border-sky-200',
+        bar: 'from-sky-500 to-blue-600',
+        label: 'text-sky-700',
+        value: 'text-slate-900',
+        glow: 'bg-sky-400/25',
+    },
+    teal: {
+        card: 'from-teal-50 via-white to-white border-teal-200',
+        bar: 'from-teal-500 to-cyan-600',
+        label: 'text-teal-700',
+        value: 'text-slate-900',
+        glow: 'bg-teal-400/25',
+    },
+    emerald: {
+        card: 'from-emerald-50 via-white to-white border-emerald-200',
+        bar: 'from-emerald-500 to-teal-600',
+        label: 'text-emerald-700',
+        value: 'text-emerald-800',
+        glow: 'bg-emerald-400/25',
+    },
+    amber: {
+        card: 'from-amber-50 via-white to-white border-amber-200',
+        bar: 'from-amber-500 to-orange-500',
+        label: 'text-amber-800',
+        value: 'text-amber-900',
+        glow: 'bg-amber-400/30',
+    },
+    rose: {
+        card: 'from-rose-50 via-white to-white border-rose-200',
+        bar: 'from-rose-500 to-red-600',
+        label: 'text-rose-700',
+        value: 'text-rose-800',
+        glow: 'bg-rose-400/25',
+    },
+};
 
+function SummaryCard({ label, value, hint, theme = 'sky' }) {
+    const t = SUMMARY_THEMES[theme] || SUMMARY_THEMES.sky;
     return (
-        <div className="bg-white p-4 rounded shadow border-l-4 border-gray-300">
-            <p className="text-gray-500 text-xs font-semibold uppercase tracking-wide">{label}</p>
-            <p className={`text-2xl font-bold ${color}`}>{value}</p>
-            {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
+        <div
+            className={`relative overflow-hidden rounded-xl border bg-gradient-to-br ${t.card} px-3 py-3 shadow-sm`}
+        >
+            <div
+                className={`pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full blur-2xl ${t.glow}`}
+            />
+            <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${t.bar}`} />
+            <p
+                className={`relative text-[11px] font-bold uppercase tracking-wider ${t.label}`}
+            >
+                {label}
+            </p>
+            <p
+                className={`relative mt-1.5 text-lg font-extrabold tabular-nums break-all ${t.value}`}
+            >
+                {value}
+            </p>
+            {hint ? (
+                <p className="relative mt-1 text-[11px] text-slate-500 leading-snug">
+                    {hint}
+                </p>
+            ) : null}
         </div>
     );
 }
