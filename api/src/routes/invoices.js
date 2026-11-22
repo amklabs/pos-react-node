@@ -1,6 +1,6 @@
 const express = require('express');
 const prisma = require('../db');
-const { authenticateToken } = require('../midleware/auth');
+const { authenticateToken, requireRoles } = require('../midleware/auth');
 const { ADMIN_ROLES, hasRole } = require('../roles');
 const { assertSufficientStock } = require('../utils/stock');
 const { PAYMENT_STATUS, recomputeInvoicePayment } = require('../utils/payments');
@@ -9,6 +9,29 @@ const { summarizeInvoiceProfit } = require('../utils/profit');
 
 const router = express.Router();
 router.use(authenticateToken);
+
+/** Delete invoice + items + cash; child RETURNS first when deleting a SALE. */
+async function deleteInvoiceCascade(tx, invoiceId) {
+    const invoice = await tx.invoice.findUnique({
+        where: { id: invoiceId },
+        select: {
+            id: true,
+            invoiceNo: true,
+            type: true,
+            returns: { select: { id: true } },
+        },
+    });
+    if (!invoice) return null;
+
+    for (const ret of invoice.returns || []) {
+        await deleteInvoiceCascade(tx, ret.id);
+    }
+
+    await tx.cashRecord.deleteMany({ where: { invoiceId } });
+    await tx.invoiceItem.deleteMany({ where: { invoiceId } });
+    await tx.invoice.delete({ where: { id: invoiceId } });
+    return invoice;
+}
 
 // Invoice lookup (paginated + server search/filters)
 // Query: page, pageSize, q, type, paymentStatus, from, to
@@ -114,6 +137,69 @@ router.get('/invoices', async (req, res, next) => {
             total,
             totalPages,
             totalAmount: Number(amountAgg._sum.totalAmount || 0),
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Bulk delete invoices (Admin only). Cascades items, cash, and related returns.
+router.post('/invoices/bulk-delete', requireRoles(...ADMIN_ROLES), async (req, res, next) => {
+    try {
+        const rawIds = Array.isArray(req.body?.ids) ? req.body.ids : [];
+        const ids = [...new Set(rawIds.map((id) => parseInt(id, 10)).filter((n) => Number.isFinite(n) && n > 0))];
+
+        if (ids.length === 0) {
+            throw httpError(400, 'Select at least one invoice to delete');
+        }
+        if (ids.length > 100) {
+            throw httpError(400, 'You can delete at most 100 invoices at a time');
+        }
+
+        const result = await prisma.$transaction(async (tx) => {
+            const deleted = [];
+            const missing = [];
+
+            // Prefer deleting RETURNS before SALES when both are selected
+            const existing = await tx.invoice.findMany({
+                where: { id: { in: ids } },
+                select: { id: true, invoiceNo: true, type: true },
+            });
+            const foundIds = new Set(existing.map((i) => i.id));
+            for (const id of ids) {
+                if (!foundIds.has(id)) missing.push(id);
+            }
+
+            const ordered = [
+                ...existing.filter((i) => i.type === 'RETURN'),
+                ...existing.filter((i) => i.type !== 'RETURN'),
+            ];
+
+            for (const inv of ordered) {
+                // May already be removed as a child return of a deleted SALE
+                const stillThere = await tx.invoice.findUnique({
+                    where: { id: inv.id },
+                    select: { id: true },
+                });
+                if (!stillThere) continue;
+                const removed = await deleteInvoiceCascade(tx, inv.id);
+                if (removed) {
+                    deleted.push({
+                        id: removed.id,
+                        invoiceNo: removed.invoiceNo,
+                        type: removed.type,
+                    });
+                }
+            }
+
+            return { deleted, missing };
+        });
+
+        res.json({
+            message: `Deleted ${result.deleted.length} invoice(s)`,
+            deletedCount: result.deleted.length,
+            deleted: result.deleted,
+            missingIds: result.missing,
         });
     } catch (err) {
         next(err);

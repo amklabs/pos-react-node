@@ -1,5 +1,5 @@
 // src/pages/InvoiceLookup.jsx
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../apiClient.js';
 import usePageTitle from '../hooks/usePageTitle.js';
@@ -7,17 +7,23 @@ import Spinner from '../components/Spinner.jsx';
 import Pagination from '../components/Pagination.jsx';
 import DateField from '../components/DateField.jsx';
 import useDebouncedValue from '../hooks/useDebouncedValue.js';
-import { toastError } from '../utils/toast';
+import { useConfirm } from '../context/ConfirmDialogContext.jsx';
+import { useAuthContext } from '../context/AuthContext';
+import { isAdmin } from '../utils/roles';
+import { toastSuccess, toastError } from '../utils/toast';
 import { formatNumber, formatDate } from '../utils/formaters.js';
 
 const PAGE_SIZE = 10;
 
 export default function InvoiceLookup() {
     usePageTitle('Invoice Lookup');
+    const confirm = useConfirm();
+    const { user } = useAuthContext();
+    const canDelete = isAdmin(user);
 
     const [invoices, setInvoices] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [typeFilter, setTypeFilter] = useState('all'); // all (non-purchase) | SALE | RETURN
+    const [typeFilter, setTypeFilter] = useState('all');
     const [paymentFilter, setPaymentFilter] = useState('all');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
@@ -26,6 +32,8 @@ export default function InvoiceLookup() {
     const [totalPages, setTotalPages] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [selectedIds, setSelectedIds] = useState(() => new Set());
+    const [deleting, setDeleting] = useState(false);
 
     const debouncedSearch = useDebouncedValue(searchTerm, 350);
 
@@ -48,6 +56,7 @@ export default function InvoiceLookup() {
             setTotal(res.data.total || 0);
             setTotalPages(res.data.totalPages || 1);
             setTotalAmount(Number(res.data.totalAmount || 0));
+            setSelectedIds(new Set());
         } catch (err) {
             toastError(err.response?.data?.error || 'Failed to load invoices');
         } finally {
@@ -59,21 +68,88 @@ export default function InvoiceLookup() {
         fetchInvoices();
     }, [fetchInvoices]);
 
-    // Reset to page 1 when filters change
     useEffect(() => {
         setPage(1);
     }, [debouncedSearch, typeFilter, paymentFilter, fromDate, toDate]);
 
+    const pageIds = useMemo(() => invoices.map((inv) => inv.id), [invoices]);
+    const allPageSelected =
+        pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
+    const somePageSelected =
+        pageIds.some((id) => selectedIds.has(id)) && !allPageSelected;
+
+    const toggleOne = (id) => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
+
+    const toggleAllPage = () => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            if (allPageSelected) {
+                pageIds.forEach((id) => next.delete(id));
+            } else {
+                pageIds.forEach((id) => next.add(id));
+            }
+            return next;
+        });
+    };
+
+    const deleteSelected = async () => {
+        const ids = [...selectedIds];
+        if (ids.length === 0) return;
+
+        const ok = await confirm({
+            title: `Delete ${ids.length} invoice${ids.length === 1 ? '' : 's'}?`,
+            message:
+                'This permanently deletes the selected invoices, their line items, and linked cash records. Related stock returns will also be removed. This cannot be undone.',
+            confirmLabel: 'Delete selected',
+        });
+        if (!ok) return;
+
+        setDeleting(true);
+        try {
+            const res = await apiClient.post('/api/invoices/bulk-delete', { ids });
+            toastSuccess(res.data.message || 'Invoices deleted');
+            setSelectedIds(new Set());
+            await fetchInvoices();
+        } catch (err) {
+            toastError(err.response?.data?.error || 'Failed to delete invoices');
+        } finally {
+            setDeleting(false);
+        }
+    };
+
+    const colSpan = canDelete ? 10 : 9;
+
     return (
         <div className="w-full min-w-0 max-w-6xl">
-            <div className="mb-2">
-                <h1 className="text-2xl font-bold">Invoice Lookup</h1>
-                <p className="text-sm text-gray-500">
-                    {total} invoice{total === 1 ? '' : 's'}
-                    {!loading && (
-                        <> · Total Rs. {formatNumber(totalAmount)}</>
-                    )}
-                </p>
+            <div className="mb-2 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                <div>
+                    <h1 className="text-2xl font-bold">Invoice Lookup</h1>
+                    <p className="text-sm text-gray-500">
+                        {total} invoice{total === 1 ? '' : 's'}
+                        {!loading && (
+                            <> · Total Rs. {formatNumber(totalAmount)}</>
+                        )}
+                    </p>
+                </div>
+                {canDelete && selectedIds.size > 0 && (
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        disabled={deleting || loading}
+                        onClick={deleteSelected}
+                    >
+                        {deleting
+                            ? 'Deleting…'
+                            : `Delete selected (${selectedIds.size})`}
+                    </button>
+                )}
             </div>
 
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-4 space-y-3 print:hidden">
@@ -107,7 +183,7 @@ export default function InvoiceLookup() {
                     <div>
                         <label className="block text-sm font-semibold mb-1">Payment</label>
                         <select
-                            className="border p-2 rounded-input min-w-[140px]"
+                            className="border p-2 rounded-input min-w-35"
                             value={paymentFilter}
                             disabled={typeFilter === 'RETURN'}
                             onChange={(e) => {
@@ -143,7 +219,11 @@ export default function InvoiceLookup() {
                                 className="w-44"
                             />
                         </div>
-                        {(fromDate || toDate || searchTerm || typeFilter !== 'all' || paymentFilter !== 'all') && (
+                        {(fromDate ||
+                            toDate ||
+                            searchTerm ||
+                            typeFilter !== 'all' ||
+                            paymentFilter !== 'all') && (
                             <button
                                 type="button"
                                 className="btn btn-secondary"
@@ -167,6 +247,20 @@ export default function InvoiceLookup() {
                 <table className="w-full border-collapse text-left text-sm">
                     <thead className="bg-gray-200">
                         <tr>
+                            {canDelete && (
+                                <th className="p-2 border w-10 text-center">
+                                    <input
+                                        type="checkbox"
+                                        checked={allPageSelected}
+                                        ref={(el) => {
+                                            if (el) el.indeterminate = somePageSelected;
+                                        }}
+                                        onChange={toggleAllPage}
+                                        disabled={loading || invoices.length === 0}
+                                        aria-label="Select all on this page"
+                                    />
+                                </th>
+                            )}
                             <th className="p-2 border">Invoice No.</th>
                             <th className="p-2 border">Date</th>
                             <th className="p-2 border">Type</th>
@@ -181,14 +275,29 @@ export default function InvoiceLookup() {
                     <tbody>
                         {loading && (
                             <tr>
-                                <td colSpan="9" className="p-8 text-center text-gray-500">
+                                <td colSpan={colSpan} className="p-8 text-center text-gray-500">
                                     <Spinner size="md" label="Loading invoices..." />
                                 </td>
                             </tr>
                         )}
                         {!loading &&
                             invoices.map((inv) => (
-                                <tr key={inv.id} className="border-b hover:bg-gray-50">
+                                <tr
+                                    key={inv.id}
+                                    className={`border-b hover:bg-gray-50 ${
+                                        selectedIds.has(inv.id) ? 'bg-blue-50/60' : ''
+                                    }`}
+                                >
+                                    {canDelete && (
+                                        <td className="p-2 border text-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedIds.has(inv.id)}
+                                                onChange={() => toggleOne(inv.id)}
+                                                aria-label={`Select invoice ${inv.invoiceNo}`}
+                                            />
+                                        </td>
+                                    )}
                                     <td className="p-2 border font-semibold">
                                         {inv.invoiceNo}
                                     </td>
@@ -249,7 +358,7 @@ export default function InvoiceLookup() {
                         {!loading && invoices.length === 0 && (
                             <tr>
                                 <td
-                                    colSpan="9"
+                                    colSpan={colSpan}
                                     className="p-4 text-center text-gray-500"
                                 >
                                     No invoices found.
