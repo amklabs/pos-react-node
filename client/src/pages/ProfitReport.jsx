@@ -249,10 +249,10 @@ export default function ProfitReport() {
                                     <th className="p-2.5 border">Invoice #</th>
                                     <th className="p-2.5 border">Type</th>
                                     <th className="p-2.5 border">Customer</th>
-                                    <th className="p-2.5 border text-right">Net</th>
-                                    <th className="p-2.5 border text-right">Cost</th>
-                                    <th className="p-2.5 border text-right">Gross profit</th>
-                                    <th className="p-2.5 border text-right">Signed</th>
+                                    <th className="p-2.5 border text-right">Purchase Amount</th>
+                                    <th className="p-2.5 border text-right">Sale Amount</th>
+                                    {/*<th className="p-2.5 border text-right">Gross profit</th>*/}
+                                    <th className="p-2.5 border text-right">Gross Profit</th>
                                     <th className="p-2.5 border text-right">Margin</th>
                                 </tr>
                             </thead>
@@ -282,15 +282,16 @@ export default function ProfitReport() {
                                             </span>
                                         </td>
                                         <td className="p-2.5 border">{inv.customerName}</td>
-                                        <td className="p-2.5 border text-right tabular-nums">
-                                            {formatNumber(inv.netSales)}
-                                        </td>
+
                                         <td className="p-2.5 border text-right tabular-nums">
                                             {formatNumber(inv.totalCost)}
                                         </td>
-                                        <td className="p-2.5 border text-right tabular-nums font-semibold">
-                                            {formatNumber(inv.grossProfit)}
+                                        <td className="p-2.5 border text-right tabular-nums">
+                                            {formatNumber(inv.netSales)}
                                         </td>
+                                        {/*<td className="p-2.5 border text-right tabular-nums font-semibold">*/}
+                                        {/*    {formatNumber(inv.grossProfit)}*/}
+                                        {/*</td>*/}
                                         <td
                                             className={`p-2.5 border text-right tabular-nums font-semibold ${
                                                 Number(inv.signedProfit) >= 0
@@ -310,7 +311,7 @@ export default function ProfitReport() {
                             </tbody>
                             <tfoot className="bg-gray-50 font-semibold">
                                 <tr>
-                                    <td className="p-2.5 border" colSpan={7}>
+                                    <td className="p-2.5 border" colSpan={6}>
                                         Page signed profit ({invoices.length} of {total})
                                     </td>
                                     <td
