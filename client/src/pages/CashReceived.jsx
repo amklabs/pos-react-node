@@ -339,7 +339,7 @@ export default function CashReceived() {
                                     Town
                                 </label>
                                 <select
-                                    className="border p-1.5 rounded-input w-full text-sm"
+                                    className="border rounded-input w-full "
                                     value={formData.townId}
                                     onChange={(e) => handleTownChange(e.target.value)}
                                 >
@@ -356,7 +356,7 @@ export default function CashReceived() {
                                     Customer
                                 </label>
                                 <select
-                                    className="border p-1.5 rounded-input w-full text-sm"
+                                    className="border rounded-input w-full "
                                     value={formData.customerId}
                                     onChange={(e) =>
                                         setFormData({
@@ -381,7 +381,7 @@ export default function CashReceived() {
                                         Invoice
                                     </label>
                                     <select
-                                        className="border p-1.5 rounded-input w-full text-sm"
+                                        className="border rounded-input w-full"
                                         value={formData.invoiceId}
                                         onChange={(e) => handleInvoiceChange(e.target.value)}
                                         disabled={!formData.customerId || loadingUnpaid}
@@ -410,7 +410,7 @@ export default function CashReceived() {
                                         min="0"
                                         step="any"
                                         placeholder="Rs."
-                                        className="border p-1.5 rounded-input w-full text-sm"
+                                        className="borderrounded-input w-full"
                                         value={formData.amount}
                                         onChange={(e) =>
                                             setFormData({
@@ -441,7 +441,7 @@ export default function CashReceived() {
                                 <input
                                     type="text"
                                     placeholder="Optional"
-                                    className="border p-1.5 rounded-input w-full text-sm"
+                                    className="border rounded-input w-full"
                                     value={formData.note}
                                     onChange={(e) =>
                                         setFormData({ ...formData, note: e.target.value })
@@ -476,7 +476,7 @@ export default function CashReceived() {
                                 type="button"
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="bg-green-600 text-white px-5 py-1.5 rounded-input text-sm font-bold hover:bg-green-700 disabled:opacity-60 cursor-pointer"
+                                className="btn btn-primary bg-green-600"
                             >
                                 {saving
                                     ? 'Saving…'
@@ -488,7 +488,7 @@ export default function CashReceived() {
                                 type="button"
                                 onClick={resetForm}
                                 disabled={saving}
-                                className="bg-gray-600 text-white px-4 py-1.5 rounded-input text-sm font-bold cursor-pointer"
+                                className="btn btn-secondary"
                             >
                                 {isEditing ? 'Cancel edit' : 'Clear'}
                             </button>
