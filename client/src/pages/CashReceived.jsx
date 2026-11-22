@@ -304,7 +304,7 @@ export default function CashReceived() {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                     <div>
                         <h1 className="text-xl font-bold">
-                            {isEditing ? 'Edit Cash Received' : 'Cash Received'}
+                            {isEditing ? 'Edit Cash Entry' : 'New Cash Entry'}
                         </h1>
                         <p className="text-xs text-gray-500">
                             {isEditing
