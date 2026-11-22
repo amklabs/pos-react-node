@@ -164,14 +164,14 @@ export default function Users() {
         <div className="w-full min-w-0 ">
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">User Management</h1>
-                <p className="text-sm text-gray-500">
+                <p className=" text-gray-500">
                     Add, update, or remove users and assign roles. Super Admin only.
                 </p>
             </div>
 
             <div className="bg-white px-3 py-2.5 rounded-xl border border-gray-200 shadow-sm border-t-4 border-t-blue-600 mb-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
-                    <h2 className="text-sm font-semibold">
+                    <h2 className=" font-semibold">
                         {isEditing ? 'Edit user' : 'Add user'}
                     </h2>
                     {isEditing && (
@@ -188,12 +188,12 @@ export default function Users() {
                     onSubmit={submit}
                     className="flex flex-wrap xl:flex-nowrap items-end gap-2"
                 >
-                    <div className="min-w-[8rem] flex-1">
-                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                    <div className="min-w-32 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             Username
                         </label>
                         <input
-                            className="border p-1.5 rounded-input w-full text-sm"
+                            className="border rounded-input w-full "
                             value={form.username}
                             onChange={(e) =>
                                 setForm({ ...form, username: e.target.value })
@@ -202,14 +202,14 @@ export default function Users() {
                             required
                         />
                     </div>
-                    <div className="min-w-[9rem] flex-1">
-                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                    <div className="min-w-36 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             {isEditing ? 'New password' : 'Password'}
                         </label>
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
-                                className="border p-1.5 pr-14 rounded-input w-full text-sm"
+                                className="border pr-14 rounded-input w-full "
                                 value={form.password}
                                 onChange={(e) =>
                                     setForm({ ...form, password: e.target.value })
@@ -220,43 +220,43 @@ export default function Users() {
                             />
                             <button
                                 type="button"
-                                className="absolute inset-y-0 right-0 px-2 text-[11px] font-semibold text-gray-500 hover:text-brand-700 cursor-pointer"
+                                className="absolute inset-y-0 right-0 px-2 text-[12px] font-semibold text-gray-500 hover:text-brand-700 cursor-pointer"
                                 onClick={() => setShowPassword((v) => !v)}
                             >
                                 {showPassword ? 'Hide' : 'Show'}
                             </button>
                         </div>
                     </div>
-                    <div className="min-w-[7rem] flex-1">
-                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                    <div className="min-w-28 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             First name
                         </label>
                         <input
-                            className="border p-1.5 rounded-input w-full text-sm"
+                            className="border rounded-input w-full "
                             value={form.firstname}
                             onChange={(e) =>
                                 setForm({ ...form, firstname: e.target.value })
                             }
                         />
                     </div>
-                    <div className="min-w-[7rem] flex-1">
-                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                    <div className="min-w-28 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             Last name
                         </label>
                         <input
-                            className="border p-1.5 rounded-input w-full text-sm"
+                            className="border rounded-input w-full "
                             value={form.lastname}
                             onChange={(e) =>
                                 setForm({ ...form, lastname: e.target.value })
                             }
                         />
                     </div>
-                    <div className="min-w-[8rem] shrink-0">
-                        <label className="block text-[11px] font-semibold mb-0.5 text-gray-600">
+                    <div className="min-w-32 shrink-0">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             Role
                         </label>
                         <select
-                            className="border p-1.5 rounded-input w-full text-sm min-w-32"
+                            className="border rounded-input w-full  min-w-32"
                             value={form.roleId}
                             onChange={(e) =>
                                 setForm({ ...form, roleId: e.target.value })
@@ -271,7 +271,7 @@ export default function Users() {
                             ))}
                         </select>
                     </div>
-                    <label className="flex items-center gap-1.5 h-[34px] text-sm cursor-pointer select-none shrink-0">
+                    <label className="flex items-center cursor-pointer select-none shrink-0 mb-2">
                         <input
                             type="checkbox"
                             checked={form.isActive}
@@ -285,7 +285,7 @@ export default function Users() {
                     </label>
                     <button
                         type="submit"
-                        className="btn btn-primary text-sm py-1.5 px-4 shrink-0"
+                        className="btn btn-primary"
                         disabled={saving}
                     >
                         {saving
@@ -301,7 +301,7 @@ export default function Users() {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
                     <h2 className="text-lg font-semibold">
                         Users{' '}
-                        <span className="text-sm font-normal text-gray-500">
+                        <span className=" font-normal text-gray-500">
                             ({filtered.length}
                             {filtered.length !== users.length
                                 ? ` of ${users.length}`
@@ -335,7 +335,7 @@ export default function Users() {
                     </div>
                 ) : (
                     <div className="overflow-x-auto rounded-lg border border-gray-300">
-                        <table className="w-full text-sm border-collapse">
+                        <table className="w-full  border-collapse">
                             <thead className="bg-gray-100">
                                 <tr>
                                     <th className="text-left p-2.5 border">Username</th>
@@ -399,14 +399,14 @@ export default function Users() {
                                             <td className="p-2.5 border text-right space-x-3 whitespace-nowrap">
                                                 <button
                                                     type="button"
-                                                    className="text-blue-600 hover:underline text-sm"
+                                                    className="text-blue-600 hover:underline "
                                                     onClick={() => startEdit(u)}
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    className="text-red-600 hover:underline text-sm disabled:opacity-40 disabled:no-underline"
+                                                    className="text-red-600 hover:underline  disabled:opacity-40 disabled:no-underline"
                                                     onClick={() => removeUser(u)}
                                                     disabled={isSelf}
                                                     title={
