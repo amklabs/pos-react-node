@@ -16,6 +16,7 @@ import ProfitReport from './pages/ProfitReport';
 import StockReturn from './pages/StockReturn';
 import PurchaseLookup from './pages/PurchaseLookup';
 import InvoiceView from './pages/InvoiceView';
+import EditInvoice from './pages/EditInvoice';
 import CustomerLedger from './pages/CustomerLedger';
 import Users from './pages/Users';
 import Login from "./pages/Login.jsx";
@@ -126,6 +127,7 @@ function AppRoutes() {
                     <Route path="/return" element={<StockReturn />} />
                     <Route path="/purchase-lookup" element={<PurchaseLookup />} />
                     <Route path="/invoice/:id" element={<InvoiceView />} />
+                    <Route path="/invoice/:id/edit" element={<EditInvoice />} />
                     <Route path="/ledger" element={<CustomerLedger />} />
 
                     {/* Admin-only: master data + new purchase */}

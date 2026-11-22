@@ -12,6 +12,7 @@ import { useAuthContext } from '../context/AuthContext';
 import { isAdmin } from '../utils/roles';
 import { toastSuccess, toastError } from '../utils/toast';
 import { formatNumber, formatDate } from '../utils/formaters.js';
+import { Eye, Pencil } from 'lucide-react';
 
 const PAGE_SIZE = 10;
 
@@ -269,7 +270,7 @@ export default function InvoiceLookup() {
                             <th className="p-2 border">Salesman</th>
                             <th className="p-2 border">Payment</th>
                             <th className="p-2 border text-end pe-4">Total</th>
-                            <th className="p-2 border">Action</th>
+                            <th className="p-2 border text-center w-36">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -346,12 +347,28 @@ export default function InvoiceLookup() {
                                         {formatNumber(inv.totalAmount)}
                                     </td>
                                     <td className="p-2 border">
-                                        <Link
-                                            to={`/invoice/${inv.id}`}
-                                            className="text-blue-600 hover:underline text-sm font-semibold"
-                                        >
-                                            View / Print
-                                        </Link>
+                                        <div className="flex items-center justify-start gap-1.5">
+                                            <Link
+                                                to={`/invoice/${inv.id}`}
+                                                title="View / Print"
+                                                className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100"
+                                            >
+                                                <Eye size={14} aria-hidden />
+                                                View
+                                            </Link>
+                                            {(inv.type === 'SALE' ||
+                                                (inv.type === 'PURCHASE' &&
+                                                    canDelete)) && (
+                                                <Link
+                                                    to={`/invoice/${inv.id}/edit`}
+                                                    title="Edit invoice"
+                                                    className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-green-100 px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-green-200"
+                                                >
+                                                    <Pencil size={14} aria-hidden />
+                                                    Edit
+                                                </Link>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

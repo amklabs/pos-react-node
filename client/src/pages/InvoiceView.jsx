@@ -7,6 +7,8 @@ import Spinner from '../components/Spinner.jsx';
 import { STORE_NAME } from '../constants/store.js';
 import { toastError } from '../utils/toast';
 import { formatNumber, formatDate, formatDateTime } from '../utils/formaters.js';
+import { useAuthContext } from '../context/AuthContext';
+import { isAdmin } from '../utils/roles';
 
 function money(value) {
     return `Rs. ${formatNumber(value)}`;
@@ -41,6 +43,8 @@ export default function InvoiceView() {
 
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuthContext();
+    const admin = isAdmin(user);
     const [invoice, setInvoice] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -68,7 +72,9 @@ export default function InvoiceView() {
         return invoice.items.some((item) => Number(item.discount || 0) !== 0);
     }, [invoice]);
 
-    const showProfit = invoice?.type === 'SALE' || invoice?.type === 'RETURN';
+    // Cost / profit is admin-only (hidden for Store Operator on screen and print)
+    const showProfit =
+        admin && (invoice?.type === 'SALE' || invoice?.type === 'RETURN');
 
     const lineRows = useMemo(() => {
         if (!invoice?.items) return [];
@@ -154,6 +160,8 @@ export default function InvoiceView() {
     const isSale = invoice.type === 'SALE';
     const isPurchase = invoice.type === 'PURCHASE';
     const isReturn = invoice.type === 'RETURN';
+    const canEdit =
+        (isSale || (isPurchase && admin)) && !isReturn;
 
     return (
         <div className="w-full min-w-0 max-w-4xl mx-auto">
@@ -167,6 +175,11 @@ export default function InvoiceView() {
                     ← Back
                 </button>
                 <div className="flex gap-2">
+                    {canEdit && (
+                        <Link to={`/invoice/${id}/edit`} className="btn btn-secondary">
+                            Edit invoice
+                        </Link>
+                    )}
                     <Link to="/invoice-lookup" className="btn btn-secondary">
                         Invoice lookup
                     </Link>
