@@ -1,6 +1,7 @@
 const express = require('express');
 const prisma = require('../db');
 const {authenticateToken} = require('../midleware/auth');
+const { summarizeInvoiceProfit, round2 } = require('../utils/profit');
 
 const router = express.Router();
 router.use(authenticateToken); // everything below is protected
@@ -296,6 +297,165 @@ router.get('/reports/cash-summary', async (req, res, next) => {
         }, 0);
 
         res.json({ records, totalCash });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Profit Report — SALE + RETURN with snapped costRate (paginated)
+// Query: from, to, type, q, page, pageSize
+router.get('/reports/profit', async (req, res, next) => {
+    const { from, to, type, q } = req.query;
+
+    try {
+        const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+        const pageSize = Math.min(100, Math.max(1, parseInt(req.query.pageSize, 10) || 20));
+        const skip = (page - 1) * pageSize;
+
+        const whereClause = {};
+
+        if (type === 'SALE' || type === 'RETURN') {
+            whereClause.type = type;
+        } else {
+            whereClause.type = { in: ['SALE', 'RETURN'] };
+        }
+
+        if (from || to) {
+            whereClause.date = {};
+            if (from) {
+                const start = dayStart(from);
+                if (!start) return res.status(400).json({ error: 'Invalid from date' });
+                whereClause.date.gte = start;
+            }
+            if (to) {
+                const end = dayEnd(to);
+                if (!end) return res.status(400).json({ error: 'Invalid to date' });
+                whereClause.date.lte = end;
+            }
+        }
+
+        const search = typeof q === 'string' ? q.trim() : '';
+        if (search) {
+            whereClause.OR = [
+                { invoiceNo: { contains: search, mode: 'insensitive' } },
+                { customer: { name: { contains: search, mode: 'insensitive' } } },
+                { salesman: { name: { contains: search, mode: 'insensitive' } } },
+                { town: { name: { contains: search, mode: 'insensitive' } } },
+            ];
+        }
+
+        const itemSelect = {
+            qty: true,
+            rate: true,
+            discount: true,
+            total: true,
+            costRate: true,
+        };
+
+        const [total, pageInvoices, summaryInvoices] = await Promise.all([
+            prisma.invoice.count({ where: whereClause }),
+            prisma.invoice.findMany({
+                where: whereClause,
+                include: {
+                    customer: { select: { id: true, name: true } },
+                    salesman: { select: { id: true, name: true } },
+                    town: { select: { id: true, name: true } },
+                    items: { select: itemSelect },
+                },
+                orderBy: [{ date: 'desc' }, { id: 'desc' }],
+                skip,
+                take: pageSize,
+            }),
+            // Full filtered set (minimal fields) so KPI summary stays period-accurate
+            prisma.invoice.findMany({
+                where: whereClause,
+                select: {
+                    type: true,
+                    items: { select: itemSelect },
+                },
+            }),
+        ]);
+
+        const rows = pageInvoices.map((inv) => {
+            const profit = summarizeInvoiceProfit(inv);
+            return {
+                id: inv.id,
+                invoiceNo: inv.invoiceNo,
+                type: inv.type,
+                date: inv.date,
+                customerName: inv.customer?.name || (inv.type === 'SALE' ? 'Cash Sale' : '—'),
+                salesmanName: inv.salesman?.name || null,
+                townName: inv.town?.name || null,
+                netSales: profit.netSales,
+                totalCost: profit.totalCost,
+                grossProfit: profit.grossProfit,
+                signedProfit: profit.signedProfit,
+                marginPct: profit.marginPct,
+            };
+        });
+
+        const summary = summaryInvoices.reduce(
+            (acc, inv) => {
+                const profit = summarizeInvoiceProfit(inv);
+                if (inv.type === 'SALE') {
+                    acc.saleCount += 1;
+                    acc.saleNet += profit.netSales;
+                    acc.saleCost += profit.totalCost;
+                    acc.saleProfit += profit.grossProfit;
+                } else if (inv.type === 'RETURN') {
+                    acc.returnCount += 1;
+                    acc.returnNet += profit.netSales;
+                    acc.returnCost += profit.totalCost;
+                    acc.returnProfitReversed += profit.grossProfit;
+                }
+                acc.netProfit += profit.signedProfit;
+                return acc;
+            },
+            {
+                saleCount: 0,
+                returnCount: 0,
+                saleNet: 0,
+                saleCost: 0,
+                saleProfit: 0,
+                returnNet: 0,
+                returnCost: 0,
+                returnProfitReversed: 0,
+                netProfit: 0,
+            }
+        );
+
+        const marginPct =
+            summary.saleNet > 0
+                ? round2((summary.netProfit / summary.saleNet) * 100)
+                : null;
+
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+        const pageNetProfit = round2(
+            rows.reduce((s, row) => s + Number(row.signedProfit || 0), 0)
+        );
+
+        res.json({
+            from: from || null,
+            to: to || null,
+            invoices: rows,
+            page,
+            pageSize,
+            total,
+            totalPages,
+            pageNetProfit,
+            summary: {
+                saleCount: summary.saleCount,
+                returnCount: summary.returnCount,
+                saleNet: round2(summary.saleNet),
+                saleCost: round2(summary.saleCost),
+                saleProfit: round2(summary.saleProfit),
+                returnNet: round2(summary.returnNet),
+                returnCost: round2(summary.returnCost),
+                returnProfitReversed: round2(summary.returnProfitReversed),
+                netProfit: round2(summary.netProfit),
+                marginPct,
+            },
+        });
     } catch (error) {
         next(error);
     }

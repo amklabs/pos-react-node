@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner.jsx';
 import DateField from '../components/DateField.jsx';
 import { toastSuccess, toastError } from '../utils/toast';
 import { formatNumber, toInputDate } from '../utils/formaters.js';
+import { useConfirm } from '../context/ConfirmDialogContext.jsx';
 
 const emptyItem = { productId: '', qty: 1, rate: 0, discount: 0 };
 const emptyInvoice = {
@@ -18,6 +19,7 @@ const emptyInvoice = {
 
 export default function NewPurchase() {
     usePageTitle('New Purchase');
+    const confirm = useConfirm();
 
     const [invoice, setInvoice] = useState(emptyInvoice);
     const [items, setItems] = useState([]);
@@ -143,7 +145,17 @@ export default function NewPurchase() {
         setEditingIndex(idx);
     };
 
-    const handleDeleteItem = (idx) => {
+    const handleDeleteItem = async (idx) => {
+        const item = items[idx];
+        const name = item
+            ? products.find((p) => String(p.id) === String(item.productId))?.name || 'this item'
+            : 'this item';
+        const ok = await confirm({
+            title: 'Remove line item?',
+            message: `Remove "${name}" from this purchase?`,
+            confirmLabel: 'Remove',
+        });
+        if (!ok) return;
         setItems(items.filter((_, i) => i !== idx));
         if (editingIndex === idx) {
             setEditingIndex(null);

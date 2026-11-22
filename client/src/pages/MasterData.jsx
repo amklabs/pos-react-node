@@ -4,6 +4,7 @@ import apiClient from '../apiClient.js';
 import usePageTitle from '../hooks/usePageTitle.js';
 import Spinner from '../components/Spinner.jsx';
 import { toastSuccess, toastError } from '../utils/toast';
+import { useConfirm } from '../context/ConfirmDialogContext.jsx';
 
 const TABS = [
     { key: 'towns', label: 'Towns', singular: 'Town' },
@@ -307,8 +308,12 @@ async function saveEntity({ isEditing, endpoint, id, payload, empty, setForm, on
     }
 }
 
-async function deleteEntity({ endpoint, row, onMutated, label }) {
-    if (!confirm(`Delete ${label.toLowerCase()} "${row.name}"?`)) return;
+async function deleteEntity({ endpoint, row, onMutated, label, confirm }) {
+    const ok = await confirm({
+        title: `Delete ${label}?`,
+        message: `Are you sure you want to delete ${label.toLowerCase()} "${row.name}"? This cannot be undone.`,
+    });
+    if (!ok) return;
     try {
         await apiClient.delete(`/api/${endpoint}/${row.id}`);
         toastSuccess(`${label} deleted`);
@@ -320,6 +325,7 @@ async function deleteEntity({ endpoint, row, onMutated, label }) {
 
 /* ---- Towns ---- */
 function TownTab({ title, list, loading, error, onMutated }) {
+    const confirm = useConfirm();
     const empty = { id: null, name: '', isActive: true };
     const [form, setForm] = useState(empty);
     const [processing, setProcessing] = useState(false);
@@ -415,6 +421,7 @@ function TownTab({ title, list, loading, error, onMutated }) {
                                     row,
                                     onMutated,
                                     label: title,
+                                    confirm,
                                 })
                             }
                         >
@@ -429,6 +436,7 @@ function TownTab({ title, list, loading, error, onMutated }) {
 
 /* ---- Salesmen ---- */
 function SalesmanTab({ title, list, loading, error, onMutated }) {
+    const confirm = useConfirm();
     const empty = { id: null, name: '', phone: '', isActive: true };
     const [form, setForm] = useState(empty);
     const [processing, setProcessing] = useState(false);
@@ -535,6 +543,7 @@ function SalesmanTab({ title, list, loading, error, onMutated }) {
                                     row,
                                     onMutated,
                                     label: title,
+                                    confirm,
                                 })
                             }
                         >
@@ -549,6 +558,7 @@ function SalesmanTab({ title, list, loading, error, onMutated }) {
 
 /* ---- Customers ---- */
 function CustomerTab({ title, towns, list, loading, error, onMutated }) {
+    const confirm = useConfirm();
     const empty = { id: null, name: '', phone: '', townId: '', isActive: true };
     const [form, setForm] = useState(empty);
     const [processing, setProcessing] = useState(false);
@@ -683,6 +693,7 @@ function CustomerTab({ title, towns, list, loading, error, onMutated }) {
                                     row,
                                     onMutated,
                                     label: title,
+                                    confirm,
                                 })
                             }
                         >
@@ -697,6 +708,7 @@ function CustomerTab({ title, towns, list, loading, error, onMutated }) {
 
 /* ---- Companies ---- */
 function CompanyTab({ title, list, loading, error, onMutated }) {
+    const confirm = useConfirm();
     const empty = { id: null, name: '', phone: '', isActive: true };
     const [form, setForm] = useState(empty);
     const [processing, setProcessing] = useState(false);
@@ -803,6 +815,7 @@ function CompanyTab({ title, list, loading, error, onMutated }) {
                                     row,
                                     onMutated,
                                     label: title,
+                                    confirm,
                                 })
                             }
                         >
@@ -817,6 +830,7 @@ function CompanyTab({ title, list, loading, error, onMutated }) {
 
 /* ---- Products ---- */
 function ProductTab({ title, companies, list, loading, error, onMutated }) {
+    const confirm = useConfirm();
     const empty = { id: null, name: '', companyId: '', isActive: true };
     const [form, setForm] = useState(empty);
     const [processing, setProcessing] = useState(false);
@@ -938,6 +952,7 @@ function ProductTab({ title, companies, list, loading, error, onMutated }) {
                                     row,
                                     onMutated,
                                     label: title,
+                                    confirm,
                                 })
                             }
                         >

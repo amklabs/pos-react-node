@@ -9100,6 +9100,7 @@ export namespace Prisma {
     productId: number | null
     qty: Decimal | null
     rate: Decimal | null
+    costRate: Decimal | null
     subTotal: Decimal | null
     discount: Decimal | null
     total: Decimal | null
@@ -9111,6 +9112,7 @@ export namespace Prisma {
     productId: number | null
     qty: Decimal | null
     rate: Decimal | null
+    costRate: Decimal | null
     subTotal: Decimal | null
     discount: Decimal | null
     total: Decimal | null
@@ -9122,6 +9124,7 @@ export namespace Prisma {
     productId: number | null
     qty: Decimal | null
     rate: Decimal | null
+    costRate: Decimal | null
     subTotal: Decimal | null
     discount: Decimal | null
     total: Decimal | null
@@ -9133,6 +9136,7 @@ export namespace Prisma {
     productId: number | null
     qty: Decimal | null
     rate: Decimal | null
+    costRate: Decimal | null
     subTotal: Decimal | null
     discount: Decimal | null
     total: Decimal | null
@@ -9144,6 +9148,7 @@ export namespace Prisma {
     productId: number
     qty: number
     rate: number
+    costRate: number
     subTotal: number
     discount: number
     total: number
@@ -9157,6 +9162,7 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    costRate?: true
     subTotal?: true
     discount?: true
     total?: true
@@ -9168,6 +9174,7 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    costRate?: true
     subTotal?: true
     discount?: true
     total?: true
@@ -9179,6 +9186,7 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    costRate?: true
     subTotal?: true
     discount?: true
     total?: true
@@ -9190,6 +9198,7 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    costRate?: true
     subTotal?: true
     discount?: true
     total?: true
@@ -9201,6 +9210,7 @@ export namespace Prisma {
     productId?: true
     qty?: true
     rate?: true
+    costRate?: true
     subTotal?: true
     discount?: true
     total?: true
@@ -9299,6 +9309,7 @@ export namespace Prisma {
     productId: number
     qty: Decimal
     rate: Decimal
+    costRate: Decimal
     subTotal: Decimal
     discount: Decimal
     total: Decimal
@@ -9329,6 +9340,7 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    costRate?: boolean
     subTotal?: boolean
     discount?: boolean
     total?: boolean
@@ -9342,6 +9354,7 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    costRate?: boolean
     subTotal?: boolean
     discount?: boolean
     total?: boolean
@@ -9355,6 +9368,7 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    costRate?: boolean
     subTotal?: boolean
     discount?: boolean
     total?: boolean
@@ -9368,12 +9382,13 @@ export namespace Prisma {
     productId?: boolean
     qty?: boolean
     rate?: boolean
+    costRate?: boolean
     subTotal?: boolean
     discount?: boolean
     total?: boolean
   }
 
-  export type InvoiceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "productId" | "qty" | "rate" | "subTotal" | "discount" | "total", ExtArgs["result"]["invoiceItem"]>
+  export type InvoiceItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invoiceId" | "productId" | "qty" | "rate" | "costRate" | "subTotal" | "discount" | "total", ExtArgs["result"]["invoiceItem"]>
   export type InvoiceItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invoice?: boolean | InvoiceDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
@@ -9399,6 +9414,7 @@ export namespace Prisma {
       productId: number
       qty: Prisma.Decimal
       rate: Prisma.Decimal
+      costRate: Prisma.Decimal
       subTotal: Prisma.Decimal
       discount: Prisma.Decimal
       total: Prisma.Decimal
@@ -9832,6 +9848,7 @@ export namespace Prisma {
     readonly productId: FieldRef<"InvoiceItem", 'Int'>
     readonly qty: FieldRef<"InvoiceItem", 'Decimal'>
     readonly rate: FieldRef<"InvoiceItem", 'Decimal'>
+    readonly costRate: FieldRef<"InvoiceItem", 'Decimal'>
     readonly subTotal: FieldRef<"InvoiceItem", 'Decimal'>
     readonly discount: FieldRef<"InvoiceItem", 'Decimal'>
     readonly total: FieldRef<"InvoiceItem", 'Decimal'>
@@ -13784,6 +13801,7 @@ export namespace Prisma {
     productId: 'productId',
     qty: 'qty',
     rate: 'rate',
+    costRate: 'costRate',
     subTotal: 'subTotal',
     discount: 'discount',
     total: 'total'
@@ -14365,6 +14383,7 @@ export namespace Prisma {
     productId?: IntFilter<"InvoiceItem"> | number
     qty?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     rate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
@@ -14378,6 +14397,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -14394,6 +14414,7 @@ export namespace Prisma {
     productId?: IntFilter<"InvoiceItem"> | number
     qty?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     rate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
@@ -14407,6 +14428,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -14426,6 +14448,7 @@ export namespace Prisma {
     productId?: IntWithAggregatesFilter<"InvoiceItem"> | number
     qty?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     rate?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     total?: DecimalWithAggregatesFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
@@ -15039,6 +15062,7 @@ export namespace Prisma {
   export type InvoiceItemCreateInput = {
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -15052,6 +15076,7 @@ export namespace Prisma {
     productId: number
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -15060,6 +15085,7 @@ export namespace Prisma {
   export type InvoiceItemUpdateInput = {
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -15073,6 +15099,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -15084,6 +15111,7 @@ export namespace Prisma {
     productId: number
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -15092,6 +15120,7 @@ export namespace Prisma {
   export type InvoiceItemUpdateManyMutationInput = {
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -15103,6 +15132,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -15814,6 +15844,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -15825,6 +15856,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -15836,6 +15868,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -15847,6 +15880,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -15858,6 +15892,7 @@ export namespace Prisma {
     productId?: SortOrder
     qty?: SortOrder
     rate?: SortOrder
+    costRate?: SortOrder
     subTotal?: SortOrder
     discount?: SortOrder
     total?: SortOrder
@@ -17273,6 +17308,7 @@ export namespace Prisma {
   export type InvoiceItemCreateWithoutProductInput = {
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -17284,6 +17320,7 @@ export namespace Prisma {
     invoiceId: number
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -17350,6 +17387,7 @@ export namespace Prisma {
     productId?: IntFilter<"InvoiceItem"> | number
     qty?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     rate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     discount?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
     total?: DecimalFilter<"InvoiceItem"> | Decimal | DecimalJsLike | number | string
@@ -17668,6 +17706,7 @@ export namespace Prisma {
   export type InvoiceItemCreateWithoutInvoiceInput = {
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -17679,6 +17718,7 @@ export namespace Prisma {
     productId: number
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -18639,6 +18679,7 @@ export namespace Prisma {
     invoiceId: number
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -18647,6 +18688,7 @@ export namespace Prisma {
   export type InvoiceItemUpdateWithoutProductInput = {
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -18658,6 +18700,7 @@ export namespace Prisma {
     invoiceId?: IntFieldUpdateOperationsInput | number
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -18668,6 +18711,7 @@ export namespace Prisma {
     invoiceId?: IntFieldUpdateOperationsInput | number
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -18867,6 +18911,7 @@ export namespace Prisma {
     productId: number
     qty: Decimal | DecimalJsLike | number | string
     rate?: Decimal | DecimalJsLike | number | string
+    costRate?: Decimal | DecimalJsLike | number | string
     subTotal?: Decimal | DecimalJsLike | number | string
     discount?: Decimal | DecimalJsLike | number | string
     total?: Decimal | DecimalJsLike | number | string
@@ -18902,6 +18947,7 @@ export namespace Prisma {
   export type InvoiceItemUpdateWithoutInvoiceInput = {
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -18913,6 +18959,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -18923,6 +18970,7 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    costRate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subTotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

@@ -6,7 +6,6 @@ import {
     ShoppingBag,
     Wallet,
     RotateCcw,
-    Package,
     Search,
     BookOpen,
     RefreshCw,
@@ -14,6 +13,8 @@ import {
     Banknote,
     AlertTriangle,
     CircleDollarSign,
+    Package,
+    ArrowDownLeft,
 } from 'lucide-react';
 import apiClient from '../apiClient.js';
 import Spinner from '../components/Spinner.jsx';
@@ -44,35 +45,101 @@ function PaymentBadge({ status }) {
     );
 }
 
-function StatCard({ label, value, hint, to, linkLabel, accent, icon: Icon }) {
+const STAT_THEMES = {
+    blue: {
+        card: 'from-sky-50 via-white to-white border-sky-100 shadow-sky-100/60',
+        bar: 'from-sky-500 to-blue-600',
+        icon: 'bg-sky-500 text-white shadow-sky-500/35',
+        label: 'text-sky-700',
+        value: 'text-slate-900',
+        link: 'text-sky-700 hover:text-sky-900',
+        glow: 'bg-sky-400/20',
+    },
+    emerald: {
+        card: 'from-emerald-50 via-white to-white border-emerald-100 shadow-emerald-100/60',
+        bar: 'from-emerald-500 to-teal-600',
+        icon: 'bg-emerald-500 text-white shadow-emerald-500/35',
+        label: 'text-emerald-700',
+        value: 'text-slate-900',
+        link: 'text-emerald-700 hover:text-emerald-900',
+        glow: 'bg-emerald-400/20',
+    },
+    teal: {
+        card: 'from-teal-50 via-white to-white border-teal-100 shadow-teal-100/60',
+        bar: 'from-teal-500 to-cyan-600',
+        icon: 'bg-teal-500 text-white shadow-teal-500/35',
+        label: 'text-teal-700',
+        value: 'text-slate-900',
+        link: 'text-teal-700 hover:text-teal-900',
+        glow: 'bg-teal-400/20',
+    },
+    amber: {
+        card: 'from-amber-50 via-white to-white border-amber-100 shadow-amber-100/60',
+        bar: 'from-amber-500 to-orange-500',
+        icon: 'bg-amber-500 text-white shadow-amber-500/35',
+        label: 'text-amber-800',
+        value: 'text-slate-900',
+        link: 'text-amber-700 hover:text-amber-900',
+        glow: 'bg-amber-400/25',
+    },
+    rose: {
+        card: 'from-rose-50 via-white to-white border-rose-100 shadow-rose-100/60',
+        bar: 'from-rose-500 to-red-600',
+        icon: 'bg-rose-500 text-white shadow-rose-500/35',
+        label: 'text-rose-700',
+        value: 'text-slate-900',
+        link: 'text-rose-700 hover:text-rose-900',
+        glow: 'bg-rose-400/20',
+    },
+    slate: {
+        card: 'from-slate-50 via-white to-white border-slate-200 shadow-slate-100/60',
+        bar: 'from-slate-500 to-slate-700',
+        icon: 'bg-slate-700 text-white shadow-slate-500/30',
+        label: 'text-slate-600',
+        value: 'text-slate-900',
+        link: 'text-slate-700 hover:text-slate-900',
+        glow: 'bg-slate-400/15',
+    },
+};
+
+function StatCard({ label, value, hint, to, linkLabel, theme = 'blue', icon: Icon }) {
+    const t = STAT_THEMES[theme] || STAT_THEMES.blue;
+
     return (
         <div
-            className={`bg-white p-5 rounded-xl shadow-sm border border-gray-200 border-l-4 ${accent} flex flex-col justify-between min-h-[132px]`}
+            className={`relative overflow-hidden rounded-2xl border bg-linear-to-br ${t.card} p-5 shadow-md flex flex-col justify-between min-h-37 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg`}
         >
-            <div className="flex items-start justify-between gap-3">
-                <div>
-                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider">
+            <div className={`pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full blur-2xl ${t.glow}`} />
+            <div className={`absolute inset-x-0 top-0 h-1 bg-linear-to-r ${t.bar}`} />
+
+            <div className="relative flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <p className={`text-[11px] font-bold uppercase tracking-[0.14em] ${t.label}`}>
                         {label}
                     </p>
-                    <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 tabular-nums break-all">
+                    <p className={`text-2xl sm:text-[1.75rem] font-extrabold mt-2.5 tabular-nums break-all tracking-tight ${t.value}`}>
                         {value}
                     </p>
                     {hint ? (
-                        <p className="text-xs text-gray-500 mt-1">{hint}</p>
+                        <p className="text-xs text-slate-500 mt-1.5 leading-snug">{hint}</p>
                     ) : null}
                 </div>
                 {Icon ? (
-                    <div className="shrink-0 w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500">
-                        <Icon size={20} />
+                    <div
+                        className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center shadow-lg ${t.icon}`}
+                    >
+                        <Icon size={20} strokeWidth={2.25} />
                     </div>
                 ) : null}
             </div>
+
             {to ? (
                 <Link
                     to={to}
-                    className="text-brand-700 text-sm mt-4 hover:underline font-medium w-fit"
+                    className={`relative text-sm mt-4 font-semibold w-fit inline-flex items-center gap-1 transition-colors ${t.link}`}
                 >
-                    {linkLabel || 'View details'} →
+                    {linkLabel || 'View details'}
+                    <span aria-hidden>→</span>
                 </Link>
             ) : (
                 <span className="mt-4 h-5" />
@@ -81,14 +148,62 @@ function StatCard({ label, value, hint, to, linkLabel, accent, icon: Icon }) {
     );
 }
 
-function ActionLink({ to, icon: Icon, label, className }) {
+function MiniStat({ label, value, theme = 'slate', icon: Icon, to }) {
+    const t = STAT_THEMES[theme] || STAT_THEMES.slate;
+    const inner = (
+        <>
+            <div className="flex items-center gap-2.5 min-w-0">
+                {Icon ? (
+                    <div
+                        className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center shadow-md ${t.icon}`}
+                    >
+                        <Icon size={16} strokeWidth={2.25} />
+                    </div>
+                ) : null}
+                <span className={`text-xs font-bold uppercase tracking-wide truncate ${t.label}`}>
+                    {label}
+                </span>
+            </div>
+            <span className={`font-extrabold tabular-nums text-sm sm:text-base ${t.value}`}>
+                {value}
+            </span>
+        </>
+    );
+
+    const className = `relative overflow-hidden rounded-xl border bg-gradient-to-br ${t.card} px-3.5 py-3.5 flex items-center justify-between gap-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md`;
+
+    if (to) {
+        return (
+            <Link to={to} className={className}>
+                <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${t.bar}`} />
+                {inner}
+            </Link>
+        );
+    }
+
+    return (
+        <div className={className}>
+            <div className={`absolute inset-y-0 left-0 w-1 bg-gradient-to-b ${t.bar}`} />
+            {inner}
+        </div>
+    );
+}
+
+function ActionLink({ to, icon: Icon, label, className, iconClass }) {
     return (
         <Link
             to={to}
-            className={`flex items-center gap-3 p-3.5 rounded-lg font-semibold text-sm transition border ${className}`}
+            className={`group flex items-center gap-3 p-3.5 rounded-xl font-semibold text-sm transition-all border shadow-sm hover:-translate-y-0.5 hover:shadow-md ${className}`}
         >
-            <Icon size={18} className="shrink-0" />
-            <span>{label}</span>
+            <span
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg shadow-sm ${iconClass}`}
+            >
+                <Icon size={17} strokeWidth={2.25} />
+            </span>
+            <span className="flex-1">{label}</span>
+            <span className="opacity-0 group-hover:opacity-70 transition-opacity text-current">
+                →
+            </span>
         </Link>
     );
 }
@@ -183,8 +298,17 @@ export default function Dashboard() {
                     hint={`${stats.todaySalesCount || 0} invoice${stats.todaySalesCount === 1 ? '' : 's'}`}
                     to="/reports/sales"
                     linkLabel="Sales report"
-                    accent="border-blue-500"
+                    theme="blue"
                     icon={TrendingUp}
+                />
+                <StatCard
+                    label="Today's Profit"
+                    value={money(stats.todayProfit)}
+                    hint="Sales profit minus returns"
+                    to="/reports/profit"
+                    linkLabel="Profit report"
+                    theme={Number(stats.todayProfit) >= 0 ? 'emerald' : 'rose'}
+                    icon={CircleDollarSign}
                 />
                 <StatCard
                     label="Cash in Hand"
@@ -192,11 +316,7 @@ export default function Dashboard() {
                     hint={`Received today: ${money(stats.todayCashReceived)}`}
                     to="/reports/cash"
                     linkLabel="Cash summary"
-                    accent={
-                        Number(stats.totalCash) >= 0
-                            ? 'border-green-500'
-                            : 'border-red-500'
-                    }
+                    theme={Number(stats.totalCash) >= 0 ? 'teal' : 'rose'}
                     icon={Banknote}
                 />
                 <StatCard
@@ -205,52 +325,50 @@ export default function Dashboard() {
                     hint={`${stats.unpaidInvoiceCount || 0} unpaid sale${stats.unpaidInvoiceCount === 1 ? '' : 's'}`}
                     to="/ledger"
                     linkLabel="Customer ledger"
-                    accent="border-amber-500"
+                    theme="amber"
                     icon={CircleDollarSign}
-                />
-                <StatCard
-                    label="Active Products"
-                    value={formatNumber(stats.totalProducts, {
-                        maximumFractionDigits: 0,
-                    })}
-                    hint={
-                        stats.lowStockItems?.length
-                            ? `${stats.lowStockItems.length} below ${stats.lowStockThreshold || 10} qty`
-                            : 'Stock levels look healthy'
-                    }
-                    to="/reports/stock"
-                    linkLabel="Stock report"
-                    accent="border-slate-500"
-                    icon={Package}
                 />
             </div>
 
             {/* Secondary today strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Today purchases</span>
-                    <span className="font-semibold tabular-nums">
-                        {money(stats.todayPurchases)}
-                    </span>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Today returns</span>
-                    <span className="font-semibold tabular-nums">
-                        {money(stats.todayReturns)}
-                    </span>
-                </div>
-                <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Today cash in</span>
-                    <span className="font-semibold tabular-nums text-green-700">
-                        {money(stats.todayCashReceived)}
-                    </span>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <MiniStat
+                    label="Purchases"
+                    value={money(stats.todayPurchases)}
+                    theme="slate"
+                    icon={ShoppingBag}
+                    to={admin ? '/purchase-lookup' : undefined}
+                />
+                <MiniStat
+                    label="Returns"
+                    value={money(stats.todayReturns)}
+                    theme="rose"
+                    icon={RotateCcw}
+                    to="/return"
+                />
+                <MiniStat
+                    label="Cash in"
+                    value={money(stats.todayCashReceived)}
+                    theme="emerald"
+                    icon={ArrowDownLeft}
+                    to="/cash"
+                />
+                <MiniStat
+                    label="Products"
+                    value={formatNumber(stats.totalProducts, {
+                        maximumFractionDigits: 0,
+                    })}
+                    theme="blue"
+                    icon={Package}
+                    to="/reports/stock"
+                />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Quick actions */}
-                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 border-t-4 border-t-brand-600">
-                    <h2 className="text-lg font-bold text-gray-900 mb-4">
+                <div className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-white to-white p-5 rounded-2xl shadow-md border border-sky-100">
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500 to-blue-600" />
+                    <h2 className="text-lg font-bold text-slate-900 mb-4">
                         Quick actions
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
@@ -258,56 +376,65 @@ export default function Dashboard() {
                             to="/sale"
                             icon={ShoppingCart}
                             label="New sale"
-                            className="bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100"
+                            className="bg-sky-50 text-sky-900 border-sky-200 hover:bg-sky-100"
+                            iconClass="bg-sky-500 text-white"
                         />
                         {admin && (
                             <ActionLink
                                 to="/purchase"
                                 icon={ShoppingBag}
                                 label="New purchase"
-                                className="bg-indigo-50 text-indigo-800 border-indigo-200 hover:bg-indigo-100"
+                                className="bg-slate-50 text-slate-900 border-slate-200 hover:bg-slate-100"
+                                iconClass="bg-slate-700 text-white"
                             />
                         )}
                         <ActionLink
                             to="/cash"
                             icon={Wallet}
                             label="Receive cash"
-                            className="bg-green-50 text-green-800 border-green-200 hover:bg-green-100"
+                            className="bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100"
+                            iconClass="bg-emerald-500 text-white"
                         />
                         <ActionLink
                             to="/return"
                             icon={RotateCcw}
                             label="Stock return"
-                            className="bg-red-50 text-red-800 border-red-200 hover:bg-red-100"
+                            className="bg-rose-50 text-rose-900 border-rose-200 hover:bg-rose-100"
+                            iconClass="bg-rose-500 text-white"
                         />
                         <ActionLink
                             to="/invoice-lookup"
                             icon={Search}
                             label="Invoice lookup"
-                            className="bg-slate-50 text-slate-800 border-slate-200 hover:bg-slate-100"
+                            className="bg-teal-50 text-teal-900 border-teal-200 hover:bg-teal-100"
+                            iconClass="bg-teal-500 text-white"
                         />
                         <ActionLink
                             to="/ledger"
                             icon={BookOpen}
                             label="Customer ledger"
-                            className="bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100"
+                            className="bg-amber-50 text-amber-950 border-amber-200 hover:bg-amber-100"
+                            iconClass="bg-amber-500 text-white"
                         />
                     </div>
                 </div>
 
                 {/* Low stock */}
-                <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 border-t-4 border-t-red-500 lg:col-span-2">
+                <div className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-white to-white p-5 rounded-2xl shadow-md border border-rose-100 lg:col-span-2">
+                    <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-rose-500 to-orange-500" />
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                            <AlertTriangle size={18} className="text-red-500" />
+                        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-rose-500 text-white shadow-md shadow-rose-500/30">
+                                <AlertTriangle size={16} />
+                            </span>
                             Low stock
-                            <span className="text-sm font-normal text-gray-400">
+                            <span className="text-sm font-normal text-slate-400">
                                 (below {stats.lowStockThreshold || 10})
                             </span>
                         </h2>
                         <Link
                             to="/reports/stock"
-                            className="text-sm text-brand-700 hover:underline font-medium"
+                            className="text-sm text-rose-700 hover:text-rose-900 hover:underline font-semibold"
                         >
                             Full stock report →
                         </Link>
@@ -360,14 +487,18 @@ export default function Dashboard() {
             </div>
 
             {/* Recent sales */}
-            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 border-t-4 border-t-blue-500">
+            <div className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-white to-white p-5 rounded-2xl shadow-md border border-sky-100">
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500 to-blue-600" />
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                    <h2 className="text-lg font-bold text-gray-900">
+                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500 text-white shadow-md shadow-sky-500/30">
+                            <TrendingUp size={16} />
+                        </span>
                         Recent sales
                     </h2>
                     <Link
                         to="/invoice-lookup"
-                        className="text-sm text-brand-700 hover:underline font-medium"
+                        className="text-sm text-sky-700 hover:text-sky-900 hover:underline font-semibold"
                     >
                         Invoice lookup →
                     </Link>

@@ -2,6 +2,7 @@ const express = require('express');
 const prisma = require('../db');
 const { authenticateToken } = require('../midleware/auth');
 const { PAYMENT_STATUS } = require('../utils/payments');
+const { summarizeInvoiceProfit, round2 } = require('../utils/profit');
 
 const router = express.Router();
 router.use(authenticateToken);
@@ -35,6 +36,7 @@ router.get('/dashboard', async (req, res, next) => {
             soldGroups,
             returnedGroups,
             recentSales,
+            todayProfitInvoices,
         ] = await Promise.all([
             prisma.invoice.aggregate({
                 _sum: { totalAmount: true },
@@ -106,6 +108,24 @@ router.get('/dashboard', async (req, res, next) => {
                     town: { select: { name: true } },
                 },
             }),
+            prisma.invoice.findMany({
+                where: {
+                    type: { in: ['SALE', 'RETURN'] },
+                    date: todayFilter,
+                },
+                select: {
+                    type: true,
+                    items: {
+                        select: {
+                            qty: true,
+                            rate: true,
+                            discount: true,
+                            total: true,
+                            costRate: true,
+                        },
+                    },
+                },
+            }),
         ]);
 
         const totalCash = cashAgg.reduce((sum, row) => {
@@ -140,12 +160,20 @@ router.get('/dashboard', async (req, res, next) => {
             .sort((a, b) => a.balance - b.balance)
             .slice(0, 8);
 
+        const todayProfit = round2(
+            todayProfitInvoices.reduce(
+                (sum, inv) => sum + summarizeInvoiceProfit(inv).signedProfit,
+                0
+            )
+        );
+
         res.json({
             todaySales: Number(todaySalesAgg._sum.totalAmount || 0),
             todaySalesCount,
             todayPurchases: Number(todayPurchasesAgg._sum.totalAmount || 0),
             todayReturns: Number(todayReturnsAgg._sum.totalAmount || 0),
             todayCashReceived: Number(todayCashReceivedAgg._sum.amount || 0),
+            todayProfit,
             totalCash,
             outstandingReceivables: Number(outstandingReceivables.toFixed(2)),
             unpaidInvoiceCount: unpaidSales.length,

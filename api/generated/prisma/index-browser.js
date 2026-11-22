@@ -182,6 +182,7 @@ exports.Prisma.InvoiceItemScalarFieldEnum = {
   productId: 'productId',
   qty: 'qty',
   rate: 'rate',
+  costRate: 'costRate',
   subTotal: 'subTotal',
   discount: 'discount',
   total: 'total'
