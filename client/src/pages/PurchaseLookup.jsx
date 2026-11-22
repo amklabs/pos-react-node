@@ -1,91 +1,132 @@
 // src/pages/PurchaseLookup.jsx
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../apiClient.js';
 import usePageTitle from '../hooks/usePageTitle.js';
 import Spinner from '../components/Spinner.jsx';
+import Pagination from '../components/Pagination.jsx';
+import DateField from '../components/DateField.jsx';
+import useDebouncedValue from '../hooks/useDebouncedValue.js';
 import { toastError } from '../utils/toast';
 import { formatNumber, formatDate } from '../utils/formaters.js';
 
+const PAGE_SIZE = 20;
+
 export default function PurchaseLookup() {
     usePageTitle('Purchase Lookup');
+
     const [purchases, setPurchases] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalAmount, setTotalAmount] = useState(0);
     const [loading, setLoading] = useState(true);
 
+    const debouncedSearch = useDebouncedValue(searchTerm, 350);
+
+    const fetchPurchases = useCallback(async () => {
+        try {
+            setLoading(true);
+            const res = await apiClient.get('/api/invoices', {
+                params: {
+                    type: 'PURCHASE',
+                    page,
+                    pageSize: PAGE_SIZE,
+                    q: debouncedSearch.trim() || undefined,
+                    from: fromDate || undefined,
+                    to: toDate || undefined,
+                },
+            });
+            setPurchases(res.data.items || []);
+            setTotal(res.data.total || 0);
+            setTotalPages(res.data.totalPages || 1);
+            setTotalAmount(Number(res.data.totalAmount || 0));
+        } catch (err) {
+            toastError(err.response?.data?.error || 'Failed to load purchases');
+        } finally {
+            setLoading(false);
+        }
+    }, [page, debouncedSearch, fromDate, toDate]);
+
     useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            try {
-                setLoading(true);
-                const res = await apiClient.get(`/api/invoices`, {
-                    params: { type: 'PURCHASE' },
-                });
-                if (!cancelled) setPurchases(res.data || []);
-            } catch (err) {
-                if (!cancelled) {
-                    toastError(err.response?.data?.error || 'Failed to load purchases');
-                }
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        })();
-        return () => {
-            cancelled = true;
-        };
-    }, []);
+        fetchPurchases();
+    }, [fetchPurchases]);
 
-    const filteredPurchases = useMemo(() => {
-        const search = searchTerm.trim().toLowerCase();
-        if (!search) return purchases;
-        return purchases.filter((inv) => {
-            const townName = inv.town?.name?.toLowerCase() || '';
-            const companyName = inv.company?.name?.toLowerCase() || '';
-            const invoiceNo = inv.invoiceNo?.toLowerCase() || '';
-            return (
-                invoiceNo.includes(search) ||
-                townName.includes(search) ||
-                companyName.includes(search)
-            );
-        });
-    }, [purchases, searchTerm]);
-
-    const filteredTotal = useMemo(
-        () => filteredPurchases.reduce((sum, inv) => sum + Number(inv.totalAmount || 0), 0),
-        [filteredPurchases]
-    );
+    useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch, fromDate, toDate]);
 
     return (
-        <div className="w-full min-w-0">
+        <div className="w-full min-w-0 max-w-6xl">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">Purchase Lookup</h1>
                     <p className="text-sm text-gray-500">
-                        {filteredPurchases.length} purchase
-                        {filteredPurchases.length === 1 ? '' : 's'}
+                        {total} purchase{total === 1 ? '' : 's'}
                         {!loading && (
-                            <> · Total Rs. {formatNumber(filteredTotal)}</>
+                            <> · Total Rs. {formatNumber(totalAmount)}</>
                         )}
                     </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                        type="search"
-                        placeholder="Search invoice #, supplier, or town..."
-                        className="border p-2 rounded-input w-full sm:w-80"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                    <Link
-                        to="/purchase"
-                        className="bg-emerald-600 text-white px-4 py-2 rounded font-semibold text-center hover:bg-emerald-700"
-                    >
-                        + New Purchase
-                    </Link>
+                <Link
+                    to="/purchase"
+                    className="bg-emerald-600 text-white px-4 py-2 rounded font-semibold text-center hover:bg-emerald-700 print:hidden"
+                >
+                    + New Purchase
+                </Link>
+            </div>
+
+            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-4 print:hidden">
+                <div className="flex flex-col lg:flex-row gap-3 lg:items-end">
+                    <div className="flex-1">
+                        <label className="block text-sm font-semibold mb-1">Search</label>
+                        <input
+                            type="search"
+                            placeholder="Invoice #, supplier, or town…"
+                            className="border p-2 rounded-input w-full"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold mb-1">From</label>
+                        <DateField
+                            value={fromDate}
+                            onChange={setFromDate}
+                            max={toDate || undefined}
+                            className="w-44"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-semibold mb-1">To</label>
+                        <DateField
+                            value={toDate}
+                            onChange={setToDate}
+                            min={fromDate || undefined}
+                            className="w-44"
+                        />
+                    </div>
+                    {(fromDate || toDate || searchTerm) && (
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                                setSearchTerm('');
+                                setFromDate('');
+                                setToDate('');
+                                setPage(1);
+                            }}
+                        >
+                            Clear
+                        </button>
+                    )}
                 </div>
             </div>
 
-            <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white mb-6">
+            <div className="overflow-x-auto rounded-lg border border-gray-300 bg-white mb-2">
                 <table className="w-full border-collapse text-left text-sm">
                     <thead className="bg-gray-200">
                         <tr>
@@ -102,19 +143,26 @@ export default function PurchaseLookup() {
                         {loading && (
                             <tr>
                                 <td colSpan="7" className="p-8 text-center text-gray-500">
-                                    <Spinner size="md" label="Loading purchase invoices..." />
+                                    <Spinner
+                                        size="md"
+                                        label="Loading purchase invoices..."
+                                    />
                                 </td>
                             </tr>
                         )}
                         {!loading &&
-                            filteredPurchases.map((inv) => (
+                            purchases.map((inv) => (
                                 <tr key={inv.id} className="border-b hover:bg-gray-50">
                                     <td className="p-2 border">{formatDate(inv.date)}</td>
-                                    <td className="p-2 border font-semibold">{inv.invoiceNo}</td>
-                                    <td className="p-2 border">{inv.company?.name || '—'}</td>
+                                    <td className="p-2 border font-semibold">
+                                        {inv.invoiceNo}
+                                    </td>
+                                    <td className="p-2 border">
+                                        {inv.company?.name || '—'}
+                                    </td>
                                     <td className="p-2 border">{inv.town?.name || '—'}</td>
                                     <td className="p-2 border text-center">
-                                        {inv.items?.length ?? '—'}
+                                        {inv.itemCount ?? '—'}
                                     </td>
                                     <td className="p-2 border text-right font-bold">
                                         Rs. {formatNumber(inv.totalAmount)}
@@ -129,9 +177,12 @@ export default function PurchaseLookup() {
                                     </td>
                                 </tr>
                             ))}
-                        {!loading && filteredPurchases.length === 0 && (
+                        {!loading && purchases.length === 0 && (
                             <tr>
-                                <td colSpan="7" className="p-4 text-center text-gray-500">
+                                <td
+                                    colSpan="7"
+                                    className="p-4 text-center text-gray-500"
+                                >
                                     No purchase invoices found.
                                 </td>
                             </tr>
@@ -139,6 +190,15 @@ export default function PurchaseLookup() {
                     </tbody>
                 </table>
             </div>
+
+            <Pagination
+                page={page}
+                totalPages={totalPages}
+                total={total}
+                pageSize={PAGE_SIZE}
+                onPageChange={setPage}
+                disabled={loading}
+            />
         </div>
     );
 }

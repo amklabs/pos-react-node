@@ -19,6 +19,7 @@ import {
     LogOut,
     Users,
     X,
+    TrendingUp,
 } from 'lucide-react';
 import { STORE_NAME } from '../constants/store.js';
 
@@ -59,6 +60,7 @@ export default function Sidebar({ open = false, onClose }) {
             title: 'Reports & Analytics',
             items: [
                 { name: 'Sales Report', path: '/reports/sales', icon: BarChart3 },
+                { name: 'Profit Report', path: '/reports/profit', icon: TrendingUp },
                 { name: 'Stock Report', path: '/reports/stock', icon: Package },
                 { name: 'Cash Summary', path: '/reports/cash', icon: Receipt },
                 { name: 'Customer Ledger', path: '/ledger', icon: BookOpen },

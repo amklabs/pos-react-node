@@ -6,7 +6,6 @@ import {
     ShoppingBag,
     Wallet,
     RotateCcw,
-    Package,
     Search,
     BookOpen,
     RefreshCw,
@@ -187,6 +186,19 @@ export default function Dashboard() {
                     icon={TrendingUp}
                 />
                 <StatCard
+                    label="Today's Profit"
+                    value={money(stats.todayProfit)}
+                    hint="Sales profit minus returns"
+                    to="/reports/profit"
+                    linkLabel="Profit report"
+                    accent={
+                        Number(stats.todayProfit) >= 0
+                            ? 'border-emerald-500'
+                            : 'border-red-500'
+                    }
+                    icon={CircleDollarSign}
+                />
+                <StatCard
                     label="Cash in Hand"
                     value={money(stats.totalCash)}
                     hint={`Received today: ${money(stats.todayCashReceived)}`}
@@ -208,25 +220,10 @@ export default function Dashboard() {
                     accent="border-amber-500"
                     icon={CircleDollarSign}
                 />
-                <StatCard
-                    label="Active Products"
-                    value={formatNumber(stats.totalProducts, {
-                        maximumFractionDigits: 0,
-                    })}
-                    hint={
-                        stats.lowStockItems?.length
-                            ? `${stats.lowStockItems.length} below ${stats.lowStockThreshold || 10} qty`
-                            : 'Stock levels look healthy'
-                    }
-                    to="/reports/stock"
-                    linkLabel="Stock report"
-                    accent="border-slate-500"
-                    icon={Package}
-                />
             </div>
 
             {/* Secondary today strip */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between">
                     <span className="text-sm text-gray-500">Today purchases</span>
                     <span className="font-semibold tabular-nums">
@@ -244,6 +241,15 @@ export default function Dashboard() {
                     <span className="font-semibold tabular-nums text-green-700">
                         {money(stats.todayCashReceived)}
                     </span>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                    <span className="text-sm text-gray-500">Active products</span>
+                    <Link
+                        to="/reports/stock"
+                        className="font-semibold tabular-nums text-brand-700 hover:underline"
+                    >
+                        {formatNumber(stats.totalProducts, { maximumFractionDigits: 0 })}
+                    </Link>
                 </div>
             </div>
 

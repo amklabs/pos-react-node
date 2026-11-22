@@ -5,6 +5,7 @@ import usePageTitle from '../hooks/usePageTitle.js';
 import Spinner from '../components/Spinner.jsx';
 import { toastSuccess, toastError } from '../utils/toast';
 import { useAuthContext } from '../context/AuthContext';
+import { useConfirm } from '../context/ConfirmDialogContext.jsx';
 import { formatDate } from '../utils/formaters.js';
 
 function emptyForm() {
@@ -22,6 +23,7 @@ function emptyForm() {
 export default function Users() {
     usePageTitle('Users');
     const { user: currentUser } = useAuthContext();
+    const confirm = useConfirm();
 
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
@@ -143,7 +145,11 @@ export default function Users() {
             toastError('You cannot delete your own account');
             return;
         }
-        if (!confirm(`Delete user "${u.username}"? This cannot be undone.`)) return;
+        const ok = await confirm({
+            title: 'Delete user?',
+            message: `Are you sure you want to delete user "${u.username}"? This cannot be undone.`,
+        });
+        if (!ok) return;
         try {
             await apiClient.delete(`/api/users/${u.id}`);
             toastSuccess('User deleted');

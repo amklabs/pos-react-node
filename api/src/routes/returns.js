@@ -51,14 +51,21 @@ async function getReturnableLines(saleId) {
     const soldByProduct = new Map();
     for (const item of sale.items) {
         const pid = item.productId;
+        const qty = Number(item.qty);
+        const costRate = Number(item.costRate || 0);
         const existing = soldByProduct.get(pid) || {
             productId: pid,
             product: item.product,
             soldQty: 0,
+            costQtyTotal: 0,
             rate: Number(item.rate),
-            lastSRate: item.product?.lastSRate != null ? Number(item.product.lastSRate) : Number(item.rate),
+            lastSRate:
+                item.product?.lastSRate != null
+                    ? Number(item.product.lastSRate)
+                    : Number(item.rate),
         };
-        existing.soldQty += Number(item.qty);
+        existing.soldQty += qty;
+        existing.costQtyTotal += qty * costRate;
         // Prefer the latest line rate on the sale
         existing.rate = Number(item.rate);
         soldByProduct.set(pid, existing);
@@ -67,6 +74,10 @@ async function getReturnableLines(saleId) {
     const lines = [...soldByProduct.values()].map((line) => {
         const alreadyReturned = returnedByProduct.get(line.productId) || 0;
         const returnableQty = Number(Math.max(0, line.soldQty - alreadyReturned).toFixed(4));
+        const costRate =
+            line.soldQty > 0
+                ? Number((line.costQtyTotal / line.soldQty).toFixed(2))
+                : Number(line.product?.lastPRate || 0);
         return {
             productId: line.productId,
             productName: line.product?.name || `Product #${line.productId}`,
@@ -74,6 +85,7 @@ async function getReturnableLines(saleId) {
             alreadyReturned: Number(alreadyReturned.toFixed(4)),
             returnableQty,
             rate: line.rate,
+            costRate,
             lastSRate: line.lastSRate,
         };
     });
@@ -239,6 +251,7 @@ router.post('/returns', async (req, res, next) => {
                 productId,
                 qty,
                 rate,
+                costRate: Number(info.costRate || 0),
                 discount: 0,
                 subTotal,
                 total: lineTotal,

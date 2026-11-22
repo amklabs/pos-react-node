@@ -1,6 +1,7 @@
 const express = require('express');
 const prisma = require('../db');
 const {authenticateToken} = require('../midleware/auth');
+const { summarizeInvoiceProfit, round2 } = require('../utils/profit');
 
 const router = express.Router();
 router.use(authenticateToken); // everything below is protected
@@ -296,6 +297,112 @@ router.get('/reports/cash-summary', async (req, res, next) => {
         }, 0);
 
         res.json({ records, totalCash });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Profit Report — SALE + RETURN with snapped costRate
+router.get('/reports/profit', async (req, res, next) => {
+    const { from, to } = req.query;
+
+    try {
+        const whereClause = { type: { in: ['SALE', 'RETURN'] } };
+
+        if (from || to) {
+            whereClause.date = {};
+            if (from) {
+                const start = dayStart(from);
+                if (!start) return res.status(400).json({ error: 'Invalid from date' });
+                whereClause.date.gte = start;
+            }
+            if (to) {
+                const end = dayEnd(to);
+                if (!end) return res.status(400).json({ error: 'Invalid to date' });
+                whereClause.date.lte = end;
+            }
+        }
+
+        const invoices = await prisma.invoice.findMany({
+            where: whereClause,
+            include: {
+                customer: { select: { id: true, name: true } },
+                salesman: { select: { id: true, name: true } },
+                town: { select: { id: true, name: true } },
+                items: true,
+            },
+            orderBy: [{ date: 'desc' }, { id: 'desc' }],
+        });
+
+        const rows = invoices.map((inv) => {
+            const profit = summarizeInvoiceProfit(inv);
+            return {
+                id: inv.id,
+                invoiceNo: inv.invoiceNo,
+                type: inv.type,
+                date: inv.date,
+                customerName: inv.customer?.name || (inv.type === 'SALE' ? 'Cash Sale' : '—'),
+                salesmanName: inv.salesman?.name || null,
+                townName: inv.town?.name || null,
+                netSales: profit.netSales,
+                totalCost: profit.totalCost,
+                grossProfit: profit.grossProfit,
+                signedProfit: profit.signedProfit,
+                marginPct: profit.marginPct,
+            };
+        });
+
+        const summary = rows.reduce(
+            (acc, row) => {
+                if (row.type === 'SALE') {
+                    acc.saleCount += 1;
+                    acc.saleNet += row.netSales;
+                    acc.saleCost += row.totalCost;
+                    acc.saleProfit += row.grossProfit;
+                } else if (row.type === 'RETURN') {
+                    acc.returnCount += 1;
+                    acc.returnNet += row.netSales;
+                    acc.returnCost += row.totalCost;
+                    acc.returnProfitReversed += row.grossProfit;
+                }
+                acc.netProfit += row.signedProfit;
+                return acc;
+            },
+            {
+                saleCount: 0,
+                returnCount: 0,
+                saleNet: 0,
+                saleCost: 0,
+                saleProfit: 0,
+                returnNet: 0,
+                returnCost: 0,
+                returnProfitReversed: 0,
+                netProfit: 0,
+            }
+        );
+
+        const marginPct =
+            summary.saleNet > 0
+                ? round2((summary.netProfit / summary.saleNet) * 100)
+                : null;
+
+        res.json({
+            from: from || null,
+            to: to || null,
+            invoices: rows,
+            summary: {
+                saleCount: summary.saleCount,
+                returnCount: summary.returnCount,
+                saleNet: round2(summary.saleNet),
+                saleCost: round2(summary.saleCost),
+                saleProfit: round2(summary.saleProfit),
+                returnNet: round2(summary.returnNet),
+                returnCost: round2(summary.returnCost),
+                returnProfitReversed: round2(summary.returnProfitReversed),
+                netProfit: round2(summary.netProfit),
+                marginPct,
+            },
+        });
     } catch (error) {
         next(error);
     }

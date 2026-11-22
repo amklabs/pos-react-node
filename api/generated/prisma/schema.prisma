@@ -94,6 +94,8 @@ model InvoiceItem {
   product   Product @relation(fields: [productId], references: [id])
   qty       Decimal @db.Decimal(10, 4)
   rate      Decimal @default(0) @db.Decimal(10, 2)
+  // Purchase cost snapped at SALE/RETURN time (from Product.lastPRate or source sale)
+  costRate  Decimal @default(0) @db.Decimal(10, 2)
   subTotal  Decimal @default(0) @db.Decimal(10, 2)
   discount  Decimal @default(0) @db.Decimal(10, 2)
   total     Decimal @default(0) @db.Decimal(10, 2)

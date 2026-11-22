@@ -68,14 +68,28 @@ export default function InvoiceView() {
         return invoice.items.some((item) => Number(item.discount || 0) !== 0);
     }, [invoice]);
 
+    const showProfit = invoice?.type === 'SALE' || invoice?.type === 'RETURN';
+
     const lineRows = useMemo(() => {
         if (!invoice?.items) return [];
         return invoice.items.map((item, index) => {
             const qty = Number(item.qty || 0);
             const rate = Number(item.rate || 0);
+            const costRate = Number(item.costRate || 0);
             const discount = Number(item.discount || 0);
             const lineTotal = Number(
-                (item.total != null ? Number(item.total) : qty * rate - discount).toFixed(2)
+                (item.lineNet != null
+                    ? Number(item.lineNet)
+                    : item.total != null
+                      ? Number(item.total)
+                      : qty * rate - discount
+                ).toFixed(2)
+            );
+            const lineProfit = Number(
+                (item.lineProfit != null
+                    ? Number(item.lineProfit)
+                    : lineTotal - qty * costRate
+                ).toFixed(2)
             );
             return {
                 key: item.id ?? index,
@@ -84,8 +98,10 @@ export default function InvoiceView() {
                 company: item.product?.company?.name || null,
                 qty,
                 rate,
+                costRate,
                 discount,
                 lineTotal,
+                lineProfit,
             };
         });
     }, [invoice]);
@@ -105,12 +121,19 @@ export default function InvoiceView() {
                 ? invoice.balanceDue
                 : Math.max(0, grandTotal - paidAmount)
         );
+        const profit = invoice.profit || null;
         return {
             subTotal: Number(subTotal.toFixed(2)),
             discountTotal: Number(discountTotal.toFixed(2)),
             grandTotal,
             paidAmount,
             balanceDue,
+            totalCost: profit ? Number(profit.totalCost) : lineRows.reduce((s, r) => s + r.qty * r.costRate, 0),
+            grossProfit: profit
+                ? Number(profit.grossProfit)
+                : lineRows.reduce((s, r) => s + r.lineProfit, 0),
+            signedProfit: profit ? Number(profit.signedProfit) : null,
+            marginPct: profit?.marginPct ?? null,
         };
     }, [invoice, lineRows]);
 
@@ -281,6 +304,11 @@ export default function InvoiceView() {
                             <th className="border border-gray-300 p-2 text-right w-24">
                                 Rate
                             </th>
+                            {showProfit && (
+                                <th className="border border-gray-300 p-2 text-right w-24 print:hidden">
+                                    Cost
+                                </th>
+                            )}
                             {showDiscountCol && (
                                 <th className="border border-gray-300 p-2 text-right w-20">
                                     Disc.
@@ -289,6 +317,11 @@ export default function InvoiceView() {
                             <th className="border border-gray-300 p-2 text-right w-28">
                                 Amount
                             </th>
+                            {showProfit && (
+                                <th className="border border-gray-300 p-2 text-right w-24 print:hidden">
+                                    Profit
+                                </th>
+                            )}
                         </tr>
                     </thead>
                     <tbody>
@@ -311,6 +344,11 @@ export default function InvoiceView() {
                                 <td className="border border-gray-300 p-2 text-right tabular-nums">
                                     {formatNumber(row.rate)}
                                 </td>
+                                {showProfit && (
+                                    <td className="border border-gray-300 p-2 text-right tabular-nums print:hidden text-gray-600">
+                                        {formatNumber(row.costRate)}
+                                    </td>
+                                )}
                                 {showDiscountCol && (
                                     <td className="border border-gray-300 p-2 text-right tabular-nums">
                                         {formatNumber(row.discount)}
@@ -319,6 +357,17 @@ export default function InvoiceView() {
                                 <td className="border border-gray-300 p-2 text-right tabular-nums font-semibold">
                                     {formatNumber(row.lineTotal)}
                                 </td>
+                                {showProfit && (
+                                    <td
+                                        className={`border border-gray-300 p-2 text-right tabular-nums font-semibold print:hidden ${
+                                            row.lineProfit >= 0
+                                                ? 'text-green-700'
+                                                : 'text-red-700'
+                                        }`}
+                                    >
+                                        {formatNumber(row.lineProfit)}
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>
@@ -369,6 +418,43 @@ export default function InvoiceView() {
                                     </span>
                                 </div>
                             </>
+                        )}
+
+                        {showProfit && (
+                            <div className="print:hidden border-t border-dashed border-gray-300 pt-2 mt-2 space-y-1.5">
+                                <div className="flex justify-between gap-6">
+                                    <span className="text-gray-600">Cost of goods</span>
+                                    <span className="font-semibold tabular-nums">
+                                        {money(totals.totalCost)}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between gap-6">
+                                    <span className="text-gray-600">
+                                        {isReturn ? 'Profit reversed' : 'Profit'}
+                                    </span>
+                                    <span
+                                        className={`font-bold tabular-nums ${
+                                            (totals.signedProfit ?? totals.grossProfit) >= 0
+                                                ? 'text-green-700'
+                                                : 'text-red-700'
+                                        }`}
+                                    >
+                                        {money(
+                                            totals.signedProfit != null
+                                                ? totals.signedProfit
+                                                : totals.grossProfit
+                                        )}
+                                    </span>
+                                </div>
+                                {totals.marginPct != null && (
+                                    <div className="flex justify-between gap-6">
+                                        <span className="text-gray-600">Margin</span>
+                                        <span className="font-semibold tabular-nums">
+                                            {formatNumber(totals.marginPct)}%
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
                 </div>

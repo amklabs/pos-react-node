@@ -12,6 +12,7 @@ import InvoiceLookup from './pages/InvoiceLookup';
 import SalesReport from './pages/SalesReport';
 import StockReport from './pages/StockReport';
 import CashSummary from './pages/CashSummary';
+import ProfitReport from './pages/ProfitReport';
 import StockReturn from './pages/StockReturn';
 import PurchaseLookup from './pages/PurchaseLookup';
 import InvoiceView from './pages/InvoiceView';
@@ -20,6 +21,7 @@ import Users from './pages/Users';
 import Login from "./pages/Login.jsx";
 
 import { AuthProvider, useAuthContext } from './context/AuthContext';
+import { ConfirmDialogProvider } from './context/ConfirmDialogContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleRoute from './components/RoleRoute';
 import { ADMIN_ROLES, SUPER_ADMIN_ROLES } from './utils/roles';
@@ -120,6 +122,7 @@ function AppRoutes() {
                     <Route path="/reports/sales" element={<SalesReport />} />
                     <Route path="/reports/stock" element={<StockReport />} />
                     <Route path="/reports/cash" element={<CashSummary />} />
+                    <Route path="/reports/profit" element={<ProfitReport />} />
                     <Route path="/return" element={<StockReturn />} />
                     <Route path="/purchase-lookup" element={<PurchaseLookup />} />
                     <Route path="/invoice/:id" element={<InvoiceView />} />
@@ -147,7 +150,9 @@ function App() {
     return (
         <Router>
             <AuthProvider>
-                <AppRoutes />
+                <ConfirmDialogProvider>
+                    <AppRoutes />
+                </ConfirmDialogProvider>
             </AuthProvider>
         </Router>
     );
