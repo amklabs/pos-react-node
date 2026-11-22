@@ -288,7 +288,7 @@ export default function PurchaseLookup() {
                                                 <Link
                                                     to={`/invoice/${inv.id}/edit`}
                                                     title="Edit purchase"
-                                                    className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                                                    className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-green-100 px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-green-200"
                                                 >
                                                     <Pencil size={14} aria-hidden />
                                                     Edit

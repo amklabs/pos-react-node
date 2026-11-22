@@ -312,7 +312,7 @@ export default function ProfitReport() {
                             <tfoot className="bg-gray-50 font-semibold">
                                 <tr>
                                     <td className="p-2.5 border" colSpan={6}>
-                                        Page signed profit ({invoices.length} of {total})
+                                        Page-wise Profit Sub Total ({invoices.length} of {total})
                                     </td>
                                     <td
                                         className={`p-2.5 border text-right tabular-nums ${

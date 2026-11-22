@@ -32,7 +32,7 @@ export default function Pagination({
             <div className="flex flex-wrap items-center gap-1">
                 <button
                     type="button"
-                    className="btn btn-secondary px-3 py-1.5 text-sm"
+                    className="btn btn-secondary px-3 py-1.5 text-sm cursor-pointer disabled:cursor-not-allowed"
                     disabled={disabled || !canPrev}
                     onClick={() => onPageChange(page - 1)}
                 >
@@ -75,7 +75,7 @@ export default function Pagination({
                 )}
                 <button
                     type="button"
-                    className="btn btn-secondary px-3 py-1.5 text-sm"
+                    className="btn btn-secondary px-3 py-1.5 text-sm cursor-pointer disabled:cursor-not-allowed"
                     disabled={disabled || !canNext}
                     onClick={() => onPageChange(page + 1)}
                 >
@@ -93,11 +93,11 @@ function PageBtn({ page, current, onPageChange, disabled }) {
             type="button"
             disabled={disabled}
             onClick={() => onPageChange(page)}
-            className={`min-w-9 px-2.5 py-1.5 text-sm rounded-md border font-medium ${
+            className={`min-w-9 px-2.5 py-1.5 text-sm rounded-md border font-medium cursor-pointer ${
                 active
                     ? 'bg-brand-600 text-white border-brand-600'
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-            } disabled:opacity-50`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
             {page}
         </button>
