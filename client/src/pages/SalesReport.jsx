@@ -47,7 +47,7 @@ export default function SalesReport() {
     const [paymentFilter, setPaymentFilter] = useState('all');
     const [salesmanFilter, setSalesmanFilter] = useState('all');
     const [townFilter, setTownFilter] = useState('all');
-    const [viewMode, setViewMode] = useState('lines'); // lines | invoices
+    const [viewMode, setViewMode] = useState('invoices'); // lines | invoices
 
     const fetchReport = useCallback(async (from = fromDate, to = toDate) => {
         try {
@@ -179,7 +179,7 @@ export default function SalesReport() {
 
     return (
         <div className="w-full min-w-0">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6 print:hidden">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-2 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Sales Report</h1>
                     <p className="text-sm text-gray-500">

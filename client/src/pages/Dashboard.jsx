@@ -262,7 +262,7 @@ export default function Dashboard() {
     const todayLabel = formatDate(new Date());
 
     return (
-        <div className="w-full min-w-0 max-w-6xl space-y-6">
+        <div className="w-full min-w-0 space-y-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
                 <div>

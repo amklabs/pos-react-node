@@ -112,7 +112,7 @@ export default function ProfitReport() {
     }, [fromDate, toDate]);
 
     return (
-        <div className="w-full min-w-0 max-w-6xl">
+        <div className="w-full min-w-0">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-2 print:hidden">
                 <div>
                     <h1 className="text-2xl font-bold">Profit Report</h1>
