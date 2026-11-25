@@ -48,8 +48,6 @@ export default function InvoiceView() {
     const [invoice, setInvoice] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    console.log(user, admin);
-
     useEffect(() => {
         let cancelled = false;
         (async () => {
@@ -172,7 +170,7 @@ export default function InvoiceView() {
                 <button
                     type="button"
                     onClick={() => navigate(-1)}
-                    className="text-gray-600 hover:underline text-sm"
+                    className="text-gray-600 hover:underline text-sm cursor-pointer"
                 >
                     ← Back
                 </button>

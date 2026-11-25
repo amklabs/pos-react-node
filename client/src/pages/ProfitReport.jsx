@@ -123,19 +123,19 @@ export default function ProfitReport() {
                 <div className="flex gap-2">
                     <button
                         type="button"
+                        onClick={() => window.print()}
+                        className="btn btn-secondary btn-outline"
+                        disabled={!hasLoaded || loading}
+                    >
+                        Print
+                    </button>
+                    <button
+                        type="button"
                         onClick={() => fetchReport()}
                         className="btn btn-primary"
                         disabled={loading}
                     >
-                        {loading ? 'Loading…' : 'Generate'}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => window.print()}
-                        className="btn btn-secondary"
-                        disabled={!hasLoaded || loading}
-                    >
-                        Print
+                        {loading ? 'Loading…' : 'Refresh'}
                     </button>
                 </div>
             </div>
@@ -326,7 +326,7 @@ export default function ProfitReport() {
                                         >
                                             {formatNumber(inv.signedProfit)}
                                         </td>
-                                        <td className="p-2.5 border text-right tabular-nums">
+                                        <td className={`p-2.5 border text-right tabular-nums`}>
                                             {inv.marginPct != null
                                                 ? `${formatNumber(inv.marginPct)}%`
                                                 : '—'}
