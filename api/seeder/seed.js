@@ -23,7 +23,7 @@ async function main() {
         prisma.role.upsert({ where: { name: 'Store Operator' }, update: {}, create: { name: 'Store Operator' } }),
     ]);
 
-    let hashedPassword = await bcrypt.hash('superadmin123', 10);
+    let hashedPassword = await bcrypt.hash('SAdmin123', 10);
 
     const superAdmin = await prisma.user.upsert({
         where: {username: 'superadmin'},
@@ -45,7 +45,7 @@ async function main() {
     console.log('Username: superadmin');
     console.log('Password: superadmin123');
 
-    hashedPassword = await bcrypt.hash('storeadmin123', 10);
+    hashedPassword = await bcrypt.hash('Store123', 10);
     const storeAdmin = await prisma.user.upsert({
         where: {username: 'storeadmin'},
         update: {
@@ -64,7 +64,7 @@ async function main() {
 
     console.log('Store Admin user created!');
     console.log('Username: storeadmin');
-    console.log('Password: storeadmin123');
+    console.log('Password: Store123');
 
     hashedPassword = await bcrypt.hash('storeoperator123', 10);
     const storeOperator = await prisma.user.upsert({
