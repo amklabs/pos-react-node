@@ -164,25 +164,36 @@ export default function Users() {
         <div className="w-full min-w-0 ">
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">User Management</h1>
-                <p className="text-sm text-gray-500">
+                <p className=" text-gray-500">
                     Add, update, or remove users and assign roles. Super Admin only.
                 </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-t-4 border-t-blue-600 mb-6">
-                <h2 className="text-lg font-semibold mb-4 border-b pb-2">
-                    {isEditing ? 'Edit user' : 'Add user'}
-                </h2>
+            <div className="bg-white px-3 py-2.5 rounded-xl border border-gray-200 shadow-sm border-t-4 border-t-blue-600 mb-4">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                    <h2 className=" font-semibold">
+                        {isEditing ? 'Edit user' : 'Add user'}
+                    </h2>
+                    {isEditing && (
+                        <button
+                            type="button"
+                            className="text-xs text-gray-600 hover:underline cursor-pointer"
+                            onClick={resetForm}
+                        >
+                            Cancel edit
+                        </button>
+                    )}
+                </div>
                 <form
                     onSubmit={submit}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    className="flex flex-wrap xl:flex-nowrap items-end gap-2"
                 >
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
+                    <div className="min-w-32 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             Username
                         </label>
                         <input
-                            className="border p-2 rounded-input w-full"
+                            className="border rounded-input w-full "
                             value={form.username}
                             onChange={(e) =>
                                 setForm({ ...form, username: e.target.value })
@@ -191,59 +202,61 @@ export default function Users() {
                             required
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
-                            {isEditing ? 'New password (optional)' : 'Password'}
+                    <div className="min-w-36 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
+                            {isEditing ? 'New password' : 'Password'}
                         </label>
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
-                                className="border p-2 pr-20 rounded-input w-full"
+                                className="border pr-14 rounded-input w-full "
                                 value={form.password}
                                 onChange={(e) =>
                                     setForm({ ...form, password: e.target.value })
                                 }
                                 autoComplete="new-password"
-                                placeholder={isEditing ? 'Leave blank to keep' : ''}
+                                placeholder={isEditing ? 'Keep current' : ''}
                                 required={!isEditing}
                             />
                             <button
                                 type="button"
-                                className="absolute inset-y-0 right-0 px-3 text-xs font-semibold text-gray-500 hover:text-brand-700"
+                                className="absolute inset-y-0 right-0 px-2 text-[12px] font-semibold text-gray-500 hover:text-brand-700 cursor-pointer"
                                 onClick={() => setShowPassword((v) => !v)}
                             >
                                 {showPassword ? 'Hide' : 'Show'}
                             </button>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
+                    <div className="min-w-28 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             First name
                         </label>
                         <input
-                            className="border p-2 rounded-input w-full"
+                            className="border rounded-input w-full "
                             value={form.firstname}
                             onChange={(e) =>
                                 setForm({ ...form, firstname: e.target.value })
                             }
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">
+                    <div className="min-w-28 flex-1">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
                             Last name
                         </label>
                         <input
-                            className="border p-2 rounded-input w-full"
+                            className="border rounded-input w-full "
                             value={form.lastname}
                             onChange={(e) =>
                                 setForm({ ...form, lastname: e.target.value })
                             }
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">Role</label>
+                    <div className="min-w-32 shrink-0">
+                        <label className="block text-[12px] font-semibold mb-0.5 text-gray-600">
+                            Role
+                        </label>
                         <select
-                            className="border p-2 rounded-input w-full"
+                            className="border rounded-input w-full  min-w-32"
                             value={form.roleId}
                             onChange={(e) =>
                                 setForm({ ...form, roleId: e.target.value })
@@ -258,41 +271,29 @@ export default function Users() {
                             ))}
                         </select>
                     </div>
-                    <div className="flex items-end">
-                        <label className="flex items-center gap-2 h-10 text-sm cursor-pointer select-none">
-                            <input
-                                type="checkbox"
-                                checked={form.isActive}
-                                onChange={(e) =>
-                                    setForm({ ...form, isActive: e.target.checked })
-                                }
-                                disabled={isEditing && form.id === currentUser?.id}
-                            />
-                            <span>Active</span>
-                        </label>
-                    </div>
-                    <div className="md:col-span-2 flex gap-2">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={saving}
-                        >
-                            {saving
-                                ? 'Saving…'
-                                : isEditing
-                                  ? 'Update user'
-                                  : 'Add user'}
-                        </button>
-                        {isEditing && (
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={resetForm}
-                            >
-                                Cancel
-                            </button>
-                        )}
-                    </div>
+                    <label className="flex items-center cursor-pointer select-none shrink-0 mb-2">
+                        <input
+                            type="checkbox"
+                            checked={form.isActive}
+                            onChange={(e) =>
+                                setForm({ ...form, isActive: e.target.checked })
+                            }
+                            disabled={isEditing && form.id === currentUser?.id}
+                            className="cursor-pointer"
+                        />
+                        <span>Active</span>
+                    </label>
+                    <button
+                        type="submit"
+                        className="btn btn-primary"
+                        disabled={saving}
+                    >
+                        {saving
+                            ? 'Saving…'
+                            : isEditing
+                              ? 'Update'
+                              : 'Add'}
+                    </button>
                 </form>
             </div>
 
@@ -300,7 +301,7 @@ export default function Users() {
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
                     <h2 className="text-lg font-semibold">
                         Users{' '}
-                        <span className="text-sm font-normal text-gray-500">
+                        <span className=" font-normal text-gray-500">
                             ({filtered.length}
                             {filtered.length !== users.length
                                 ? ` of ${users.length}`
@@ -334,7 +335,7 @@ export default function Users() {
                     </div>
                 ) : (
                     <div className="overflow-x-auto rounded-lg border border-gray-300">
-                        <table className="w-full text-sm border-collapse">
+                        <table className="w-full  border-collapse">
                             <thead className="bg-gray-100">
                                 <tr>
                                     <th className="text-left p-2.5 border">Username</th>
@@ -398,14 +399,14 @@ export default function Users() {
                                             <td className="p-2.5 border text-right space-x-3 whitespace-nowrap">
                                                 <button
                                                     type="button"
-                                                    className="text-blue-600 hover:underline text-sm"
+                                                    className="text-blue-600 hover:underline "
                                                     onClick={() => startEdit(u)}
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    className="text-red-600 hover:underline text-sm disabled:opacity-40 disabled:no-underline"
+                                                    className="text-red-600 hover:underline  disabled:opacity-40 disabled:no-underline"
                                                     onClick={() => removeUser(u)}
                                                     disabled={isSelf}
                                                     title={

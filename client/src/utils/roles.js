@@ -20,6 +20,7 @@ export function hasRole(user, roles) {
     return Boolean(role && allowed.includes(role));
 }
 
+
 export function isAdmin(user) {
     return hasRole(user, ADMIN_ROLES);
 }

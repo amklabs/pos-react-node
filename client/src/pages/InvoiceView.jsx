@@ -8,7 +8,7 @@ import { STORE_NAME } from '../constants/store.js';
 import { toastError } from '../utils/toast';
 import { formatNumber, formatDate, formatDateTime } from '../utils/formaters.js';
 import { useAuthContext } from '../context/AuthContext';
-import { isAdmin } from '../utils/roles';
+import { isSuperAdmin} from '../utils/roles';
 
 function money(value) {
     return `Rs. ${formatNumber(value)}`;
@@ -44,7 +44,7 @@ export default function InvoiceView() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuthContext();
-    const admin = isAdmin(user);
+    const admin = isSuperAdmin(user);
     const [invoice, setInvoice] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -166,11 +166,11 @@ export default function InvoiceView() {
     return (
         <div className="w-full min-w-0 max-w-4xl mx-auto">
             {/* Screen actions */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 print:hidden no-print">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-2 print:hidden no-print">
                 <button
                     type="button"
                     onClick={() => navigate(-1)}
-                    className="text-gray-600 hover:underline text-sm"
+                    className="text-gray-600 hover:underline text-sm cursor-pointer"
                 >
                     ← Back
                 </button>
@@ -260,44 +260,44 @@ export default function InvoiceView() {
                         </p>
                         {isPurchase ? (
                             <>
-                                <p className="font-bold text-base text-gray-900">
+                                <span className="font-bold text-base text-gray-900">
                                     {invoice.company?.name || '—'}
-                                </p>
+                                </span>
                                 {invoice.company?.phone ? (
-                                    <p className="text-gray-600">{invoice.company.phone}</p>
+                                    <span className="text-gray-600">({invoice.company.phone})</span>
                                 ) : null}
                             </>
                         ) : (
                             <>
-                                <p className="font-bold text-base text-gray-900">
+                                <span className="font-bold text-base text-gray-900">
                                     {invoice.customer?.name || 'Cash Sale'}
-                                </p>
+                                </span>
                                 {invoice.customer?.phone ? (
-                                    <p className="text-gray-600">{invoice.customer.phone}</p>
+                                    <span className="text-gray-600">({invoice.customer.phone})</span>
                                 ) : null}
                             </>
                         )}
                     </div>
                     <div className="rounded-lg border border-gray-200 p-3 print:border-gray-400">
                         <p className="text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-1">
-                            Summary
+                            Invoice Summary
                         </p>
-                        <p className="text-gray-700">
+                        <span className="text-gray-700">
                             Items:{' '}
-                            <span className="font-semibold">{lineRows.length}</span>
-                        </p>
-                        <p className="text-gray-700">
+                            <span className="font-semibold pe-4">{lineRows.length} </span>
+                        </span>
+                        <span className="text-gray-700">
                             Qty:{' '}
-                            <span className="font-semibold">
+                            <span className="font-semibold pe-4">
                                 {formatNumber(
                                     lineRows.reduce((s, r) => s + r.qty, 0)
                                 )}
                             </span>
-                        </p>
-                        <p className="text-gray-700">
+                        </span>
+                        <span className="text-gray-700">
                             Amount:{' '}
                             <span className="font-bold">{money(totals.grandTotal)}</span>
-                        </p>
+                        </span>
                     </div>
                 </div>
 
@@ -305,33 +305,33 @@ export default function InvoiceView() {
                 <table className="w-full border-collapse text-sm mb-4">
                     <thead>
                         <tr className="bg-gray-100 print:bg-gray-200">
-                            <th className="border border-gray-300 p-2 text-center w-10">
+                            <th className="border border-gray-300 p-1 text-center w-10">
                                 #
                             </th>
-                            <th className="border border-gray-300 p-2 text-left">
+                            <th className="border border-gray-300 p-1 text-left">
                                 Item
                             </th>
-                            <th className="border border-gray-300 p-2 text-right w-20">
+                            <th className="border border-gray-300 p-1 text-right w-20">
                                 Qty
                             </th>
-                            <th className="border border-gray-300 p-2 text-right w-24">
+                            <th className="border border-gray-300 p-1 text-right w-24">
                                 Rate
                             </th>
                             {showProfit && (
-                                <th className="border border-gray-300 p-2 text-right w-24 print:hidden">
+                                <th className="border border-gray-300 p-1 text-right w-24 print:hidden">
                                     Cost
                                 </th>
                             )}
                             {showDiscountCol && (
-                                <th className="border border-gray-300 p-2 text-right w-20">
+                                <th className="border border-gray-300 p-1 text-right w-20">
                                     Disc.
                                 </th>
                             )}
-                            <th className="border border-gray-300 p-2 text-right w-28">
+                            <th className="border border-gray-300 p-1 text-right w-28">
                                 Amount
                             </th>
                             {showProfit && (
-                                <th className="border border-gray-300 p-2 text-right w-24 print:hidden">
+                                <th className="border border-gray-300 p-1 text-right w-24 print:hidden">
                                     Profit
                                 </th>
                             )}
@@ -340,39 +340,41 @@ export default function InvoiceView() {
                     <tbody>
                         {lineRows.map((row) => (
                             <tr key={row.key}>
-                                <td className="border border-gray-300 p-2 text-center text-gray-600">
+                                <td className="border border-gray-300 p-1 text-center text-gray-600">
                                     {row.sr}
                                 </td>
-                                <td className="border border-gray-300 p-2">
-                                    <span className="font-medium">{row.name}</span>
-                                    {row.company ? (
-                                        <span className="block text-xs text-gray-500">
+                                <td className="border border-gray-300 p-1">
+                                    <div className="flex flex-row items-center gap-2">
+                                        <span className="font-medium">{row.name}</span>
+                                        {row.company ? (
+                                            <span className="block text-xs text-gray-500">
                                             {row.company}
                                         </span>
-                                    ) : null}
+                                        ) : null}
+                                    </div>
                                 </td>
-                                <td className="border border-gray-300 p-2 text-right tabular-nums">
+                                <td className="border border-gray-300 p-1 text-right tabular-nums">
                                     {formatNumber(row.qty)}
                                 </td>
-                                <td className="border border-gray-300 p-2 text-right tabular-nums">
+                                <td className="border border-gray-300 p-1 text-right tabular-nums">
                                     {formatNumber(row.rate)}
                                 </td>
                                 {showProfit && (
-                                    <td className="border border-gray-300 p-2 text-right tabular-nums print:hidden text-gray-600">
+                                    <td className="border border-gray-300 p-1 text-right tabular-nums print:hidden text-gray-600">
                                         {formatNumber(row.costRate)}
                                     </td>
                                 )}
                                 {showDiscountCol && (
-                                    <td className="border border-gray-300 p-2 text-right tabular-nums">
+                                    <td className="border border-gray-300 p-1 text-right tabular-nums">
                                         {formatNumber(row.discount)}
                                     </td>
                                 )}
-                                <td className="border border-gray-300 p-2 text-right tabular-nums font-semibold">
+                                <td className="border border-gray-300 p-1 text-right tabular-nums font-semibold">
                                     {formatNumber(row.lineTotal)}
                                 </td>
                                 {showProfit && (
                                     <td
-                                        className={`border border-gray-300 p-2 text-right tabular-nums font-semibold print:hidden ${
+                                        className={`border border-gray-300 p-1 text-right tabular-nums font-semibold print:hidden ${
                                             row.lineProfit >= 0
                                                 ? 'text-green-700'
                                                 : 'text-red-700'
@@ -388,7 +390,7 @@ export default function InvoiceView() {
 
                 {/* Totals */}
                 <div className="flex justify-end mb-8">
-                    <div className="w-full max-w-xs text-sm space-y-1.5">
+                    <div className="w-full max-w-xs text-sm">
                         <div className="flex justify-between gap-6">
                             <span className="text-gray-600">Subtotal</span>
                             <span className="font-semibold tabular-nums">
@@ -403,7 +405,7 @@ export default function InvoiceView() {
                                 </span>
                             </div>
                         )}
-                        <div className="flex justify-between gap-6 border-t-2 border-gray-900 pt-2 mt-1">
+                        <div className="flex justify-between gap-6 border-t-2 border-gray-900">
                             <span className="font-bold text-base">Grand total</span>
                             <span className="font-bold text-base tabular-nums">
                                 {money(totals.grandTotal)}
@@ -412,7 +414,7 @@ export default function InvoiceView() {
 
                         {isSale && (
                             <>
-                                <div className="flex justify-between gap-6 pt-1">
+                                <div className="flex justify-between gap-6">
                                     <span className="text-gray-600">Paid</span>
                                     <span className="font-semibold tabular-nums text-green-700">
                                         {money(totals.paidAmount)}
@@ -481,13 +483,13 @@ export default function InvoiceView() {
                         <table className="w-full border-collapse text-sm">
                             <thead>
                                 <tr className="bg-gray-50">
-                                    <th className="border border-gray-300 p-2 text-left">
+                                    <th className="border border-gray-300 p-1 text-left">
                                         Date
                                     </th>
-                                    <th className="border border-gray-300 p-2 text-left">
+                                    <th className="border border-gray-300 p-1 text-left">
                                         Note
                                     </th>
-                                    <th className="border border-gray-300 p-2 text-right">
+                                    <th className="border border-gray-300 p-1 text-right">
                                         Amount
                                     </th>
                                 </tr>
@@ -495,13 +497,13 @@ export default function InvoiceView() {
                             <tbody>
                                 {receivedPayments.map((p) => (
                                     <tr key={p.id}>
-                                        <td className="border border-gray-300 p-2 whitespace-nowrap">
+                                        <td className="border border-gray-300 p-1 whitespace-nowrap">
                                             {formatDateTime(p.date)}
                                         </td>
-                                        <td className="border border-gray-300 p-2 text-gray-600">
+                                        <td className="border border-gray-300 p-1 text-gray-600">
                                             {p.note || '—'}
                                         </td>
-                                        <td className="border border-gray-300 p-2 text-right tabular-nums font-semibold">
+                                        <td className="border border-gray-300 p-1 text-right tabular-nums font-semibold">
                                             {formatNumber(p.amount)}
                                         </td>
                                     </tr>

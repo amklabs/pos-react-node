@@ -77,7 +77,7 @@ function summarizeInvoiceProfit(invoice) {
     const grossProfit = round2(items.reduce((s, i) => s + i.lineProfit, 0));
     const signedProfit = round2(grossProfit * sign);
     const marginPct =
-        netSales > 0 ? round2((grossProfit / netSales) * 100) : null;
+        netSales > 0 ? round2((grossProfit / totalCost) * 100) : null;
 
     return {
         items,
