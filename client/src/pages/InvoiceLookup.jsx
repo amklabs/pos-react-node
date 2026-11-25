@@ -251,6 +251,7 @@ export default function InvoiceLookup() {
                             {canDelete && (
                                 <th className="p-2 border w-10 text-center">
                                     <input
+                                        className="w-4 h-4"
                                         type="checkbox"
                                         checked={allPageSelected}
                                         ref={(el) => {
@@ -292,6 +293,7 @@ export default function InvoiceLookup() {
                                     {canDelete && (
                                         <td className="p-2 border text-center">
                                             <input
+                                                className="w-4 h-4"
                                                 type="checkbox"
                                                 checked={selectedIds.has(inv.id)}
                                                 onChange={() => toggleOne(inv.id)}
